@@ -22,4 +22,30 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\gtest\gtest.vcproj">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\gtest\gtest.vcxproj">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\gtest\gtest.vcxproj.filters">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\gtest\gtest.vcxproj.user">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\test_bitfield\test_bitfield.vcproj">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\test_bitfield\test_bitfield.vcxproj">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\test_bitfield\test_bitfield.vcxproj.filters">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\test_bitfield\test_bitfield.vcxproj.user">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

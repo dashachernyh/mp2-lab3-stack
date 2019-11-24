@@ -63,6 +63,7 @@ void TCalculator<T>::ToPosfix()
 	postfix = " ";
 	for (int i = 0; i < str.size(); i++)
 	{
+		if (str[i] == ' ') continue;
 		if (str[i] == '(') st_c.Push();
 		if (str[i] >= '0' || str[i] <= '9' || str[i] == '.') postfix += str[i];
 		if (str[i] == ')')
@@ -74,7 +75,7 @@ void TCalculator<T>::ToPosfix()
 				tmp = st_c.Pop();
 			}
 		}
-		if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/')
+		if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/'|| str[i] == '^')
 		{
 			posfix += " ";
 			char tmp = st_c.Pop();
@@ -90,7 +91,49 @@ void TCalculator<T>::ToPosfix()
 	}
 }
 template<class T>
-double Calc()
+double TCalculator<T>::Calc()
 {
-	st_d.Clear
+	st_d.ClearSt();
+	char*tmp;
+	double rez;
+	for (int i = 0; i < postfix[i]; i++)
+	{
+		if (postfix[i] == ' ') continue;
+		if (postfix[i] >= '0'&&postfix[i] <= '9')
+		{
+			double d = strtod(&postfix[i], &tmp);
+			int j = tmp - &postfix[i];
+			i += j - 1;
+			st_d.Push(d);
+		}
+		if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/'postfix[i] == '^' || )
+		{
+			double op1, op2;
+			op2 = st_d.Pop();
+			op1 = st_d.Pop();
+			if (postfix[i] == '+')
+			{
+				rez = op1 + op2;
+			}
+			if (postfix[i] == '-')
+			{
+				rez = op1 - op2;
+			}
+			if (postfix[i] == '*')
+			{
+				rez = op1 * op2;
+			}
+			if (postfix[i] == '/')
+			{
+				rez = op1 / op2;
+			}
+			if (postfix[i] == '^')
+			{
+				rez = Pow(op1,op2);
+			}
+			st_d.Push(rez);
+		}
+	}
+	rez = st_d.Pop();
+	return rez;
 }
