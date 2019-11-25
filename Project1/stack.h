@@ -58,7 +58,7 @@ void TStack<T>::Push(T el)
 	else
 	{
 		arr[num + 1] = el;
-		num++
+		num++;
 	}
 }
 template<class T>

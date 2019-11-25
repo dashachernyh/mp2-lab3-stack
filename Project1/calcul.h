@@ -3,19 +3,21 @@
 using namespace std;
 #include"stack.h"
 #include<string>
+#include<cmath>
 template<class T>
 class TCalculator
 {
 	string expr, postfix;
-	TStack<char> st_c,st_d;
+	TStack<char> st_c;
+	TStack<double>st_d;
 	int Prior(char c); //функция
-	public::
-		TCalculator() :st_c(50) {}
+	public:
+	TCalculator() :st_c(50) {}
 	void SetExpr(string _expr);
 	string GetExpr();
+	string GetPostfix();
 	bool CheckBrackets() const;
 	void ToPosfix();
-	int Prior(char c);
 	double Calc();
 };
 template<class T>
@@ -27,6 +29,11 @@ template<class T>
 string TCalculator<T>::GetExpr()
 {
 	return expr;
+}
+template<class T>
+string TCalculator<T>::GetPostfix()
+{
+	return postfix;
 }
 template<class T>
 bool TCalculator<T>::CheckBrackets()const
@@ -64,23 +71,25 @@ void TCalculator<T>::ToPosfix()
 	for (int i = 0; i < str.size(); i++)
 	{
 		if (str[i] == ' ') continue;
-		if (str[i] == '(') st_c.Push();
-		if (str[i] >= '0' || str[i] <= '9' || str[i] == '.') postfix += str[i];
+		if (str[i] == '(') st_c.Push('(');
+		if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') postfix += str[i];
 		if (str[i] == ')')
 		{
 			char tmp = st_c.Pop();
 			while (tmp != '(')
 			{
+				postfix += ' ';
 				postfix += tmp;
 				tmp = st_c.Pop();
 			}
 		}
 		if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/'|| str[i] == '^')
 		{
-			posfix += " ";
+			postfix += ' ';
 			char tmp = st_c.Pop();
 			while (Prior(str[i]) <= Prior(tmp))
 			{
+				
 				postfix += tmp;
 				tmp = st_c.Pop();
 			}
@@ -106,7 +115,7 @@ double TCalculator<T>::Calc()
 			i += j - 1;
 			st_d.Push(d);
 		}
-		if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/'postfix[i] == '^' || )
+		if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/'||postfix[i] == '^')
 		{
 			double op1, op2;
 			op2 = st_d.Pop();
@@ -129,7 +138,7 @@ double TCalculator<T>::Calc()
 			}
 			if (postfix[i] == '^')
 			{
-				rez = Pow(op1,op2);
+				rez = pow(op1,op2);
 			}
 			st_d.Push(rez);
 		}
