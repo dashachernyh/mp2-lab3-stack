@@ -66,20 +66,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="calcul.h" />
+    <ClInclude Include="gtest.h" />
     <ClInclude Include="stack.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\gtest\gtest.vcproj" />
-    <None Include="..\gtest\gtest.vcxproj" />
     <None Include="..\gtest\gtest.vcxproj.filters" />
-    <None Include="..\gtest\gtest.vcxproj.user" />
-    <None Include="..\test_bitfield\test_bitfield.vcproj" />
-    <None Include="..\test_bitfield\test_bitfield.vcxproj" />
     <None Include="..\test_bitfield\test_bitfield.vcxproj.filters" />
-    <None Include="..\test_bitfield\test_bitfield.vcxproj.user" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\mp2-lab2-matrix\gtest\gtest-all.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="test_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

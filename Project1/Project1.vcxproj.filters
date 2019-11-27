@@ -21,36 +21,30 @@
     <ClInclude Include="calcul.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="gtest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\gtest\gtest.vcproj">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\gtest\gtest.vcxproj">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="..\gtest\gtest.vcxproj.filters">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\gtest\gtest.vcxproj.user">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\test_bitfield\test_bitfield.vcproj">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\test_bitfield\test_bitfield.vcxproj">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="..\test_bitfield\test_bitfield.vcxproj.filters">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\test_bitfield\test_bitfield.vcxproj.user">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\mp2-lab2-matrix\gtest\gtest-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
