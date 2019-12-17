@@ -1,3 +1,4 @@
+
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //
@@ -751,7 +752,7 @@ namespace std {
 			typename T3 = void, typename T4 = void, typename T5 = void,
 			typename T6 = void, typename T7 = void, typename T8 = void,
 			typename T9 = void>
-		class tuple;
+			class tuple;
 
 		// Anything in namespace gtest_internal is Google Test's INTERNAL
 		// IMPLEMENTATION DETAIL and MUST NOT BE USED DIRECTLY in user code.
@@ -763,20 +764,20 @@ namespace std {
 			template <typename T>
 			struct ByRef<T&> { typedef T& type; };  // NOLINT
 
-													// A handy wrapper for ByRef.
+			// A handy wrapper for ByRef.
 #define GTEST_BY_REF_(T) typename ::std::tr1::gtest_internal::ByRef<T>::type
 
-													// AddRef<T>::type is T if T is a reference; otherwise it's T&.  This
-													// is the same as tr1::add_reference<T>::type.
+// AddRef<T>::type is T if T is a reference; otherwise it's T&.  This
+// is the same as tr1::add_reference<T>::type.
 			template <typename T>
 			struct AddRef { typedef T& type; };  // NOLINT
 			template <typename T>
 			struct AddRef<T&> { typedef T& type; };  // NOLINT
 
-													 // A handy wrapper for AddRef.
+			// A handy wrapper for AddRef.
 #define GTEST_ADD_REF_(T) typename ::std::tr1::gtest_internal::AddRef<T>::type
 
-													 // A helper for implementing get<k>().
+// A helper for implementing get<k>().
 			template <int k> class Get;
 
 			// A helper for implementing tuple_element<k, T>.  kIndexValid is true
@@ -1429,7 +1430,7 @@ namespace std {
 
 		template <int k, class Tuple>
 		struct tuple_element {
-			typedef typename gtest_internal::TupleElement<
+			typedef typename gtest_internal::TupleElement <
 				k < (tuple_size<Tuple>::value), k, Tuple>::type type;
 		};
 
@@ -1700,7 +1701,7 @@ namespace std {
 #   define _TR1_FUNCTIONAL 1
 #   include <tr1/tuple>
 #   undef _TR1_FUNCTIONAL  // Allows the user to #include
-// <tr1/functional> if he chooses to.
+						// <tr1/functional> if he chooses to.
 #  else
 #   include <tr1/tuple>  // NOLINT
 #  endif  // !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
@@ -2175,36 +2176,36 @@ namespace testing {
     else \
       GTEST_LOG_(FATAL) << "Condition " #condition " failed. "
 
-		// An all-mode assert to verify that the given POSIX-style function
-		// call returns 0 (indicating success).  Known limitation: this
-		// doesn't expand to a balanced 'if' statement, so enclose the macro
-		// in {} if you need to use it as the only statement in an 'if'
-		// branch.
+// An all-mode assert to verify that the given POSIX-style function
+// call returns 0 (indicating success).  Known limitation: this
+// doesn't expand to a balanced 'if' statement, so enclose the macro
+// in {} if you need to use it as the only statement in an 'if'
+// branch.
 #define GTEST_CHECK_POSIX_SUCCESS_(posix_call) \
   if (const int gtest_error = (posix_call)) \
     GTEST_LOG_(FATAL) << #posix_call << "failed with error " \
                       << gtest_error
 
-		// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
-		//
-		// Use ImplicitCast_ as a safe version of static_cast for upcasting in
-		// the type hierarchy (e.g. casting a Foo* to a SuperclassOfFoo* or a
-		// const Foo*).  When you use ImplicitCast_, the compiler checks that
-		// the cast is safe.  Such explicit ImplicitCast_s are necessary in
-		// surprisingly many situations where C++ demands an exact type match
-		// instead of an argument type convertable to a target type.
-		//
-		// The syntax for using ImplicitCast_ is the same as for static_cast:
-		//
-		//   ImplicitCast_<ToType>(expr)
-		//
-		// ImplicitCast_ would have been part of the C++ standard library,
-		// but the proposal was submitted too late.  It will probably make
-		// its way into the language in the future.
-		//
-		// This relatively ugly name is intentional. It prevents clashes with
-		// similar functions users may have (e.g., implicit_cast). The internal
-		// namespace alone is not enough because the function can be found by ADL.
+// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+//
+// Use ImplicitCast_ as a safe version of static_cast for upcasting in
+// the type hierarchy (e.g. casting a Foo* to a SuperclassOfFoo* or a
+// const Foo*).  When you use ImplicitCast_, the compiler checks that
+// the cast is safe.  Such explicit ImplicitCast_s are necessary in
+// surprisingly many situations where C++ demands an exact type match
+// instead of an argument type convertable to a target type.
+//
+// The syntax for using ImplicitCast_ is the same as for static_cast:
+//
+//   ImplicitCast_<ToType>(expr)
+//
+// ImplicitCast_ would have been part of the C++ standard library,
+// but the proposal was submitted too late.  It will probably make
+// its way into the language in the future.
+//
+// This relatively ugly name is intentional. It prevents clashes with
+// similar functions users may have (e.g., implicit_cast). The internal
+// namespace alone is not enough because the function can be found by ADL.
 		template<typename To>
 		inline To ImplicitCast_(To x) { return x; }
 
@@ -2231,10 +2232,10 @@ namespace testing {
 		// namespace alone is not enough because the function can be found by ADL.
 		template<typename To, typename From>  // use like this: DownCast_<T*>(foo);
 		inline To DownCast_(From* f) {  // so we only accept pointers
-										// Ensures that To is a sub-type of From *.  This test is here only
-										// for compile-time type checking, and has no overhead in an
-										// optimized build at run-time, as it will be optimized away
-										// completely.
+		  // Ensures that To is a sub-type of From *.  This test is here only
+		  // for compile-time type checking, and has no overhead in an
+		  // optimized build at run-time, as it will be optimized away
+		  // completely.
 			if (false) {
 				const To to = NULL;
 				::testing::internal::ImplicitCast_<From*>(to);
@@ -2293,13 +2294,13 @@ namespace testing {
 
 #if GTEST_HAS_PTHREAD
 
-		// Sleeps for (roughly) n milli-seconds.  This function is only for
-		// testing Google Test's own constructs.  Don't use it in user tests,
-		// either directly or indirectly.
+// Sleeps for (roughly) n milli-seconds.  This function is only for
+// testing Google Test's own constructs.  Don't use it in user tests,
+// either directly or indirectly.
 		inline void SleepMilliseconds(int n) {
 			const timespec time = {
-				0,                  // 0 seconds.
-				n * 1000L * 1000L,  // And n ms.
+			  0,                  // 0 seconds.
+			  n * 1000L * 1000L,  // And n ms.
 			};
 			nanosleep(&time, NULL);
 		}
@@ -2416,8 +2417,8 @@ namespace testing {
 		private:
 			const UserThreadFunc func_;  // User-supplied thread function.
 			const T param_;  // User-supplied parameter to the thread function.
-							 // When non-NULL, used to block execution until the controller thread
-							 // notifies.
+			// When non-NULL, used to block execution until the controller thread
+			// notifies.
 			Notification* const thread_can_start_;
 			bool finished_;  // true iff we know that the thread function has finished.
 			pthread_t thread_;  // The native thread object.
@@ -2477,12 +2478,12 @@ namespace testing {
 			// have to be public.
 		public:
 			pthread_mutex_t mutex_;  // The underlying pthread mutex.
-									 // has_owner_ indicates whether the owner_ field below contains a valid thread
-									 // ID and is therefore safe to inspect (e.g., to use in pthread_equal()). All
-									 // accesses to the owner_ field should be protected by a check of this field.
-									 // An alternative might be to memset() owner_ to all zeros, but there's no
-									 // guarantee that a zero'd pthread_t is necessarily invalid or even different
-									 // from pthread_self().
+			// has_owner_ indicates whether the owner_ field below contains a valid thread
+			// ID and is therefore safe to inspect (e.g., to use in pthread_equal()). All
+			// accesses to the owner_ field should be protected by a check of this field.
+			// An alternative might be to memset() owner_ to all zeros, but there's no
+			// guarantee that a zero'd pthread_t is necessarily invalid or even different
+			// from pthread_self().
 			bool has_owner_;
 			pthread_t owner_;  // The thread holding the mutex.
 		};
@@ -2491,17 +2492,17 @@ namespace testing {
 # define GTEST_DECLARE_STATIC_MUTEX_(mutex) \
     extern ::testing::internal::MutexBase mutex
 
-		// Defines and statically (i.e. at link time) initializes a static mutex.
-		// The initialization list here does not explicitly initialize each field,
-		// instead relying on default initialization for the unspecified fields. In
-		// particular, the owner_ field (a pthread_t) is not explicitly initialized.
-		// This allows initialization to work whether pthread_t is a scalar or struct.
-		// The flag -Wmissing-field-initializers must not be specified for this to work.
+// Defines and statically (i.e. at link time) initializes a static mutex.
+// The initialization list here does not explicitly initialize each field,
+// instead relying on default initialization for the unspecified fields. In
+// particular, the owner_ field (a pthread_t) is not explicitly initialized.
+// This allows initialization to work whether pthread_t is a scalar or struct.
+// The flag -Wmissing-field-initializers must not be specified for this to work.
 # define GTEST_DEFINE_STATIC_MUTEX_(mutex) \
     ::testing::internal::MutexBase mutex = { PTHREAD_MUTEX_INITIALIZER, false }
 
-		// The Mutex class can only be used for mutexes created at runtime. It
-		// shares its API with MutexBase otherwise.
+// The Mutex class can only be used for mutexes created at runtime. It
+// shares its API with MutexBase otherwise.
 		class Mutex : public MutexBase {
 		public:
 			Mutex() {
@@ -2650,10 +2651,10 @@ namespace testing {
 
 #else  // GTEST_HAS_PTHREAD
 
-		// A dummy implementation of synchronization primitives (mutex, lock,
-		// and thread-local variable).  Necessary for compiling Google Test where
-		// mutex is not supported - using Google Test in multiple threads is not
-		// supported on such platforms.
+// A dummy implementation of synchronization primitives (mutex, lock,
+// and thread-local variable).  Necessary for compiling Google Test where
+// mutex is not supported - using Google Test in multiple threads is not
+// supported on such platforms.
 
 		class Mutex {
 		public:
@@ -2694,8 +2695,8 @@ namespace testing {
 
 #endif  // GTEST_HAS_PTHREAD
 
-		// Returns the number of threads running in the process, or 0 to indicate that
-		// we cannot detect it.
+// Returns the number of threads running in the process, or 0 to indicate that
+// we cannot detect it.
 		GTEST_API_ size_t GetThreadCount();
 
 		// Passing non-POD classes through ellipsis (...) crashes the ARM
@@ -2705,17 +2706,17 @@ namespace testing {
 		// objects.  We define this to ensure that only POD is passed through
 		// ellipsis on these systems.
 #if defined(__SYMBIAN32__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
-		// We lose support for NULL detection where the compiler doesn't like
-		// passing non-POD classes through ellipsis (...).
+// We lose support for NULL detection where the compiler doesn't like
+// passing non-POD classes through ellipsis (...).
 # define GTEST_ELLIPSIS_NEEDS_POD_ 1
 #else
 # define GTEST_CAN_COMPARE_NULL 1
 #endif
 
-		// The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
-		// const T& and const T* in a function template.  These compilers
-		// _can_ decide between class template specializations for T and T*,
-		// so a tr1::type_traits-like is_pointer works.
+// The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
+// const T& and const T* in a function template.  These compilers
+// _can_ decide between class template specializations for T and T*,
+// so a tr1::type_traits-like is_pointer works.
 #if defined(__SYMBIAN32__) || defined(__IBMCPP__)
 # define GTEST_NEEDS_IS_POINTER_ 1
 #endif
@@ -2762,12 +2763,12 @@ namespace testing {
 		typedef long long BiggestInt;  // NOLINT
 #endif  // GTEST_OS_WINDOWS
 
-									   // Utilities for char.
+// Utilities for char.
 
-									   // isspace(int ch) and friends accept an unsigned char or EOF.  char
-									   // may be signed, depending on the compiler (or compiler flags).
-									   // Therefore we need to cast a char to unsigned char before calling
-									   // isspace(), etc.
+// isspace(int ch) and friends accept an unsigned char or EOF.  char
+// may be signed, depending on the compiler (or compiler flags).
+// Therefore we need to cast a char to unsigned char before calling
+// isspace(), etc.
 
 		inline bool IsAlpha(char ch) {
 			return isalpha(static_cast<unsigned char>(ch)) != 0;
@@ -2866,7 +2867,7 @@ namespace testing {
 			// Functions deprecated by MSVC 8.0.
 
 #ifdef _MSC_VER
-			// Temporarily disable warning 4996 (deprecated function).
+// Temporarily disable warning 4996 (deprecated function).
 # pragma warning(push)
 # pragma warning(disable:4996)
 #endif
@@ -2931,30 +2932,30 @@ namespace testing {
 
 		}  // namespace posix
 
-		   // MSVC "deprecates" snprintf and issues warnings wherever it is used.  In
-		   // order to avoid these warnings, we need to use _snprintf or _snprintf_s on
-		   // MSVC-based platforms.  We map the GTEST_SNPRINTF_ macro to the appropriate
-		   // function in order to achieve that.  We use macro definition here because
-		   // snprintf is a variadic function.
+		// MSVC "deprecates" snprintf and issues warnings wherever it is used.  In
+		// order to avoid these warnings, we need to use _snprintf or _snprintf_s on
+		// MSVC-based platforms.  We map the GTEST_SNPRINTF_ macro to the appropriate
+		// function in order to achieve that.  We use macro definition here because
+		// snprintf is a variadic function.
 #if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
-		   // MSVC 2005 and above support variadic macros.
+// MSVC 2005 and above support variadic macros.
 # define GTEST_SNPRINTF_(buffer, size, format, ...) \
      _snprintf_s(buffer, size, size, format, __VA_ARGS__)
 #elif defined(_MSC_VER)
-		   // Windows CE does not define _snprintf_s and MSVC prior to 2005 doesn't
-		   // complain about _snprintf.
+// Windows CE does not define _snprintf_s and MSVC prior to 2005 doesn't
+// complain about _snprintf.
 # define GTEST_SNPRINTF_ _snprintf
 #else
 # define GTEST_SNPRINTF_ snprintf
 #endif
 
-		   // The maximum number a BiggestInt can represent.  This definition
-		   // works no matter BiggestInt is represented in one's complement or
-		   // two's complement.
-		   //
-		   // We cannot rely on numeric_limits in STL, as __int64 and long long
-		   // are not part of standard C++ and numeric_limits doesn't need to be
-		   // defined for them.
+// The maximum number a BiggestInt can represent.  This definition
+// works no matter BiggestInt is represented in one's complement or
+// two's complement.
+//
+// We cannot rely on numeric_limits in STL, as __int64 and long long
+// are not part of standard C++ and numeric_limits doesn't need to be
+// defined for them.
 		const BiggestInt kMaxBiggestInt =
 			~(static_cast<BiggestInt>(1) << (8 * sizeof(BiggestInt) - 1));
 
@@ -3016,19 +3017,19 @@ namespace testing {
 		typedef TypeWithSize<8>::UInt UInt64;
 		typedef TypeWithSize<8>::Int TimeInMillis;  // Represents time in milliseconds.
 
-													// Utilities for command line flags and environment variables.
+		// Utilities for command line flags and environment variables.
 
-													// Macro for referencing flags.
+		// Macro for referencing flags.
 #define GTEST_FLAG(name) FLAGS_gtest_##name
 
-													// Macros for declaring flags.
+// Macros for declaring flags.
 #define GTEST_DECLARE_bool_(name) GTEST_API_ extern bool GTEST_FLAG(name)
 #define GTEST_DECLARE_int32_(name) \
     GTEST_API_ extern ::testing::internal::Int32 GTEST_FLAG(name)
 #define GTEST_DECLARE_string_(name) \
     GTEST_API_ extern ::std::string GTEST_FLAG(name)
 
-													// Macros for defining flags.
+// Macros for defining flags.
 #define GTEST_DEFINE_bool_(name, default_val, doc) \
     GTEST_API_ bool GTEST_FLAG(name) = (default_val)
 #define GTEST_DEFINE_int32_(name, default_val, doc) \
@@ -3036,16 +3037,16 @@ namespace testing {
 #define GTEST_DEFINE_string_(name, default_val, doc) \
     GTEST_API_ ::std::string GTEST_FLAG(name) = (default_val)
 
-													// Thread annotations
+// Thread annotations
 #define GTEST_EXCLUSIVE_LOCK_REQUIRED_(locks)
 #define GTEST_LOCK_EXCLUDED_(locks)
 
-													// Parses 'str' for a 32-bit signed integer.  If successful, writes the result
-													// to *value and returns true; otherwise leaves *value unchanged and returns
-													// false.
-													// TODO(chandlerc): Find a better way to refactor flag and environment parsing
-													// out of both gtest-port.cc and gtest.cc to avoid exporting this utility
-													// function.
+// Parses 'str' for a 32-bit signed integer.  If successful, writes the result
+// to *value and returns true; otherwise leaves *value unchanged and returns
+// false.
+// TODO(chandlerc): Find a better way to refactor flag and environment parsing
+// out of both gtest-port.cc and gtest.cc to avoid exporting this utility
+// function.
 		bool ParseInt32(const Message& src_text, const char* str, Int32* value);
 
 		// Parses a bool/Int32/string from the environment variable
@@ -3077,50 +3078,50 @@ namespace testing {
 #include <limits>
 #include <set>
 
-   // Copyright 2005, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
-   //
-   // The Google C++ Testing Framework (Google Test)
-   //
-   // This header file defines the Message class.
-   //
-   // IMPORTANT NOTE: Due to limitation of the C++ language, we have to
-   // leave some internal implementation details in this header file.
-   // They are clearly marked by comments like this:
-   //
-   //   // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
-   //
-   // Such code is NOT meant to be used by a user directly, and is subject
-   // to CHANGE WITHOUT NOTICE.  Therefore DO NOT DEPEND ON IT in a user
-   // program!
+// Copyright 2005, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
+//
+// The Google C++ Testing Framework (Google Test)
+//
+// This header file defines the Message class.
+//
+// IMPORTANT NOTE: Due to limitation of the C++ language, we have to
+// leave some internal implementation details in this header file.
+// They are clearly marked by comments like this:
+//
+//   // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
+//
+// Such code is NOT meant to be used by a user directly, and is subject
+// to CHANGE WITHOUT NOTICE.  Therefore DO NOT DEPEND ON IT in a user
+// program!
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
 #define GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
@@ -3128,8 +3129,8 @@ namespace testing {
 #include <limits>
 
 
-   // Ensures that there is at least one operator<< in the global namespace.
-   // See Message& operator<<(...) below for why.
+// Ensures that there is at least one operator<< in the global namespace.
+// See Message& operator<<(...) below for why.
 void operator<<(const testing::internal::Secret&, int);
 
 namespace testing {
@@ -3328,51 +3329,51 @@ namespace testing {
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
-   // Copyright 2005, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
-   //
-   // The Google C++ Testing Framework (Google Test)
-   //
-   // This header file declares the String class and functions used internally by
-   // Google Test.  They are subject to change without notice. They should not used
-   // by code external to Google Test.
-   //
-   // This header file is #included by <gtest/internal/gtest-internal.h>.
-   // It should not be #included by other files.
+// Copyright 2005, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
+//
+// The Google C++ Testing Framework (Google Test)
+//
+// This header file declares the String class and functions used internally by
+// Google Test.  They are subject to change without notice. They should not used
+// by code external to Google Test.
+//
+// This header file is #included by <gtest/internal/gtest-internal.h>.
+// It should not be #included by other files.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 
 #ifdef __BORLANDC__
-   // string.h is not guaranteed to provide strcpy on C++ Builder.
+// string.h is not guaranteed to provide strcpy on C++ Builder.
 # include <mem.h>
 #endif
 
@@ -3476,7 +3477,7 @@ namespace testing {
 			// Formats an int value as "%02d".
 			static std::string FormatIntWidth2(int value);  // "%02d" for width == 2
 
-															// Formats an int value as "%X".
+			// Formats an int value as "%X".
 			static std::string FormatHexInt(int value);
 
 			// Formats a byte as "%02X".
@@ -3486,52 +3487,52 @@ namespace testing {
 			String();  // Not meant to be instantiated.
 		};  // class String
 
-			// Gets the content of the stringstream's buffer as an std::string.  Each '\0'
-			// character in the buffer is replaced with "\\0".
+		// Gets the content of the stringstream's buffer as an std::string.  Each '\0'
+		// character in the buffer is replaced with "\\0".
 		GTEST_API_ std::string StringStreamToString(::std::stringstream* stream);
 
 	}  // namespace internal
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
-   // Copyright 2008, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: keith.ray@gmail.com (Keith Ray)
-   //
-   // Google Test filepath utilities
-   //
-   // This header file declares classes and functions used internally by
-   // Google Test.  They are subject to change without notice.
-   //
-   // This file is #included in <gtest/internal/gtest-internal.h>.
-   // Do not include this header file separately!
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: keith.ray@gmail.com (Keith Ray)
+//
+// Google Test filepath utilities
+//
+// This header file declares classes and functions used internally by
+// Google Test.  They are subject to change without notice.
+//
+// This file is #included in <gtest/internal/gtest-internal.h>.
+// Do not include this header file separately!
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
@@ -3699,55 +3700,55 @@ namespace testing {
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
-   // This file was GENERATED by command:
-   //     pump.py gtest-type-util.h.pump
-   // DO NOT EDIT BY HAND!!!
+// This file was GENERATED by command:
+//     pump.py gtest-type-util.h.pump
+// DO NOT EDIT BY HAND!!!
 
-   // Copyright 2008 Google Inc.
-   // All Rights Reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
+// Copyright 2008 Google Inc.
+// All Rights Reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
 
-   // Type utilities needed for implementing typed and type-parameterized
-   // tests.  This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
-   //
-   // Currently we support at most 50 types in a list, and at most 50
-   // type-parameterized tests in one type-parameterized test case.
-   // Please contact googletestframework@googlegroups.com if you need
-   // more.
+// Type utilities needed for implementing typed and type-parameterized
+// tests.  This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
+//
+// Currently we support at most 50 types in a list, and at most 50
+// type-parameterized tests in one type-parameterized test case.
+// Please contact googletestframework@googlegroups.com if you need
+// more.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
 
 
-   // #ifdef __GNUC__ is too general here.  It is possible to use gcc without using
-   // libstdc++ (which is where cxxabi.h comes from).
+// #ifdef __GNUC__ is too general here.  It is possible to use gcc without using
+// libstdc++ (which is where cxxabi.h comes from).
 # if GTEST_HAS_CXXABI_H_
 #  include <cxxabi.h>
 # elif defined(__HP_aCC)
@@ -3850,35 +3851,35 @@ namespace testing {
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6>
-		struct Types6 {
+			struct Types6 {
 			typedef T1 Head;
 			typedef Types5<T2, T3, T4, T5, T6> Tail;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7>
-		struct Types7 {
+			struct Types7 {
 			typedef T1 Head;
 			typedef Types6<T2, T3, T4, T5, T6, T7> Tail;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8>
-		struct Types8 {
+			struct Types8 {
 			typedef T1 Head;
 			typedef Types7<T2, T3, T4, T5, T6, T7, T8> Tail;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9>
-		struct Types9 {
+			struct Types9 {
 			typedef T1 Head;
 			typedef Types8<T2, T3, T4, T5, T6, T7, T8, T9> Tail;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10>
-		struct Types10 {
+			struct Types10 {
 			typedef T1 Head;
 			typedef Types9<T2, T3, T4, T5, T6, T7, T8, T9, T10> Tail;
 		};
@@ -3886,7 +3887,7 @@ namespace testing {
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11>
-		struct Types11 {
+			struct Types11 {
 			typedef T1 Head;
 			typedef Types10<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> Tail;
 		};
@@ -3894,7 +3895,7 @@ namespace testing {
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12>
-		struct Types12 {
+			struct Types12 {
 			typedef T1 Head;
 			typedef Types11<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> Tail;
 		};
@@ -3902,7 +3903,7 @@ namespace testing {
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13>
-		struct Types13 {
+			struct Types13 {
 			typedef T1 Head;
 			typedef Types12<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> Tail;
 		};
@@ -3910,7 +3911,7 @@ namespace testing {
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14>
-		struct Types14 {
+			struct Types14 {
 			typedef T1 Head;
 			typedef Types13<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> Tail;
 		};
@@ -3918,7 +3919,7 @@ namespace testing {
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15>
-		struct Types15 {
+			struct Types15 {
 			typedef T1 Head;
 			typedef Types14<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15> Tail;
@@ -3928,7 +3929,7 @@ namespace testing {
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16>
-		struct Types16 {
+			struct Types16 {
 			typedef T1 Head;
 			typedef Types15<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16> Tail;
@@ -3938,7 +3939,7 @@ namespace testing {
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17>
-		struct Types17 {
+			struct Types17 {
 			typedef T1 Head;
 			typedef Types16<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17> Tail;
@@ -3948,7 +3949,7 @@ namespace testing {
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18>
-		struct Types18 {
+			struct Types18 {
 			typedef T1 Head;
 			typedef Types17<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18> Tail;
@@ -3958,7 +3959,7 @@ namespace testing {
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19>
-		struct Types19 {
+			struct Types19 {
 			typedef T1 Head;
 			typedef Types18<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19> Tail;
@@ -3968,7 +3969,7 @@ namespace testing {
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20>
-		struct Types20 {
+			struct Types20 {
 			typedef T1 Head;
 			typedef Types19<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20> Tail;
@@ -3979,7 +3980,7 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21>
-		struct Types21 {
+			struct Types21 {
 			typedef T1 Head;
 			typedef Types20<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21> Tail;
@@ -3990,7 +3991,7 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22>
-		struct Types22 {
+			struct Types22 {
 			typedef T1 Head;
 			typedef Types21<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22> Tail;
@@ -4001,7 +4002,7 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23>
-		struct Types23 {
+			struct Types23 {
 			typedef T1 Head;
 			typedef Types22<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23> Tail;
@@ -4012,7 +4013,7 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24>
-		struct Types24 {
+			struct Types24 {
 			typedef T1 Head;
 			typedef Types23<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24> Tail;
@@ -4023,7 +4024,7 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25>
-		struct Types25 {
+			struct Types25 {
 			typedef T1 Head;
 			typedef Types24<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25> Tail;
@@ -4035,7 +4036,7 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26>
-		struct Types26 {
+			struct Types26 {
 			typedef T1 Head;
 			typedef Types25<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26> Tail;
@@ -4047,7 +4048,7 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27>
-		struct Types27 {
+			struct Types27 {
 			typedef T1 Head;
 			typedef Types26<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27> Tail;
@@ -4059,7 +4060,7 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28>
-		struct Types28 {
+			struct Types28 {
 			typedef T1 Head;
 			typedef Types27<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28> Tail;
@@ -4071,7 +4072,7 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29>
-		struct Types29 {
+			struct Types29 {
 			typedef T1 Head;
 			typedef Types28<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -4084,7 +4085,7 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30>
-		struct Types30 {
+			struct Types30 {
 			typedef T1 Head;
 			typedef Types29<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4098,7 +4099,7 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31>
-		struct Types31 {
+			struct Types31 {
 			typedef T1 Head;
 			typedef Types30<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4112,7 +4113,7 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32>
-		struct Types32 {
+			struct Types32 {
 			typedef T1 Head;
 			typedef Types31<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4126,7 +4127,7 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33>
-		struct Types33 {
+			struct Types33 {
 			typedef T1 Head;
 			typedef Types32<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4140,7 +4141,7 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34>
-		struct Types34 {
+			struct Types34 {
 			typedef T1 Head;
 			typedef Types33<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4154,7 +4155,7 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35>
-		struct Types35 {
+			struct Types35 {
 			typedef T1 Head;
 			typedef Types34<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4169,7 +4170,7 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36>
-		struct Types36 {
+			struct Types36 {
 			typedef T1 Head;
 			typedef Types35<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4184,7 +4185,7 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37>
-		struct Types37 {
+			struct Types37 {
 			typedef T1 Head;
 			typedef Types36<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4199,7 +4200,7 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38>
-		struct Types38 {
+			struct Types38 {
 			typedef T1 Head;
 			typedef Types37<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4214,7 +4215,7 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39>
-		struct Types39 {
+			struct Types39 {
 			typedef T1 Head;
 			typedef Types38<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4229,7 +4230,7 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40>
-		struct Types40 {
+			struct Types40 {
 			typedef T1 Head;
 			typedef Types39<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4245,7 +4246,7 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41>
-		struct Types41 {
+			struct Types41 {
 			typedef T1 Head;
 			typedef Types40<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4261,7 +4262,7 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42>
-		struct Types42 {
+			struct Types42 {
 			typedef T1 Head;
 			typedef Types41<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4277,7 +4278,7 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43>
-		struct Types43 {
+			struct Types43 {
 			typedef T1 Head;
 			typedef Types42<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4294,7 +4295,7 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44>
-		struct Types44 {
+			struct Types44 {
 			typedef T1 Head;
 			typedef Types43<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4311,7 +4312,7 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45>
-		struct Types45 {
+			struct Types45 {
 			typedef T1 Head;
 			typedef Types44<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4329,7 +4330,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46>
-		struct Types46 {
+			struct Types46 {
 			typedef T1 Head;
 			typedef Types45<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4347,7 +4348,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47>
-		struct Types47 {
+			struct Types47 {
 			typedef T1 Head;
 			typedef Types46<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4365,7 +4366,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48>
-		struct Types48 {
+			struct Types48 {
 			typedef T1 Head;
 			typedef Types47<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4383,7 +4384,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48, typename T49>
-		struct Types49 {
+			struct Types49 {
 			typedef T1 Head;
 			typedef Types48<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4401,7 +4402,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48, typename T49, typename T50>
-		struct Types50 {
+			struct Types50 {
 			typedef T1 Head;
 			typedef Types49<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
@@ -4412,19 +4413,19 @@ namespace testing {
 
 	}  // namespace internal
 
-	   // We don't want to require the users to write TypesN<...> directly,
-	   // as that would require them to count the length.  Types<...> is much
-	   // easier to write, but generates horrible messages when there is a
-	   // compiler error, as gcc insists on printing out each template
-	   // argument, even if it has the default value (this means Types<int>
-	   // will appear as Types<int, None, None, ..., None> in the compiler
-	   // errors).
-	   //
-	   // Our solution is to combine the best part of the two approaches: a
-	   // user would write Types<T1, ..., TN>, and Google Test will translate
-	   // that to TypesN<T1, ..., TN> internally to make error messages
-	   // readable.  The translation is done by the 'type' member of the
-	   // Types template.
+	// We don't want to require the users to write TypesN<...> directly,
+	// as that would require them to count the length.  Types<...> is much
+	// easier to write, but generates horrible messages when there is a
+	// compiler error, as gcc insists on printing out each template
+	// argument, even if it has the default value (this means Types<int>
+	// will appear as Types<int, None, None, ..., None> in the compiler
+	// errors).
+	//
+	// Our solution is to combine the best part of the two approaches: a
+	// user would write Types<T1, ..., TN>, and Google Test will translate
+	// that to TypesN<T1, ..., TN> internally to make error messages
+	// readable.  The translation is done by the 'type' member of the
+	// Types template.
 	template <typename T1 = internal::None, typename T2 = internal::None,
 		typename T3 = internal::None, typename T4 = internal::None,
 		typename T5 = internal::None, typename T6 = internal::None,
@@ -4449,8 +4450,8 @@ namespace testing {
 		typename T43 = internal::None, typename T44 = internal::None,
 		typename T45 = internal::None, typename T46 = internal::None,
 		typename T47 = internal::None, typename T48 = internal::None,
-		typename T49 = internal::None, typename T50 = internal::None>
-	struct Types {
+		typename T49 = internal::None, typename T50 = internal::None >
+		struct Types {
 		typedef internal::Types50<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12,
 			T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26,
 			T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
@@ -4552,7 +4553,7 @@ namespace testing {
 	};
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6>
-	struct Types<T1, T2, T3, T4, T5, T6, internal::None, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4568,7 +4569,7 @@ namespace testing {
 	};
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, internal::None, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4584,7 +4585,7 @@ namespace testing {
 	};
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, internal::None, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4599,7 +4600,7 @@ namespace testing {
 	};
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4614,7 +4615,7 @@ namespace testing {
 	};
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4630,7 +4631,7 @@ namespace testing {
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4646,7 +4647,7 @@ namespace testing {
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, internal::None,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4663,7 +4664,7 @@ namespace testing {
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4680,7 +4681,7 @@ namespace testing {
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4696,7 +4697,7 @@ namespace testing {
 	template <typename T1, typename T2, typename T3, typename T4, typename T5,
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4713,7 +4714,7 @@ namespace testing {
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4730,7 +4731,7 @@ namespace testing {
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4747,7 +4748,7 @@ namespace testing {
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4764,7 +4765,7 @@ namespace testing {
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4780,7 +4781,7 @@ namespace testing {
 		typename T6, typename T7, typename T8, typename T9, typename T10,
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4797,7 +4798,7 @@ namespace testing {
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4814,7 +4815,7 @@ namespace testing {
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4831,7 +4832,7 @@ namespace testing {
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4848,7 +4849,7 @@ namespace testing {
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4865,7 +4866,7 @@ namespace testing {
 		typename T11, typename T12, typename T13, typename T14, typename T15,
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4882,7 +4883,7 @@ namespace testing {
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4900,7 +4901,7 @@ namespace testing {
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4918,7 +4919,7 @@ namespace testing {
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4936,7 +4937,7 @@ namespace testing {
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4954,7 +4955,7 @@ namespace testing {
 		typename T16, typename T17, typename T18, typename T19, typename T20,
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4972,7 +4973,7 @@ namespace testing {
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -4990,7 +4991,7 @@ namespace testing {
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, internal::None, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5008,7 +5009,7 @@ namespace testing {
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5026,7 +5027,7 @@ namespace testing {
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5044,7 +5045,7 @@ namespace testing {
 		typename T21, typename T22, typename T23, typename T24, typename T25,
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, internal::None, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5062,7 +5063,7 @@ namespace testing {
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5080,7 +5081,7 @@ namespace testing {
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5098,7 +5099,7 @@ namespace testing {
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, internal::None, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5116,7 +5117,7 @@ namespace testing {
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5134,7 +5135,7 @@ namespace testing {
 		typename T26, typename T27, typename T28, typename T29, typename T30,
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5154,7 +5155,7 @@ namespace testing {
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5173,7 +5174,7 @@ namespace testing {
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, internal::None,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5192,7 +5193,7 @@ namespace testing {
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5211,7 +5212,7 @@ namespace testing {
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5230,7 +5231,7 @@ namespace testing {
 		typename T31, typename T32, typename T33, typename T34, typename T35,
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44, typename T45>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,
 		internal::None, internal::None, internal::None, internal::None,
@@ -5250,7 +5251,7 @@ namespace testing {
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44, typename T45,
 		typename T46>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,
 		T46, internal::None, internal::None, internal::None, internal::None> {
@@ -5269,7 +5270,7 @@ namespace testing {
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44, typename T45,
 		typename T46, typename T47>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,
 		T46, T47, internal::None, internal::None, internal::None> {
@@ -5288,7 +5289,7 @@ namespace testing {
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44, typename T45,
 		typename T46, typename T47, typename T48>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,
 		T46, T47, T48, internal::None, internal::None> {
@@ -5307,7 +5308,7 @@ namespace testing {
 		typename T36, typename T37, typename T38, typename T39, typename T40,
 		typename T41, typename T42, typename T43, typename T44, typename T45,
 		typename T46, typename T47, typename T48, typename T49>
-	struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
+		struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 		T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 		T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,
 		T46, T47, T48, T49, internal::None> {
@@ -5378,21 +5379,21 @@ namespace testing {
 
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4>
-		struct Templates4 {
+			struct Templates4 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates3<T2, T3, T4> Tail;
 		};
 
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5>
-		struct Templates5 {
+			struct Templates5 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates4<T2, T3, T4, T5> Tail;
 		};
 
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6>
-		struct Templates6 {
+			struct Templates6 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates5<T2, T3, T4, T5, T6> Tail;
 		};
@@ -5400,7 +5401,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7>
-		struct Templates7 {
+			struct Templates7 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates6<T2, T3, T4, T5, T6, T7> Tail;
 		};
@@ -5408,7 +5409,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8>
-		struct Templates8 {
+			struct Templates8 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates7<T2, T3, T4, T5, T6, T7, T8> Tail;
 		};
@@ -5416,7 +5417,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9>
-		struct Templates9 {
+			struct Templates9 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates8<T2, T3, T4, T5, T6, T7, T8, T9> Tail;
 		};
@@ -5425,7 +5426,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10>
-		struct Templates10 {
+			struct Templates10 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates9<T2, T3, T4, T5, T6, T7, T8, T9, T10> Tail;
 		};
@@ -5434,7 +5435,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11>
-		struct Templates11 {
+			struct Templates11 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates10<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> Tail;
 		};
@@ -5443,7 +5444,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12>
-		struct Templates12 {
+			struct Templates12 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates11<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> Tail;
 		};
@@ -5453,7 +5454,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13>
-		struct Templates13 {
+			struct Templates13 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates12<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> Tail;
 		};
@@ -5463,7 +5464,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14>
-		struct Templates14 {
+			struct Templates14 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates13<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 				T14> Tail;
@@ -5474,7 +5475,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15>
-		struct Templates15 {
+			struct Templates15 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates14<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15> Tail;
@@ -5486,7 +5487,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16>
-		struct Templates16 {
+			struct Templates16 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates15<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16> Tail;
@@ -5498,7 +5499,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17>
-		struct Templates17 {
+			struct Templates17 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates16<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17> Tail;
@@ -5510,7 +5511,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18>
-		struct Templates18 {
+			struct Templates18 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates17<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18> Tail;
@@ -5523,7 +5524,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19>
-		struct Templates19 {
+			struct Templates19 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates18<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19> Tail;
@@ -5536,7 +5537,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20>
-		struct Templates20 {
+			struct Templates20 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates19<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20> Tail;
@@ -5549,7 +5550,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21>
-		struct Templates21 {
+			struct Templates21 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates20<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21> Tail;
@@ -5563,7 +5564,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22>
-		struct Templates22 {
+			struct Templates22 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates21<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22> Tail;
@@ -5577,7 +5578,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23>
-		struct Templates23 {
+			struct Templates23 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates22<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23> Tail;
@@ -5591,7 +5592,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24>
-		struct Templates24 {
+			struct Templates24 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates23<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> Tail;
@@ -5606,7 +5607,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25>
-		struct Templates25 {
+			struct Templates25 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates24<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25> Tail;
@@ -5621,7 +5622,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26>
-		struct Templates26 {
+			struct Templates26 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates25<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26> Tail;
@@ -5636,7 +5637,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27>
-		struct Templates27 {
+			struct Templates27 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates26<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27> Tail;
@@ -5652,7 +5653,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28>
-		struct Templates28 {
+			struct Templates28 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates27<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27,
@@ -5669,7 +5670,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29>
-		struct Templates29 {
+			struct Templates29 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates28<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5686,7 +5687,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30>
-		struct Templates30 {
+			struct Templates30 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates29<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5704,7 +5705,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31>
-		struct Templates31 {
+			struct Templates31 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates30<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5722,7 +5723,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32>
-		struct Templates32 {
+			struct Templates32 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates31<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5740,7 +5741,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33>
-		struct Templates33 {
+			struct Templates33 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates32<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5759,7 +5760,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34>
-		struct Templates34 {
+			struct Templates34 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates33<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5778,7 +5779,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35>
-		struct Templates35 {
+			struct Templates35 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates34<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5797,7 +5798,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36>
-		struct Templates36 {
+			struct Templates36 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates35<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5817,7 +5818,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37>
-		struct Templates37 {
+			struct Templates37 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates36<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5837,7 +5838,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38>
-		struct Templates38 {
+			struct Templates38 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates37<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5857,7 +5858,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39>
-		struct Templates39 {
+			struct Templates39 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates38<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5878,7 +5879,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40>
-		struct Templates40 {
+			struct Templates40 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates39<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5899,7 +5900,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41>
-		struct Templates41 {
+			struct Templates41 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates40<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5920,7 +5921,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42>
-		struct Templates42 {
+			struct Templates42 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates41<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5943,7 +5944,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43>
-		struct Templates43 {
+			struct Templates43 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates42<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5966,7 +5967,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44>
-		struct Templates44 {
+			struct Templates44 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates43<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -5989,7 +5990,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45>
-		struct Templates45 {
+			struct Templates45 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates44<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6013,7 +6014,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46>
-		struct Templates46 {
+			struct Templates46 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates45<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6037,7 +6038,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47>
-		struct Templates47 {
+			struct Templates47 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates46<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6061,7 +6062,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47, GTEST_TEMPLATE_ T48>
-		struct Templates48 {
+			struct Templates48 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates47<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6086,7 +6087,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47, GTEST_TEMPLATE_ T48,
 			GTEST_TEMPLATE_ T49>
-		struct Templates49 {
+			struct Templates49 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates48<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6111,7 +6112,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47, GTEST_TEMPLATE_ T48,
 			GTEST_TEMPLATE_ T49, GTEST_TEMPLATE_ T50>
-		struct Templates50 {
+			struct Templates50 {
 			typedef TemplateSel<T1> Head;
 			typedef Templates49<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
@@ -6157,8 +6158,8 @@ namespace testing {
 			GTEST_TEMPLATE_ T43 = NoneT, GTEST_TEMPLATE_ T44 = NoneT,
 			GTEST_TEMPLATE_ T45 = NoneT, GTEST_TEMPLATE_ T46 = NoneT,
 			GTEST_TEMPLATE_ T47 = NoneT, GTEST_TEMPLATE_ T48 = NoneT,
-			GTEST_TEMPLATE_ T49 = NoneT, GTEST_TEMPLATE_ T50 = NoneT>
-		struct Templates {
+			GTEST_TEMPLATE_ T49 = NoneT, GTEST_TEMPLATE_ T50 = NoneT >
+			struct Templates {
 			typedef Templates50<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 				T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27,
 				T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
@@ -6202,7 +6203,7 @@ namespace testing {
 		};
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4>
-		struct Templates<T1, T2, T3, T4, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6211,7 +6212,7 @@ namespace testing {
 		};
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5>
-		struct Templates<T1, T2, T3, T4, T5, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6220,7 +6221,7 @@ namespace testing {
 		};
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6>
-		struct Templates<T1, T2, T3, T4, T5, T6, NoneT, NoneT, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6230,7 +6231,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, NoneT, NoneT, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6240,7 +6241,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, NoneT, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6250,7 +6251,7 @@ namespace testing {
 		template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3,
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6261,7 +6262,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, NoneT, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6272,7 +6273,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, NoneT, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6283,7 +6284,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5, GTEST_TEMPLATE_ T6,
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6295,7 +6296,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, NoneT,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6308,7 +6309,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6321,7 +6322,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9,
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6335,7 +6336,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6349,7 +6350,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6363,7 +6364,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T10, GTEST_TEMPLATE_ T11, GTEST_TEMPLATE_ T12,
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6378,7 +6379,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6393,7 +6394,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6408,7 +6409,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T13, GTEST_TEMPLATE_ T14, GTEST_TEMPLATE_ T15,
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6424,7 +6425,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6440,7 +6441,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6456,7 +6457,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T16, GTEST_TEMPLATE_ T17, GTEST_TEMPLATE_ T18,
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6473,7 +6474,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6490,7 +6491,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6507,7 +6508,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T19, GTEST_TEMPLATE_ T20, GTEST_TEMPLATE_ T21,
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6526,7 +6527,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6545,7 +6546,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
@@ -6564,7 +6565,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T22, GTEST_TEMPLATE_ T23, GTEST_TEMPLATE_ T24,
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6583,7 +6584,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6602,7 +6603,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6621,7 +6622,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T25, GTEST_TEMPLATE_ T26, GTEST_TEMPLATE_ T27,
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6641,7 +6642,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6661,7 +6662,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6681,7 +6682,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T28, GTEST_TEMPLATE_ T29, GTEST_TEMPLATE_ T30,
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6702,7 +6703,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, NoneT, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6723,7 +6724,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, NoneT, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6744,7 +6745,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T31, GTEST_TEMPLATE_ T32, GTEST_TEMPLATE_ T33,
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6766,7 +6767,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, NoneT, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6788,7 +6789,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, NoneT, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6811,7 +6812,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T34, GTEST_TEMPLATE_ T35, GTEST_TEMPLATE_ T36,
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, NoneT,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6835,7 +6836,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6859,7 +6860,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			NoneT, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6883,7 +6884,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T37, GTEST_TEMPLATE_ T38, GTEST_TEMPLATE_ T39,
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			T45, NoneT, NoneT, NoneT, NoneT, NoneT> {
@@ -6908,7 +6909,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			T45, T46, NoneT, NoneT, NoneT, NoneT> {
@@ -6933,7 +6934,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			T45, T46, T47, NoneT, NoneT, NoneT> {
@@ -6958,7 +6959,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T40, GTEST_TEMPLATE_ T41, GTEST_TEMPLATE_ T42,
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47, GTEST_TEMPLATE_ T48>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			T45, T46, T47, T48, NoneT, NoneT> {
@@ -6984,7 +6985,7 @@ namespace testing {
 			GTEST_TEMPLATE_ T43, GTEST_TEMPLATE_ T44, GTEST_TEMPLATE_ T45,
 			GTEST_TEMPLATE_ T46, GTEST_TEMPLATE_ T47, GTEST_TEMPLATE_ T48,
 			GTEST_TEMPLATE_ T49>
-		struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
+			struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 			T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29,
 			T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44,
 			T45, T46, T47, T48, T49, NoneT> {
@@ -7013,7 +7014,7 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48, typename T49, typename T50>
-		struct TypeList<Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
+			struct TypeList<Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13,
 			T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
 			T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
 			T44, T45, T46, T47, T48, T49, T50> > {
@@ -7030,14 +7031,14 @@ namespace testing {
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
 
-   // Due to C++ preprocessor weirdness, we need double indirection to
-   // concatenate two tokens when one of them is __LINE__.  Writing
-   //
-   //   foo ## __LINE__
-   //
-   // will result in the token foo__LINE__, instead of foo followed by
-   // the current line number.  For more details, see
-   // http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.6
+// Due to C++ preprocessor weirdness, we need double indirection to
+// concatenate two tokens when one of them is __LINE__.  Writing
+//
+//   foo ## __LINE__
+//
+// will result in the token foo__LINE__, instead of foo followed by
+// the current line number.  For more details, see
+// http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.6
 #define GTEST_CONCAT_TOKEN_(foo, bar) GTEST_CONCAT_TOKEN_IMPL_(foo, bar)
 #define GTEST_CONCAT_TOKEN_IMPL_(foo, bar) foo ## bar
 
@@ -7065,7 +7066,7 @@ namespace testing {
 		class TestInfoImpl;                    // Opaque implementation of TestInfo
 		class UnitTestImpl;                    // Opaque implementation of UnitTest
 
-											   // How many times InitGoogleTest() has been called.
+		// How many times InitGoogleTest() has been called.
 		GTEST_API_ extern int g_init_gtest_count;
 
 		// The text used in failure messages to indicate the start of the
@@ -7089,19 +7090,19 @@ namespace testing {
 		char IsNullLiteralHelper(Secret* p);
 		char(&IsNullLiteralHelper(...))[2];  // NOLINT
 
-											 // A compile-time bool constant that is true if and only if x is a
-											 // null pointer literal (i.e. NULL or any 0-valued compile-time
-											 // integral constant).
+		// A compile-time bool constant that is true if and only if x is a
+		// null pointer literal (i.e. NULL or any 0-valued compile-time
+		// integral constant).
 #ifdef GTEST_ELLIPSIS_NEEDS_POD_
-											 // We lose support for NULL detection where the compiler doesn't like
-											 // passing non-POD classes through ellipsis (...).
+// We lose support for NULL detection where the compiler doesn't like
+// passing non-POD classes through ellipsis (...).
 # define GTEST_IS_NULL_LITERAL_(x) false
 #else
 # define GTEST_IS_NULL_LITERAL_(x) \
     (sizeof(::testing::internal::IsNullLiteralHelper(x)) == 1)
 #endif  // GTEST_ELLIPSIS_NEEDS_POD_
 
-											 // Appends the user-supplied message to the Google-Test-generated message.
+// Appends the user-supplied message to the Google-Test-generated message.
 		GTEST_API_ std::string AppendUserMessage(
 			const std::string& gtest_msg, const Message& user_msg);
 
@@ -7139,21 +7140,21 @@ namespace testing {
 									// c'tor and d'tor.  Therefore it doesn't
 									// need to be used otherwise.
 
-									// Constructs and returns the message for an equality assertion
-									// (e.g. ASSERT_EQ, EXPECT_STREQ, etc) failure.
-									//
-									// The first four parameters are the expressions used in the assertion
-									// and their values, as strings.  For example, for ASSERT_EQ(foo, bar)
-									// where foo is 5 and bar is 6, we have:
-									//
-									//   expected_expression: "foo"
-									//   actual_expression:   "bar"
-									//   expected_value:      "5"
-									//   actual_value:        "6"
-									//
-									// The ignoring_case parameter is true iff the assertion is a
-									// *_STRCASEEQ*.  When it's true, the string " (ignoring case)" will
-									// be inserted into the message.
+		// Constructs and returns the message for an equality assertion
+		// (e.g. ASSERT_EQ, EXPECT_STREQ, etc) failure.
+		//
+		// The first four parameters are the expressions used in the assertion
+		// and their values, as strings.  For example, for ASSERT_EQ(foo, bar)
+		// where foo is 5 and bar is 6, we have:
+		//
+		//   expected_expression: "foo"
+		//   actual_expression:   "bar"
+		//   expected_value:      "5"
+		//   actual_value:        "6"
+		//
+		// The ignoring_case parameter is true iff the assertion is a
+		// *_STRCASEEQ*.  When it's true, the string " (ignoring case)" will
+		// be inserted into the message.
 		GTEST_API_ AssertionResult EqFailure(const char* expected_expression,
 			const char* actual_expression,
 			const std::string& expected_value,
@@ -7436,7 +7437,7 @@ namespace testing {
 
 #endif  // GTEST_OS_WINDOWS
 
-					   // Types of SetUpTestCase() and TearDownTestCase() functions.
+// Types of SetUpTestCase() and TearDownTestCase() functions.
 		typedef void(*SetUpTestCaseFunc)();
 		typedef void(*TearDownTestCaseFunc)();
 
@@ -7676,22 +7677,22 @@ namespace testing {
 		template <typename T>
 		struct RemoveReference<T&> { typedef T type; };  // NOLINT
 
-														 // A handy wrapper around RemoveReference that works when the argument
-														 // T depends on template parameters.
+		// A handy wrapper around RemoveReference that works when the argument
+		// T depends on template parameters.
 #define GTEST_REMOVE_REFERENCE_(T) \
     typename ::testing::internal::RemoveReference<T>::type
 
-														 // Removes const from a type if it is a const type, otherwise leaves
-														 // it unchanged.  This is the same as tr1::remove_const, which is not
-														 // widely available yet.
+// Removes const from a type if it is a const type, otherwise leaves
+// it unchanged.  This is the same as tr1::remove_const, which is not
+// widely available yet.
 		template <typename T>
 		struct RemoveConst { typedef T type; };  // NOLINT
 		template <typename T>
 		struct RemoveConst<const T> { typedef T type; };  // NOLINT
 
-														  // MSVC 8.0, Sun C++, and IBM XL C++ have a bug which causes the above
-														  // definition to fail to remove the const in 'const int[3]' and 'const
-														  // char[3][4]'.  The following specialization works around the bug.
+		// MSVC 8.0, Sun C++, and IBM XL C++ have a bug which causes the above
+		// definition to fail to remove the const in 'const int[3]' and 'const
+		// char[3][4]'.  The following specialization works around the bug.
 		template <typename T, size_t N>
 		struct RemoveConst<const T[N]> {
 			typedef typename RemoveConst<T>::type type[N];
@@ -7712,38 +7713,38 @@ namespace testing {
 #define GTEST_REMOVE_CONST_(T) \
     typename ::testing::internal::RemoveConst<T>::type
 
-		// Turns const U&, U&, const U, and U all into U.
+// Turns const U&, U&, const U, and U all into U.
 #define GTEST_REMOVE_REFERENCE_AND_CONST_(T) \
     GTEST_REMOVE_CONST_(GTEST_REMOVE_REFERENCE_(T))
 
-		// Adds reference to a type if it is not a reference type,
-		// otherwise leaves it unchanged.  This is the same as
-		// tr1::add_reference, which is not widely available yet.
+// Adds reference to a type if it is not a reference type,
+// otherwise leaves it unchanged.  This is the same as
+// tr1::add_reference, which is not widely available yet.
 		template <typename T>
 		struct AddReference { typedef T& type; };  // NOLINT
 		template <typename T>
 		struct AddReference<T&> { typedef T& type; };  // NOLINT
 
-													   // A handy wrapper around AddReference that works when the argument T
-													   // depends on template parameters.
+		// A handy wrapper around AddReference that works when the argument T
+		// depends on template parameters.
 #define GTEST_ADD_REFERENCE_(T) \
     typename ::testing::internal::AddReference<T>::type
 
-													   // Adds a reference to const on top of T as necessary.  For example,
-													   // it transforms
-													   //
-													   //   char         ==> const char&
-													   //   const char   ==> const char&
-													   //   char&        ==> const char&
-													   //   const char&  ==> const char&
-													   //
-													   // The argument T must depend on some template parameters.
+// Adds a reference to const on top of T as necessary.  For example,
+// it transforms
+//
+//   char         ==> const char&
+//   const char   ==> const char&
+//   char&        ==> const char&
+//   const char&  ==> const char&
+//
+// The argument T must depend on some template parameters.
 #define GTEST_REFERENCE_TO_CONST_(T) \
     GTEST_ADD_REFERENCE_(const GTEST_REMOVE_REFERENCE_(T))
 
-													   // ImplicitlyConvertible<From, To>::value is a compile-time bool
-													   // constant that's true iff type From can be implicitly converted to
-													   // type To.
+// ImplicitlyConvertible<From, To>::value is a compile-time bool
+// constant that's true iff type From can be implicitly converted to
+// type To.
 		template <typename From, typename To>
 		class ImplicitlyConvertible {
 		private:
@@ -7768,8 +7769,8 @@ namespace testing {
 			static char Helper(To);
 			static char(&Helper(...))[2];  // NOLINT
 
-										   // We have to put the 'public' section after the 'private' section,
-										   // or MSVC refuses to compile the code.
+			// We have to put the 'public' section after the 'private' section,
+			// or MSVC refuses to compile the code.
 		public:
 			// MSVC warns about implicitly converting from double to int for
 			// possible loss of data, so we need to temporarily disable the
@@ -7782,9 +7783,9 @@ namespace testing {
 				sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
 # pragma warning(pop)           // Restores the warning state.
 #elif defined(__BORLANDC__)
-			// C++Builder cannot use member overload resolution during template
-			// instantiation.  The simplest workaround is to use its C++0x type traits
-			// functions (C++Builder 2009 and above only).
+  // C++Builder cannot use member overload resolution during template
+  // instantiation.  The simplest workaround is to use its C++0x type traits
+  // functions (C++Builder 2009 and above only).
 			static const bool value = __is_convertible(From, To);
 #else
 			static const bool value =
@@ -7844,11 +7845,11 @@ namespace testing {
 		template<bool> struct EnableIf;
 		template<> struct EnableIf<true> { typedef void type; };  // NOLINT
 
-																  // Utilities for native arrays.
+		// Utilities for native arrays.
 
-																  // ArrayEq() compares two k-dimensional native arrays using the
-																  // elements' operator==, where k can be any integer >= 0.  When k is
-																  // 0, ArrayEq() degenerates into comparing a single pair of values.
+		// ArrayEq() compares two k-dimensional native arrays using the
+		// elements' operator==, where k can be any integer >= 0.  When k is
+		// 0, ArrayEq() degenerates into comparing a single pair of values.
 
 		template <typename T, typename U>
 		bool ArrayEq(const T* lhs, size_t size, const U* rhs);
@@ -8007,9 +8008,9 @@ namespace testing {
 #define GTEST_SUCCESS_(message) \
   GTEST_MESSAGE_(message, ::testing::TestPartResult::kSuccess)
 
-   // Suppresses MSVC warnings 4072 (unreachable code) for the code following
-   // statement if it returns or throws (or doesn't return or throw in some
-   // situations).
+// Suppresses MSVC warnings 4072 (unreachable code) for the code following
+// statement if it returns or throws (or doesn't return or throw in some
+// situations).
 #define GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement) \
   if (::testing::internal::AlwaysTrue()) { statement; }
 
@@ -8072,9 +8073,9 @@ namespace testing {
            "  Actual: it doesn't.")
 
 
-   // Implements Boolean test assertions such as EXPECT_TRUE. expression can be
-   // either a boolean expression or an AssertionResult. text is a textual
-   // represenation of expression as it was passed into the EXPECT_TRUE.
+// Implements Boolean test assertions such as EXPECT_TRUE. expression can be
+// either a boolean expression or an AssertionResult. text is a textual
+// represenation of expression as it was passed into the EXPECT_TRUE.
 #define GTEST_TEST_BOOLEAN_(expression, text, actual, expected, fail) \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (const ::testing::AssertionResult gtest_ar_ = \
@@ -8098,11 +8099,11 @@ namespace testing {
            "failures in the current thread.\n" \
            "  Actual: it does.")
 
-   // Expands to the name of the class that implements the given test.
+// Expands to the name of the class that implements the given test.
 #define GTEST_TEST_CLASS_NAME_(test_case_name, test_name) \
   test_case_name##_##test_name##_Test
 
-   // Helper macro for defining tests.
+// Helper macro for defining tests.
 #define GTEST_TEST_(test_case_name, test_name, parent_class, parent_id)\
 class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
  public:\
@@ -8126,81 +8127,81 @@ class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
 void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
-   // Copyright 2005, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
-   //
-   // The Google C++ Testing Framework (Google Test)
-   //
-   // This header file defines the public API for death tests.  It is
-   // #included by gtest.h so a user doesn't need to include this
-   // directly.
+// Copyright 2005, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
+//
+// The Google C++ Testing Framework (Google Test)
+//
+// This header file defines the public API for death tests.  It is
+// #included by gtest.h so a user doesn't need to include this
+// directly.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
 
-   // Copyright 2005, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
-   //
-   // The Google C++ Testing Framework (Google Test)
-   //
-   // This header file defines internal utilities needed for implementing
-   // death tests.  They are subject to change without notice.
+// Copyright 2005, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Authors: wan@google.com (Zhanyong Wan), eefacm@gmail.com (Sean Mcafee)
+//
+// The Google C++ Testing Framework (Google Test)
+//
+// This header file defines internal utilities needed for implementing
+// death tests.  They are subject to change without notice.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
@@ -8347,8 +8348,8 @@ namespace testing {
 
 # endif
 
-		// This macro is for implementing ASSERT_DEATH*, EXPECT_DEATH*,
-		// ASSERT_EXIT*, and EXPECT_EXIT*.
+// This macro is for implementing ASSERT_DEATH*, EXPECT_DEATH*,
+// ASSERT_EXIT*, and EXPECT_EXIT*.
 # define GTEST_DEATH_TEST_(statement, predicate, regex, fail) \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (::testing::internal::AlwaysTrue()) { \
@@ -8381,13 +8382,13 @@ namespace testing {
   } else \
     GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__): \
       fail(::testing::internal::DeathTest::LastMessage())
-		// The symbol "fail" here expands to something into which a message
-		// can be streamed.
+// The symbol "fail" here expands to something into which a message
+// can be streamed.
 
-		// This macro is for implementing ASSERT/EXPECT_DEBUG_DEATH when compiled in
-		// NDEBUG mode. In this case we need the statements to be executed, the regex is
-		// ignored, and the macro must accept a streamed message even though the message
-		// is never printed.
+// This macro is for implementing ASSERT/EXPECT_DEBUG_DEATH when compiled in
+// NDEBUG mode. In this case we need the statements to be executed, the regex is
+// ignored, and the macro must accept a streamed message even though the message
+// is never printed.
 # define GTEST_EXECUTE_STATEMENT_(statement, regex) \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
   if (::testing::internal::AlwaysTrue()) { \
@@ -8395,9 +8396,9 @@ namespace testing {
   } else \
     ::testing::Message()
 
-		// A class representing the parsed contents of the
-		// --gtest_internal_run_death_test flag, as it existed when
-		// RUN_ALL_TESTS was called.
+// A class representing the parsed contents of the
+// --gtest_internal_run_death_test flag, as it existed when
+// RUN_ALL_TESTS was called.
 		class InternalRunDeathTestFlag {
 		public:
 			InternalRunDeathTestFlag(const std::string& a_file,
@@ -8507,131 +8508,131 @@ namespace testing {
 
 	}  // namespace internal
 
-	   // The following macros are useful for writing death tests.
+	// The following macros are useful for writing death tests.
 
-	   // Here's what happens when an ASSERT_DEATH* or EXPECT_DEATH* is
-	   // executed:
-	   //
-	   //   1. It generates a warning if there is more than one active
-	   //   thread.  This is because it's safe to fork() or clone() only
-	   //   when there is a single thread.
-	   //
-	   //   2. The parent process clone()s a sub-process and runs the death
-	   //   test in it; the sub-process exits with code 0 at the end of the
-	   //   death test, if it hasn't exited already.
-	   //
-	   //   3. The parent process waits for the sub-process to terminate.
-	   //
-	   //   4. The parent process checks the exit code and error message of
-	   //   the sub-process.
-	   //
-	   // Examples:
-	   //
-	   //   ASSERT_DEATH(server.SendMessage(56, "Hello"), "Invalid port number");
-	   //   for (int i = 0; i < 5; i++) {
-	   //     EXPECT_DEATH(server.ProcessRequest(i),
-	   //                  "Invalid request .* in ProcessRequest()")
-	   //                  << "Failed to die on request " << i;
-	   //   }
-	   //
-	   //   ASSERT_EXIT(server.ExitNow(), ::testing::ExitedWithCode(0), "Exiting");
-	   //
-	   //   bool KilledBySIGHUP(int exit_code) {
-	   //     return WIFSIGNALED(exit_code) && WTERMSIG(exit_code) == SIGHUP;
-	   //   }
-	   //
-	   //   ASSERT_EXIT(client.HangUpServer(), KilledBySIGHUP, "Hanging up!");
-	   //
-	   // On the regular expressions used in death tests:
-	   //
-	   //   On POSIX-compliant systems (*nix), we use the <regex.h> library,
-	   //   which uses the POSIX extended regex syntax.
-	   //
-	   //   On other platforms (e.g. Windows), we only support a simple regex
-	   //   syntax implemented as part of Google Test.  This limited
-	   //   implementation should be enough most of the time when writing
-	   //   death tests; though it lacks many features you can find in PCRE
-	   //   or POSIX extended regex syntax.  For example, we don't support
-	   //   union ("x|y"), grouping ("(xy)"), brackets ("[xy]"), and
-	   //   repetition count ("x{5,7}"), among others.
-	   //
-	   //   Below is the syntax that we do support.  We chose it to be a
-	   //   subset of both PCRE and POSIX extended regex, so it's easy to
-	   //   learn wherever you come from.  In the following: 'A' denotes a
-	   //   literal character, period (.), or a single \\ escape sequence;
-	   //   'x' and 'y' denote regular expressions; 'm' and 'n' are for
-	   //   natural numbers.
-	   //
-	   //     c     matches any literal character c
-	   //     \\d   matches any decimal digit
-	   //     \\D   matches any character that's not a decimal digit
-	   //     \\f   matches \f
-	   //     \\n   matches \n
-	   //     \\r   matches \r
-	   //     \\s   matches any ASCII whitespace, including \n
-	   //     \\S   matches any character that's not a whitespace
-	   //     \\t   matches \t
-	   //     \\v   matches \v
-	   //     \\w   matches any letter, _, or decimal digit
-	   //     \\W   matches any character that \\w doesn't match
-	   //     \\c   matches any literal character c, which must be a punctuation
-	   //     .     matches any single character except \n
-	   //     A?    matches 0 or 1 occurrences of A
-	   //     A*    matches 0 or many occurrences of A
-	   //     A+    matches 1 or many occurrences of A
-	   //     ^     matches the beginning of a string (not that of each line)
-	   //     $     matches the end of a string (not that of each line)
-	   //     xy    matches x followed by y
-	   //
-	   //   If you accidentally use PCRE or POSIX extended regex features
-	   //   not implemented by us, you will get a run-time failure.  In that
-	   //   case, please try to rewrite your regular expression within the
-	   //   above syntax.
-	   //
-	   //   This implementation is *not* meant to be as highly tuned or robust
-	   //   as a compiled regex library, but should perform well enough for a
-	   //   death test, which already incurs significant overhead by launching
-	   //   a child process.
-	   //
-	   // Known caveats:
-	   //
-	   //   A "threadsafe" style death test obtains the path to the test
-	   //   program from argv[0] and re-executes it in the sub-process.  For
-	   //   simplicity, the current implementation doesn't search the PATH
-	   //   when launching the sub-process.  This means that the user must
-	   //   invoke the test program via a path that contains at least one
-	   //   path separator (e.g. path/to/foo_test and
-	   //   /absolute/path/to/bar_test are fine, but foo_test is not).  This
-	   //   is rarely a problem as people usually don't put the test binary
-	   //   directory in PATH.
-	   //
-	   // TODO(wan@google.com): make thread-safe death tests search the PATH.
+	// Here's what happens when an ASSERT_DEATH* or EXPECT_DEATH* is
+	// executed:
+	//
+	//   1. It generates a warning if there is more than one active
+	//   thread.  This is because it's safe to fork() or clone() only
+	//   when there is a single thread.
+	//
+	//   2. The parent process clone()s a sub-process and runs the death
+	//   test in it; the sub-process exits with code 0 at the end of the
+	//   death test, if it hasn't exited already.
+	//
+	//   3. The parent process waits for the sub-process to terminate.
+	//
+	//   4. The parent process checks the exit code and error message of
+	//   the sub-process.
+	//
+	// Examples:
+	//
+	//   ASSERT_DEATH(server.SendMessage(56, "Hello"), "Invalid port number");
+	//   for (int i = 0; i < 5; i++) {
+	//     EXPECT_DEATH(server.ProcessRequest(i),
+	//                  "Invalid request .* in ProcessRequest()")
+	//                  << "Failed to die on request " << i;
+	//   }
+	//
+	//   ASSERT_EXIT(server.ExitNow(), ::testing::ExitedWithCode(0), "Exiting");
+	//
+	//   bool KilledBySIGHUP(int exit_code) {
+	//     return WIFSIGNALED(exit_code) && WTERMSIG(exit_code) == SIGHUP;
+	//   }
+	//
+	//   ASSERT_EXIT(client.HangUpServer(), KilledBySIGHUP, "Hanging up!");
+	//
+	// On the regular expressions used in death tests:
+	//
+	//   On POSIX-compliant systems (*nix), we use the <regex.h> library,
+	//   which uses the POSIX extended regex syntax.
+	//
+	//   On other platforms (e.g. Windows), we only support a simple regex
+	//   syntax implemented as part of Google Test.  This limited
+	//   implementation should be enough most of the time when writing
+	//   death tests; though it lacks many features you can find in PCRE
+	//   or POSIX extended regex syntax.  For example, we don't support
+	//   union ("x|y"), grouping ("(xy)"), brackets ("[xy]"), and
+	//   repetition count ("x{5,7}"), among others.
+	//
+	//   Below is the syntax that we do support.  We chose it to be a
+	//   subset of both PCRE and POSIX extended regex, so it's easy to
+	//   learn wherever you come from.  In the following: 'A' denotes a
+	//   literal character, period (.), or a single \\ escape sequence;
+	//   'x' and 'y' denote regular expressions; 'm' and 'n' are for
+	//   natural numbers.
+	//
+	//     c     matches any literal character c
+	//     \\d   matches any decimal digit
+	//     \\D   matches any character that's not a decimal digit
+	//     \\f   matches \f
+	//     \\n   matches \n
+	//     \\r   matches \r
+	//     \\s   matches any ASCII whitespace, including \n
+	//     \\S   matches any character that's not a whitespace
+	//     \\t   matches \t
+	//     \\v   matches \v
+	//     \\w   matches any letter, _, or decimal digit
+	//     \\W   matches any character that \\w doesn't match
+	//     \\c   matches any literal character c, which must be a punctuation
+	//     .     matches any single character except \n
+	//     A?    matches 0 or 1 occurrences of A
+	//     A*    matches 0 or many occurrences of A
+	//     A+    matches 1 or many occurrences of A
+	//     ^     matches the beginning of a string (not that of each line)
+	//     $     matches the end of a string (not that of each line)
+	//     xy    matches x followed by y
+	//
+	//   If you accidentally use PCRE or POSIX extended regex features
+	//   not implemented by us, you will get a run-time failure.  In that
+	//   case, please try to rewrite your regular expression within the
+	//   above syntax.
+	//
+	//   This implementation is *not* meant to be as highly tuned or robust
+	//   as a compiled regex library, but should perform well enough for a
+	//   death test, which already incurs significant overhead by launching
+	//   a child process.
+	//
+	// Known caveats:
+	//
+	//   A "threadsafe" style death test obtains the path to the test
+	//   program from argv[0] and re-executes it in the sub-process.  For
+	//   simplicity, the current implementation doesn't search the PATH
+	//   when launching the sub-process.  This means that the user must
+	//   invoke the test program via a path that contains at least one
+	//   path separator (e.g. path/to/foo_test and
+	//   /absolute/path/to/bar_test are fine, but foo_test is not).  This
+	//   is rarely a problem as people usually don't put the test binary
+	//   directory in PATH.
+	//
+	// TODO(wan@google.com): make thread-safe death tests search the PATH.
 
-	   // Asserts that a given statement causes the program to exit, with an
-	   // integer exit status that satisfies predicate, and emitting error output
-	   // that matches regex.
+	// Asserts that a given statement causes the program to exit, with an
+	// integer exit status that satisfies predicate, and emitting error output
+	// that matches regex.
 # define ASSERT_EXIT(statement, predicate, regex) \
     GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_FATAL_FAILURE_)
 
-	   // Like ASSERT_EXIT, but continues on to successive tests in the
-	   // test case, if any:
+// Like ASSERT_EXIT, but continues on to successive tests in the
+// test case, if any:
 # define EXPECT_EXIT(statement, predicate, regex) \
     GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_NONFATAL_FAILURE_)
 
-	   // Asserts that a given statement causes the program to exit, either by
-	   // explicitly exiting with a nonzero exit code or being killed by a
-	   // signal, and emitting error output that matches regex.
+// Asserts that a given statement causes the program to exit, either by
+// explicitly exiting with a nonzero exit code or being killed by a
+// signal, and emitting error output that matches regex.
 # define ASSERT_DEATH(statement, regex) \
     ASSERT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
 
-	   // Like ASSERT_DEATH, but continues on to successive tests in the
-	   // test case, if any:
+// Like ASSERT_DEATH, but continues on to successive tests in the
+// test case, if any:
 # define EXPECT_DEATH(statement, regex) \
     EXPECT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
 
-	   // Two predicate classes that can be used in {ASSERT,EXPECT}_EXIT*:
+// Two predicate classes that can be used in {ASSERT,EXPECT}_EXIT*:
 
-	   // Tests that an exit code describes a normal exit with a given exit code.
+// Tests that an exit code describes a normal exit with a given exit code.
 	class GTEST_API_ ExitedWithCode {
 	public:
 		explicit ExitedWithCode(int exit_code);
@@ -8717,11 +8718,11 @@ namespace testing {
 # endif  // NDEBUG for EXPECT_DEBUG_DEATH
 #endif  // GTEST_HAS_DEATH_TEST
 
-	// EXPECT_DEATH_IF_SUPPORTED(statement, regex) and
-	// ASSERT_DEATH_IF_SUPPORTED(statement, regex) expand to real death tests if
-	// death tests are supported; otherwise they just issue a warning.  This is
-	// useful when you are combining death test assertions with normal test
-	// assertions in one test.
+// EXPECT_DEATH_IF_SUPPORTED(statement, regex) and
+// ASSERT_DEATH_IF_SUPPORTED(statement, regex) expand to real death tests if
+// death tests are supported; otherwise they just issue a warning.  This is
+// useful when you are combining death test assertions with normal test
+// assertions in one test.
 #if GTEST_HAS_DEATH_TEST
 # define EXPECT_DEATH_IF_SUPPORTED(statement, regex) \
     EXPECT_DEATH(statement, regex)
@@ -8737,64 +8738,64 @@ namespace testing {
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
-   // This file was GENERATED by command:
-   //     pump.py gtest-param-test.h.pump
-   // DO NOT EDIT BY HAND!!!
+// This file was GENERATED by command:
+//     pump.py gtest-param-test.h.pump
+// DO NOT EDIT BY HAND!!!
 
-   // Copyright 2008, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Authors: vladl@google.com (Vlad Losev)
-   //
-   // Macros and functions for implementing parameterized tests
-   // in Google C++ Testing Framework (Google Test)
-   //
-   // This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
-   //
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Authors: vladl@google.com (Vlad Losev)
+//
+// Macros and functions for implementing parameterized tests
+// in Google C++ Testing Framework (Google Test)
+//
+// This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
+//
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
 
 
-   // Value-parameterized tests allow you to test your code with different
-   // parameters without writing multiple copies of the same test.
-   //
-   // Here is how you use value-parameterized tests:
+// Value-parameterized tests allow you to test your code with different
+// parameters without writing multiple copies of the same test.
+//
+// Here is how you use value-parameterized tests:
 
 #if 0
 
-   // To write value-parameterized tests, first you should define a fixture
-   // class. It is usually derived from testing::TestWithParam<T> (see below for
-   // another inheritance scheme that's sometimes useful in more complicated
-   // class hierarchies), where the type of your parameter values.
-   // TestWithParam<T> is itself derived from testing::Test. T can be any
-   // copyable type. If it's a raw pointer, you are responsible for managing the
-   // lifespan of the pointed values.
+// To write value-parameterized tests, first you should define a fixture
+// class. It is usually derived from testing::TestWithParam<T> (see below for
+// another inheritance scheme that's sometimes useful in more complicated
+// class hierarchies), where the type of your parameter values.
+// TestWithParam<T> is itself derived from testing::Test. T can be any
+// copyable type. If it's a raw pointer, you are responsible for managing the
+// lifespan of the pointed values.
 
 class FooTest : public ::testing::TestWithParam<const char*> {
 	// You can implement all the usual class fixture members here.
@@ -9201,99 +9202,99 @@ namespace testing {
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
-   // Copyright 2007, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
 
-   // Google Test - The Google C++ Testing Framework
-   //
-   // This file implements a universal value printer that can print a
-   // value of any type T:
-   //
-   //   void ::testing::internal::UniversalPrinter<T>::Print(value, ostream_ptr);
-   //
-   // A user can teach this function how to print a class type T by
-   // defining either operator<<() or PrintTo() in the namespace that
-   // defines T.  More specifically, the FIRST defined function in the
-   // following list will be used (assuming T is defined in namespace
-   // foo):
-   //
-   //   1. foo::PrintTo(const T&, ostream*)
-   //   2. operator<<(ostream&, const T&) defined in either foo or the
-   //      global namespace.
-   //
-   // If none of the above is defined, it will print the debug string of
-   // the value if it is a protocol buffer, or print the raw bytes in the
-   // value otherwise.
-   //
-   // To aid debugging: when T is a reference type, the address of the
-   // value is also printed; when T is a (const) char pointer, both the
-   // pointer value and the NUL-terminated string it points to are
-   // printed.
-   //
-   // We also provide some convenient wrappers:
-   //
-   //   // Prints a value to a string.  For a (const or not) char
-   //   // pointer, the NUL-terminated string (but not the pointer) is
-   //   // printed.
-   //   std::string ::testing::PrintToString(const T& value);
-   //
-   //   // Prints a value tersely: for a reference type, the referenced
-   //   // value (but not the address) is printed; for a (const or not) char
-   //   // pointer, the NUL-terminated string (but not the pointer) is
-   //   // printed.
-   //   void ::testing::internal::UniversalTersePrint(const T& value, ostream*);
-   //
-   //   // Prints value using the type inferred by the compiler.  The difference
-   //   // from UniversalTersePrint() is that this function prints both the
-   //   // pointer and the NUL-terminated string for a (const or not) char pointer.
-   //   void ::testing::internal::UniversalPrint(const T& value, ostream*);
-   //
-   //   // Prints the fields of a tuple tersely to a string vector, one
-   //   // element for each field. Tuple support must be enabled in
-   //   // gtest-port.h.
-   //   std::vector<string> UniversalTersePrintTupleFieldsToStrings(
-   //       const Tuple& value);
-   //
-   // Known limitation:
-   //
-   // The print primitives print the elements of an STL-style container
-   // using the compiler-inferred type of *iter where iter is a
-   // const_iterator of the container.  When const_iterator is an input
-   // iterator but not a forward iterator, this inferred type may not
-   // match value_type, and the print output may be incorrect.  In
-   // practice, this is rarely a problem as for most containers
-   // const_iterator is a forward iterator.  We'll fix this if there's an
-   // actual need for it.  Note that this fix cannot rely on value_type
-   // being defined as many user-defined container types don't have
-   // value_type.
+// Google Test - The Google C++ Testing Framework
+//
+// This file implements a universal value printer that can print a
+// value of any type T:
+//
+//   void ::testing::internal::UniversalPrinter<T>::Print(value, ostream_ptr);
+//
+// A user can teach this function how to print a class type T by
+// defining either operator<<() or PrintTo() in the namespace that
+// defines T.  More specifically, the FIRST defined function in the
+// following list will be used (assuming T is defined in namespace
+// foo):
+//
+//   1. foo::PrintTo(const T&, ostream*)
+//   2. operator<<(ostream&, const T&) defined in either foo or the
+//      global namespace.
+//
+// If none of the above is defined, it will print the debug string of
+// the value if it is a protocol buffer, or print the raw bytes in the
+// value otherwise.
+//
+// To aid debugging: when T is a reference type, the address of the
+// value is also printed; when T is a (const) char pointer, both the
+// pointer value and the NUL-terminated string it points to are
+// printed.
+//
+// We also provide some convenient wrappers:
+//
+//   // Prints a value to a string.  For a (const or not) char
+//   // pointer, the NUL-terminated string (but not the pointer) is
+//   // printed.
+//   std::string ::testing::PrintToString(const T& value);
+//
+//   // Prints a value tersely: for a reference type, the referenced
+//   // value (but not the address) is printed; for a (const or not) char
+//   // pointer, the NUL-terminated string (but not the pointer) is
+//   // printed.
+//   void ::testing::internal::UniversalTersePrint(const T& value, ostream*);
+//
+//   // Prints value using the type inferred by the compiler.  The difference
+//   // from UniversalTersePrint() is that this function prints both the
+//   // pointer and the NUL-terminated string for a (const or not) char pointer.
+//   void ::testing::internal::UniversalPrint(const T& value, ostream*);
+//
+//   // Prints the fields of a tuple tersely to a string vector, one
+//   // element for each field. Tuple support must be enabled in
+//   // gtest-port.h.
+//   std::vector<string> UniversalTersePrintTupleFieldsToStrings(
+//       const Tuple& value);
+//
+// Known limitation:
+//
+// The print primitives print the elements of an STL-style container
+// using the compiler-inferred type of *iter where iter is a
+// const_iterator of the container.  When const_iterator is an input
+// iterator but not a forward iterator, this inferred type may not
+// match value_type, and the print output may be incorrect.  In
+// practice, this is rarely a problem as for most containers
+// const_iterator is a forward iterator.  We'll fix this if there's an
+// actual need for it.  Note that this fix cannot rely on value_type
+// being defined as many user-defined container types don't have
+// value_type.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
 #define GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
@@ -9322,7 +9323,7 @@ namespace testing {
 			kProtobuf,              // a protobuf type
 			kConvertibleToInteger,  // a type implicitly convertible to BiggestInt
 									// (e.g. a named or unnamed enum type)
-			kOtherType              // anything else
+									kOtherType              // anything else
 		};
 
 		// TypeWithoutFormatter<T, kTypeKind>::PrintValue(value, os) is called
@@ -9409,8 +9410,8 @@ namespace testing {
 	}  // namespace internal2
 }  // namespace testing
 
-   // This namespace MUST NOT BE NESTED IN ::testing, or the name look-up
-   // magic needed for implementing UniversalPrinter won't work.
+// This namespace MUST NOT BE NESTED IN ::testing, or the name look-up
+// magic needed for implementing UniversalPrinter won't work.
 namespace testing_internal {
 
 	// Used to print a value that is not an STL-style container when the
@@ -9430,19 +9431,19 @@ namespace testing_internal {
 		// gcc 3.3 fails to compile due to a compiler bug.
 		using namespace ::testing::internal2;  // NOLINT
 
-											   // Assuming T is defined in namespace foo, in the next statement,
-											   // the compiler will consider all of:
-											   //
-											   //   1. foo::operator<< (thanks to Koenig look-up),
-											   //   2. ::operator<< (as the current namespace is enclosed in ::),
-											   //   3. testing::internal2::operator<< (thanks to the using statement above).
-											   //
-											   // The operator<< whose type matches T best will be picked.
-											   //
-											   // We deliberately allow #2 to be a candidate, as sometimes it's
-											   // impossible to define #1 (e.g. when foo is ::std, defining
-											   // anything in it is undefined behavior unless you are a compiler
-											   // vendor.).
+		// Assuming T is defined in namespace foo, in the next statement,
+		// the compiler will consider all of:
+		//
+		//   1. foo::operator<< (thanks to Koenig look-up),
+		//   2. ::operator<< (as the current namespace is enclosed in ::),
+		//   3. testing::internal2::operator<< (thanks to the using statement above).
+		//
+		// The operator<< whose type matches T best will be picked.
+		//
+		// We deliberately allow #2 to be a candidate, as sometimes it's
+		// impossible to define #1 (e.g. when foo is ::std, defining
+		// anything in it is undefined behavior unless you are a compiler
+		// vendor.).
 		*os << value;
 	}
 
@@ -9474,7 +9475,7 @@ namespace testing {
 			*os << '{';
 			size_t count = 0;
 			for (typename C::const_iterator it = container.begin();
-			it != container.end(); ++it, ++count) {
+				it != container.end(); ++it, ++count) {
 				if (count > 0) {
 					*os << ',';
 					if (count == kMaxCount) {  // Enough has been printed.
@@ -9634,7 +9635,7 @@ namespace testing {
 		// wchar_t* would cause unsigned short* be printed as a wide string,
 		// possibly causing invalid memory accesses.
 #if !defined(_MSC_VER) || defined(_NATIVE_WCHAR_T_DEFINED)
-		// Overloads for wide C strings
+// Overloads for wide C strings
 		GTEST_API_ void PrintTo(const wchar_t* s, ::std::ostream* os);
 		inline void PrintTo(wchar_t* s, ::std::ostream* os) {
 			PrintTo(ImplicitCast_<const wchar_t*>(s), os);
@@ -9788,9 +9789,9 @@ namespace testing {
 # pragma warning(disable:4180)  // Temporarily disables warning 4180.
 #endif  // _MSC_VER
 
-			// Note: we deliberately don't call this PrintTo(), as that name
-			// conflicts with ::testing::internal::PrintTo in the body of the
-			// function.
+  // Note: we deliberately don't call this PrintTo(), as that name
+  // conflicts with ::testing::internal::PrintTo in the body of the
+  // function.
 			static void Print(const T& value, ::std::ostream* os) {
 				// By default, ::testing::internal::PrintTo() is used for printing
 				// the value.
@@ -10275,10 +10276,10 @@ namespace testing {
 		};  // class RangeGenerator
 
 
-			// Generates values from a pair of STL-style iterators. Used in the
-			// ValuesIn() function. The elements are copied from the source range
-			// since the source can be located on the stack, and the generator
-			// is likely to persist beyond that stack frame.
+		// Generates values from a pair of STL-style iterators. Used in the
+		// ValuesIn() function. The elements are copied from the source range
+		// since the source can be located on the stack, and the generator
+		// is likely to persist beyond that stack frame.
 		template <typename T>
 		class ValuesInIteratorRangeGenerator : public ParamGeneratorInterface<T> {
 		public:
@@ -10354,16 +10355,16 @@ namespace testing {
 				mutable scoped_ptr<const T> value_;
 			};  // class ValuesInIteratorRangeGenerator::Iterator
 
-				// No implementation - assignment is unsupported.
+			// No implementation - assignment is unsupported.
 			void operator=(const ValuesInIteratorRangeGenerator& other);
 
 			const ContainerType container_;
 		};  // class ValuesInIteratorRangeGenerator
 
-			// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
-			//
-			// Stores a parameter value and later creates tests parameterized with that
-			// value.
+		// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+		//
+		// Stores a parameter value and later creates tests parameterized with that
+		// value.
 		template <class TestClass>
 		class ParameterizedTestFactory : public TestFactoryBase {
 		public:
@@ -10501,7 +10502,7 @@ namespace testing {
 			// UnitTest has a guard to prevent from calling this method more then once.
 			virtual void RegisterTests() {
 				for (typename TestInfoContainer::iterator test_it = tests_.begin();
-				test_it != tests_.end(); ++test_it) {
+					test_it != tests_.end(); ++test_it) {
 					linked_ptr<TestInfo> test_info = *test_it;
 					for (typename InstantiationContainer::iterator gen_it =
 						instantiations_.begin(); gen_it != instantiations_.end();
@@ -10562,18 +10563,18 @@ namespace testing {
 			GTEST_DISALLOW_COPY_AND_ASSIGN_(ParameterizedTestCaseInfo);
 		};  // class ParameterizedTestCaseInfo
 
-			// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
-			//
-			// ParameterizedTestCaseRegistry contains a map of ParameterizedTestCaseInfoBase
-			// classes accessed by test case names. TEST_P and INSTANTIATE_TEST_CASE_P
-			// macros use it to locate their corresponding ParameterizedTestCaseInfo
-			// descriptors.
+		// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+		//
+		// ParameterizedTestCaseRegistry contains a map of ParameterizedTestCaseInfoBase
+		// classes accessed by test case names. TEST_P and INSTANTIATE_TEST_CASE_P
+		// macros use it to locate their corresponding ParameterizedTestCaseInfo
+		// descriptors.
 		class ParameterizedTestCaseRegistry {
 		public:
 			ParameterizedTestCaseRegistry() {}
 			~ParameterizedTestCaseRegistry() {
 				for (TestCaseInfoContainer::iterator it = test_case_infos_.begin();
-				it != test_case_infos_.end(); ++it) {
+					it != test_case_infos_.end(); ++it) {
 					delete *it;
 				}
 			}
@@ -10587,7 +10588,7 @@ namespace testing {
 				int line) {
 				ParameterizedTestCaseInfo<TestCase>* typed_test_info = NULL;
 				for (TestCaseInfoContainer::iterator it = test_case_infos_.begin();
-				it != test_case_infos_.end(); ++it) {
+					it != test_case_infos_.end(); ++it) {
 					if ((*it)->GetTestCaseName() == test_case_name) {
 						if ((*it)->GetTestCaseTypeId() != GetTypeId<TestCase>()) {
 							// Complain about incorrect usage of Google Test facilities
@@ -10614,7 +10615,7 @@ namespace testing {
 			}
 			void RegisterTests() {
 				for (TestCaseInfoContainer::iterator it = test_case_infos_.begin();
-				it != test_case_infos_.end(); ++it) {
+					it != test_case_infos_.end(); ++it) {
 					(*it)->RegisterTests();
 				}
 			}
@@ -10633,57 +10634,57 @@ namespace testing {
 #endif  //  GTEST_HAS_PARAM_TEST
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
-   // This file was GENERATED by command:
-   //     pump.py gtest-param-util-generated.h.pump
-   // DO NOT EDIT BY HAND!!!
+// This file was GENERATED by command:
+//     pump.py gtest-param-util-generated.h.pump
+// DO NOT EDIT BY HAND!!!
 
-   // Copyright 2008 Google Inc.
-   // All Rights Reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: vladl@google.com (Vlad Losev)
+// Copyright 2008 Google Inc.
+// All Rights Reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: vladl@google.com (Vlad Losev)
 
-   // Type and function utilities for implementing parameterized tests.
-   // This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
-   //
-   // Currently Google Test supports at most 50 arguments in Values,
-   // and at most 10 arguments in Combine. Please contact
-   // googletestframework@googlegroups.com if you need more.
-   // Please note that the number of arguments to Combine is limited
-   // by the maximum arity of the implementation of tr1::tuple which is
-   // currently set at 10.
+// Type and function utilities for implementing parameterized tests.
+// This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
+//
+// Currently Google Test supports at most 50 arguments in Values,
+// and at most 10 arguments in Combine. Please contact
+// googletestframework@googlegroups.com if you need more.
+// Please note that the number of arguments to Combine is limited
+// by the maximum arity of the implementation of tr1::tuple which is
+// currently set at 10.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 
-   // scripts/fuse_gtest.py depends on gtest's own header being #included
-   // *unconditionally*.  Therefore these #includes cannot be moved
-   // inside #if GTEST_HAS_PARAM_TEST.
+// scripts/fuse_gtest.py depends on gtest's own header being #included
+// *unconditionally*.  Therefore these #includes cannot be moved
+// inside #if GTEST_HAS_PARAM_TEST.
 
 #if GTEST_HAS_PARAM_TEST
 
@@ -10810,584 +10811,584 @@ namespace testing {
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6>
-		class ValueArray6 {
-		public:
-			ValueArray6(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6) {}
+			class ValueArray6 {
+			public:
+				ValueArray6(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray6& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray6& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7>
-		class ValueArray7 {
-		public:
-			ValueArray7(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7) {}
+			class ValueArray7 {
+			public:
+				ValueArray7(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray7& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray7& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8>
-		class ValueArray8 {
-		public:
-			ValueArray8(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7,
-				T8 v8) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8) {}
+			class ValueArray8 {
+			public:
+				ValueArray8(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7,
+					T8 v8) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray8& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray8& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9>
-		class ValueArray9 {
-		public:
-			ValueArray9(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8,
-				T9 v9) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9) {}
+			class ValueArray9 {
+			public:
+				ValueArray9(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8,
+					T9 v9) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray9& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray9& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10>
-		class ValueArray10 {
-		public:
-			ValueArray10(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10) {}
+			class ValueArray10 {
+			public:
+				ValueArray10(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray10& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray10& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11>
-		class ValueArray11 {
-		public:
-			ValueArray11(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
-				v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11) {}
+			class ValueArray11 {
+			public:
+				ValueArray11(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
+					v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray11& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray11& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12>
-		class ValueArray12 {
-		public:
-			ValueArray12(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
-				v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12) {}
+			class ValueArray12 {
+			public:
+				ValueArray12(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
+					v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray12& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray12& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13>
-		class ValueArray13 {
-		public:
-			ValueArray13(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
-				v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
-				v12_(v12), v13_(v13) {}
+			class ValueArray13 {
+			public:
+				ValueArray13(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
+					v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
+					v12_(v12), v13_(v13) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray13& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray13& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14>
-		class ValueArray14 {
-		public:
-			ValueArray14(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14) : v1_(v1), v2_(v2), v3_(v3),
-				v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14) {}
+			class ValueArray14 {
+			public:
+				ValueArray14(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14) : v1_(v1), v2_(v2), v3_(v3),
+					v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray14& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray14& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15>
-		class ValueArray15 {
-		public:
-			ValueArray15(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15) {}
+			class ValueArray15 {
+			public:
+				ValueArray15(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray15& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray15& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16>
-		class ValueArray16 {
-		public:
-			ValueArray16(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
-				v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
-				v16_(v16) {}
+			class ValueArray16 {
+			public:
+				ValueArray16(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
+					v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
+					v16_(v16) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray16& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray16& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17>
-		class ValueArray17 {
-		public:
-			ValueArray17(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16,
-				T17 v17) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17) {}
+			class ValueArray17 {
+			public:
+				ValueArray17(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16,
+					T17 v17) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray17& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray17& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18>
-		class ValueArray18 {
-		public:
-			ValueArray18(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18) {}
+			class ValueArray18 {
+			public:
+				ValueArray18(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray18& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray18& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19>
-		class ValueArray19 {
-		public:
-			ValueArray19(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
-				v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
-				v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19) {}
+			class ValueArray19 {
+			public:
+				ValueArray19(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
+					v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
+					v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray19& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray19& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10,
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20>
-		class ValueArray20 {
-		public:
-			ValueArray20(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
-				v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
-				v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
-				v19_(v19), v20_(v20) {}
+			class ValueArray20 {
+			public:
+				ValueArray20(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
+					v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
+					v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
+					v19_(v19), v20_(v20) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray20& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray20& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11395,53 +11396,53 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21>
-		class ValueArray21 {
-		public:
-			ValueArray21(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
-				v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
-				v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
-				v18_(v18), v19_(v19), v20_(v20), v21_(v21) {}
+			class ValueArray21 {
+			public:
+				ValueArray21(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
+					v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
+					v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
+					v18_(v18), v19_(v19), v20_(v20), v21_(v21) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray21& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray21& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11449,54 +11450,54 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22>
-		class ValueArray22 {
-		public:
-			ValueArray22(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22) : v1_(v1), v2_(v2), v3_(v3),
-				v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22) {}
+			class ValueArray22 {
+			public:
+				ValueArray22(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22) : v1_(v1), v2_(v2), v3_(v3),
+					v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray22& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray22& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11504,56 +11505,56 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23>
-		class ValueArray23 {
-		public:
-			ValueArray23(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23) {}
+			class ValueArray23 {
+			public:
+				ValueArray23(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray23& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray23& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11561,58 +11562,58 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24>
-		class ValueArray24 {
-		public:
-			ValueArray24(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
-				v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
-				v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
-				v22_(v22), v23_(v23), v24_(v24) {}
+			class ValueArray24 {
+			public:
+				ValueArray24(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
+					v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
+					v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
+					v22_(v22), v23_(v23), v24_(v24) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray24& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray24& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11620,59 +11621,59 @@ namespace testing {
 			typename T11, typename T12, typename T13, typename T14, typename T15,
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25>
-		class ValueArray25 {
-		public:
-			ValueArray25(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24,
-				T25 v25) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25) {}
+			class ValueArray25 {
+			public:
+				ValueArray25(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24,
+					T25 v25) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray25& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray25& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11681,60 +11682,60 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26>
-		class ValueArray26 {
-		public:
-			ValueArray26(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26) {}
+			class ValueArray26 {
+			public:
+				ValueArray26(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray26& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray26& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11743,63 +11744,63 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27>
-		class ValueArray27 {
-		public:
-			ValueArray27(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
-				v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
-				v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
-				v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
-				v26_(v26), v27_(v27) {}
+			class ValueArray27 {
+			public:
+				ValueArray27(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
+					v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
+					v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
+					v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
+					v26_(v26), v27_(v27) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray27& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray27& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11808,64 +11809,64 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28>
-		class ValueArray28 {
-		public:
-			ValueArray28(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
-				v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
-				v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
-				v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
-				v25_(v25), v26_(v26), v27_(v27), v28_(v28) {}
+			class ValueArray28 {
+			public:
+				ValueArray28(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
+					v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
+					v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
+					v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
+					v25_(v25), v26_(v26), v27_(v27), v28_(v28) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray28& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray28& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11874,65 +11875,65 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29>
-		class ValueArray29 {
-		public:
-			ValueArray29(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
-				v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
-				v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
-				v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
-				v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29) {}
+			class ValueArray29 {
+			public:
+				ValueArray29(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
+					v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
+					v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
+					v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
+					v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray29& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray29& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -11941,68 +11942,68 @@ namespace testing {
 			typename T16, typename T17, typename T18, typename T19, typename T20,
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30>
-		class ValueArray30 {
-		public:
-			ValueArray30(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30) : v1_(v1), v2_(v2), v3_(v3),
-				v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30) {}
+			class ValueArray30 {
+			public:
+				ValueArray30(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30) : v1_(v1), v2_(v2), v3_(v3),
+					v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray30& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray30& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12012,69 +12013,69 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31>
-		class ValueArray31 {
-		public:
-			ValueArray31(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30), v31_(v31) {}
+			class ValueArray31 {
+			public:
+				ValueArray31(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30), v31_(v31) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray31& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray31& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12084,70 +12085,70 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32>
-		class ValueArray32 {
-		public:
-			ValueArray32(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
-				v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
-				v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
-				v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
-				v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32) {}
+			class ValueArray32 {
+			public:
+				ValueArray32(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
+					v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
+					v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
+					v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
+					v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray32& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray32& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12157,73 +12158,73 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33>
-		class ValueArray33 {
-		public:
-			ValueArray33(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32,
-				T33 v33) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33) {}
+			class ValueArray33 {
+			public:
+				ValueArray33(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32,
+					T33 v33) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray33& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray33& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12233,74 +12234,74 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34>
-		class ValueArray34 {
-		public:
-			ValueArray34(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33), v34_(v34) {}
+			class ValueArray34 {
+			public:
+				ValueArray34(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33), v34_(v34) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray34& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray34& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12310,75 +12311,75 @@ namespace testing {
 			typename T21, typename T22, typename T23, typename T24, typename T25,
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35>
-		class ValueArray35 {
-		public:
-			ValueArray35(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
-				v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
-				v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
-				v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
-				v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31),
-				v32_(v32), v33_(v33), v34_(v34), v35_(v35) {}
+			class ValueArray35 {
+			public:
+				ValueArray35(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
+					v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
+					v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
+					v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
+					v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31),
+					v32_(v32), v33_(v33), v34_(v34), v35_(v35) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray35& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray35& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12389,77 +12390,77 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36>
-		class ValueArray36 {
-		public:
-			ValueArray36(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
-				v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
-				v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
-				v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
-				v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30),
-				v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36) {}
+			class ValueArray36 {
+			public:
+				ValueArray36(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
+					v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
+					v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
+					v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
+					v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30),
+					v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray36& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray36& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12470,79 +12471,79 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37>
-		class ValueArray37 {
-		public:
-			ValueArray37(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
-				v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
-				v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
-				v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
-				v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29),
-				v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35),
-				v36_(v36), v37_(v37) {}
+			class ValueArray37 {
+			public:
+				ValueArray37(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
+					v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
+					v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
+					v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
+					v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29),
+					v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35),
+					v36_(v36), v37_(v37) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray37& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray37& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12553,80 +12554,80 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38>
-		class ValueArray38 {
-		public:
-			ValueArray38(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38) : v1_(v1), v2_(v2), v3_(v3),
-				v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
-				v35_(v35), v36_(v36), v37_(v37), v38_(v38) {}
+			class ValueArray38 {
+			public:
+				ValueArray38(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38) : v1_(v1), v2_(v2), v3_(v3),
+					v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
+					v35_(v35), v36_(v36), v37_(v37), v38_(v38) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray38& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray38& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12637,82 +12638,82 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39>
-		class ValueArray39 {
-		public:
-			ValueArray39(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
-				v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39) {}
+			class ValueArray39 {
+			public:
+				ValueArray39(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
+					v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray39& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray39& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12723,84 +12724,84 @@ namespace testing {
 			typename T26, typename T27, typename T28, typename T29, typename T30,
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40>
-		class ValueArray40 {
-		public:
-			ValueArray40(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
-				v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
-				v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
-				v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
-				v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33),
-				v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39),
-				v40_(v40) {}
+			class ValueArray40 {
+			public:
+				ValueArray40(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
+					v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
+					v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
+					v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
+					v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33),
+					v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39),
+					v40_(v40) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray40& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray40& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12812,85 +12813,85 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41>
-		class ValueArray41 {
-		public:
-			ValueArray41(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40,
-				T41 v41) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
-				v39_(v39), v40_(v40), v41_(v41) {}
+			class ValueArray41 {
+			public:
+				ValueArray41(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40,
+					T41 v41) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
+					v39_(v39), v40_(v40), v41_(v41) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray41& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray41& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12902,87 +12903,87 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42>
-		class ValueArray42 {
-		public:
-			ValueArray42(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
-				v39_(v39), v40_(v40), v41_(v41), v42_(v42) {}
+			class ValueArray42 {
+			public:
+				ValueArray42(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
+					v39_(v39), v40_(v40), v41_(v41), v42_(v42) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray42& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray42& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -12994,88 +12995,88 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43>
-		class ValueArray43 {
-		public:
-			ValueArray43(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
-				v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
-				v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
-				v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
-				v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31),
-				v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37),
-				v38_(v38), v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43) {}
+			class ValueArray43 {
+			public:
+				ValueArray43(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6),
+					v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13),
+					v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19),
+					v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25),
+					v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31),
+					v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37),
+					v38_(v38), v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray43& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray43& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13087,90 +13088,90 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44>
-		class ValueArray44 {
-		public:
-			ValueArray44(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
-				v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
-				v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
-				v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
-				v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30),
-				v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36),
-				v37_(v37), v38_(v38), v39_(v39), v40_(v40), v41_(v41), v42_(v42),
-				v43_(v43), v44_(v44) {}
+			class ValueArray44 {
+			public:
+				ValueArray44(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5),
+					v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12),
+					v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17), v18_(v18),
+					v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23), v24_(v24),
+					v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29), v30_(v30),
+					v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35), v36_(v36),
+					v37_(v37), v38_(v38), v39_(v39), v40_(v40), v41_(v41), v42_(v42),
+					v43_(v43), v44_(v44) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray44& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray44& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13182,92 +13183,92 @@ namespace testing {
 			typename T31, typename T32, typename T33, typename T34, typename T35,
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45>
-		class ValueArray45 {
-		public:
-			ValueArray45(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
-				v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
-				v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
-				v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
-				v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29),
-				v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35),
-				v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40), v41_(v41),
-				v42_(v42), v43_(v43), v44_(v44), v45_(v45) {}
+			class ValueArray45 {
+			public:
+				ValueArray45(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45) : v1_(v1), v2_(v2), v3_(v3), v4_(v4),
+					v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10), v11_(v11),
+					v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16), v17_(v17),
+					v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22), v23_(v23),
+					v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28), v29_(v29),
+					v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34), v35_(v35),
+					v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40), v41_(v41),
+					v42_(v42), v43_(v43), v44_(v44), v45_(v45) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray45& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray45& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13280,93 +13281,93 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46>
-		class ValueArray46 {
-		public:
-			ValueArray46(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45, T46 v46) : v1_(v1), v2_(v2), v3_(v3),
-				v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
-				v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40),
-				v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45), v46_(v46) {}
+			class ValueArray46 {
+			public:
+				ValueArray46(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45, T46 v46) : v1_(v1), v2_(v2), v3_(v3),
+					v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
+					v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40),
+					v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45), v46_(v46) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_), static_cast<T>(v46_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_), static_cast<T>(v46_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray46& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray46& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
-			const T46 v46_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
+				const T46 v46_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13379,95 +13380,95 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47>
-		class ValueArray47 {
-		public:
-			ValueArray47(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47) : v1_(v1), v2_(v2),
-				v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
-				v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
-				v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
-				v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
-				v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
-				v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40),
-				v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45), v46_(v46),
-				v47_(v47) {}
+			class ValueArray47 {
+			public:
+				ValueArray47(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47) : v1_(v1), v2_(v2),
+					v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9), v10_(v10),
+					v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15), v16_(v16),
+					v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21), v22_(v22),
+					v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27), v28_(v28),
+					v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33), v34_(v34),
+					v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39), v40_(v40),
+					v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45), v46_(v46),
+					v47_(v47) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray47& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray47& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
-			const T46 v46_;
-			const T47 v47_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
+				const T46 v46_;
+				const T47 v47_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13480,97 +13481,97 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48>
-		class ValueArray48 {
-		public:
-			ValueArray48(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48) : v1_(v1),
-				v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
-				v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
-				v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
-				v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
-				v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33),
-				v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39),
-				v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45),
-				v46_(v46), v47_(v47), v48_(v48) {}
+			class ValueArray48 {
+			public:
+				ValueArray48(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48) : v1_(v1),
+					v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7), v8_(v8), v9_(v9),
+					v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14), v15_(v15),
+					v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20), v21_(v21),
+					v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26), v27_(v27),
+					v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32), v33_(v33),
+					v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38), v39_(v39),
+					v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44), v45_(v45),
+					v46_(v46), v47_(v47), v48_(v48) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
-					static_cast<T>(v48_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
+						static_cast<T>(v48_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray48& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray48& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
-			const T46 v46_;
-			const T47 v47_;
-			const T48 v48_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
+				const T46 v46_;
+				const T47 v47_;
+				const T48 v48_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13583,98 +13584,98 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48, typename T49>
-		class ValueArray49 {
-		public:
-			ValueArray49(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48,
-				T49 v49) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
-				v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44),
-				v45_(v45), v46_(v46), v47_(v47), v48_(v48), v49_(v49) {}
+			class ValueArray49 {
+			public:
+				ValueArray49(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48,
+					T49 v49) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
+					v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44),
+					v45_(v45), v46_(v46), v47_(v47), v48_(v48), v49_(v49) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
-					static_cast<T>(v48_), static_cast<T>(v49_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
+						static_cast<T>(v48_), static_cast<T>(v49_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray49& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray49& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
-			const T46 v46_;
-			const T47 v47_;
-			const T48 v48_;
-			const T49 v49_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
+				const T46 v46_;
+				const T47 v47_;
+				const T48 v48_;
+				const T49 v49_;
 		};
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
@@ -13687,99 +13688,99 @@ namespace testing {
 			typename T36, typename T37, typename T38, typename T39, typename T40,
 			typename T41, typename T42, typename T43, typename T44, typename T45,
 			typename T46, typename T47, typename T48, typename T49, typename T50>
-		class ValueArray50 {
-		public:
-			ValueArray50(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
-				T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
-				T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
-				T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
-				T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
-				T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48, T49 v49,
-				T50 v50) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
-				v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
-				v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
-				v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
-				v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
-				v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
-				v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44),
-				v45_(v45), v46_(v46), v47_(v47), v48_(v48), v49_(v49), v50_(v50) {}
+			class ValueArray50 {
+			public:
+				ValueArray50(T1 v1, T2 v2, T3 v3, T4 v4, T5 v5, T6 v6, T7 v7, T8 v8, T9 v9,
+					T10 v10, T11 v11, T12 v12, T13 v13, T14 v14, T15 v15, T16 v16, T17 v17,
+					T18 v18, T19 v19, T20 v20, T21 v21, T22 v22, T23 v23, T24 v24, T25 v25,
+					T26 v26, T27 v27, T28 v28, T29 v29, T30 v30, T31 v31, T32 v32, T33 v33,
+					T34 v34, T35 v35, T36 v36, T37 v37, T38 v38, T39 v39, T40 v40, T41 v41,
+					T42 v42, T43 v43, T44 v44, T45 v45, T46 v46, T47 v47, T48 v48, T49 v49,
+					T50 v50) : v1_(v1), v2_(v2), v3_(v3), v4_(v4), v5_(v5), v6_(v6), v7_(v7),
+					v8_(v8), v9_(v9), v10_(v10), v11_(v11), v12_(v12), v13_(v13), v14_(v14),
+					v15_(v15), v16_(v16), v17_(v17), v18_(v18), v19_(v19), v20_(v20),
+					v21_(v21), v22_(v22), v23_(v23), v24_(v24), v25_(v25), v26_(v26),
+					v27_(v27), v28_(v28), v29_(v29), v30_(v30), v31_(v31), v32_(v32),
+					v33_(v33), v34_(v34), v35_(v35), v36_(v36), v37_(v37), v38_(v38),
+					v39_(v39), v40_(v40), v41_(v41), v42_(v42), v43_(v43), v44_(v44),
+					v45_(v45), v46_(v46), v47_(v47), v48_(v48), v49_(v49), v50_(v50) {}
 
-			template <typename T>
-			operator ParamGenerator<T>() const {
-				const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
-					static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
-					static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
-					static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
-					static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
-					static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
-					static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
-					static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
-					static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
-					static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
-					static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
-					static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
-					static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
-					static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
-					static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
-					static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
-					static_cast<T>(v48_), static_cast<T>(v49_), static_cast<T>(v50_) };
-				return ValuesIn(array);
-			}
+				template <typename T>
+				operator ParamGenerator<T>() const {
+					const T array[] = { static_cast<T>(v1_), static_cast<T>(v2_),
+						static_cast<T>(v3_), static_cast<T>(v4_), static_cast<T>(v5_),
+						static_cast<T>(v6_), static_cast<T>(v7_), static_cast<T>(v8_),
+						static_cast<T>(v9_), static_cast<T>(v10_), static_cast<T>(v11_),
+						static_cast<T>(v12_), static_cast<T>(v13_), static_cast<T>(v14_),
+						static_cast<T>(v15_), static_cast<T>(v16_), static_cast<T>(v17_),
+						static_cast<T>(v18_), static_cast<T>(v19_), static_cast<T>(v20_),
+						static_cast<T>(v21_), static_cast<T>(v22_), static_cast<T>(v23_),
+						static_cast<T>(v24_), static_cast<T>(v25_), static_cast<T>(v26_),
+						static_cast<T>(v27_), static_cast<T>(v28_), static_cast<T>(v29_),
+						static_cast<T>(v30_), static_cast<T>(v31_), static_cast<T>(v32_),
+						static_cast<T>(v33_), static_cast<T>(v34_), static_cast<T>(v35_),
+						static_cast<T>(v36_), static_cast<T>(v37_), static_cast<T>(v38_),
+						static_cast<T>(v39_), static_cast<T>(v40_), static_cast<T>(v41_),
+						static_cast<T>(v42_), static_cast<T>(v43_), static_cast<T>(v44_),
+						static_cast<T>(v45_), static_cast<T>(v46_), static_cast<T>(v47_),
+						static_cast<T>(v48_), static_cast<T>(v49_), static_cast<T>(v50_) };
+					return ValuesIn(array);
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const ValueArray50& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const ValueArray50& other);
 
-			const T1 v1_;
-			const T2 v2_;
-			const T3 v3_;
-			const T4 v4_;
-			const T5 v5_;
-			const T6 v6_;
-			const T7 v7_;
-			const T8 v8_;
-			const T9 v9_;
-			const T10 v10_;
-			const T11 v11_;
-			const T12 v12_;
-			const T13 v13_;
-			const T14 v14_;
-			const T15 v15_;
-			const T16 v16_;
-			const T17 v17_;
-			const T18 v18_;
-			const T19 v19_;
-			const T20 v20_;
-			const T21 v21_;
-			const T22 v22_;
-			const T23 v23_;
-			const T24 v24_;
-			const T25 v25_;
-			const T26 v26_;
-			const T27 v27_;
-			const T28 v28_;
-			const T29 v29_;
-			const T30 v30_;
-			const T31 v31_;
-			const T32 v32_;
-			const T33 v33_;
-			const T34 v34_;
-			const T35 v35_;
-			const T36 v36_;
-			const T37 v37_;
-			const T38 v38_;
-			const T39 v39_;
-			const T40 v40_;
-			const T41 v41_;
-			const T42 v42_;
-			const T43 v43_;
-			const T44 v44_;
-			const T45 v45_;
-			const T46 v46_;
-			const T47 v47_;
-			const T48 v48_;
-			const T49 v49_;
-			const T50 v50_;
+				const T1 v1_;
+				const T2 v2_;
+				const T3 v3_;
+				const T4 v4_;
+				const T5 v5_;
+				const T6 v6_;
+				const T7 v7_;
+				const T8 v8_;
+				const T9 v9_;
+				const T10 v10_;
+				const T11 v11_;
+				const T12 v12_;
+				const T13 v13_;
+				const T14 v14_;
+				const T15 v15_;
+				const T16 v16_;
+				const T17 v17_;
+				const T18 v18_;
+				const T19 v19_;
+				const T20 v20_;
+				const T21 v21_;
+				const T22 v22_;
+				const T23 v23_;
+				const T24 v24_;
+				const T25 v25_;
+				const T26 v26_;
+				const T27 v27_;
+				const T28 v28_;
+				const T29 v29_;
+				const T30 v30_;
+				const T31 v31_;
+				const T32 v32_;
+				const T33 v33_;
+				const T34 v34_;
+				const T35 v35_;
+				const T36 v36_;
+				const T37 v37_;
+				const T38 v38_;
+				const T39 v39_;
+				const T40 v40_;
+				const T41 v41_;
+				const T42 v42_;
+				const T43 v43_;
+				const T44 v44_;
+				const T45 v45_;
+				const T46 v46_;
+				const T47 v47_;
+				const T48 v48_;
+				const T49 v49_;
+				const T50 v50_;
 		};
 
 # if GTEST_HAS_COMBINE
@@ -13895,7 +13896,7 @@ namespace testing {
 				ParamType current_value_;
 			};  // class CartesianProductGenerator2::Iterator
 
-				// No implementation - assignment is unsupported.
+			// No implementation - assignment is unsupported.
 			void operator=(const CartesianProductGenerator2& other);
 
 			const ParamGenerator<T1> g1_;
@@ -14026,7 +14027,7 @@ namespace testing {
 				ParamType current_value_;
 			};  // class CartesianProductGenerator3::Iterator
 
-				// No implementation - assignment is unsupported.
+			// No implementation - assignment is unsupported.
 			void operator=(const CartesianProductGenerator3& other);
 
 			const ParamGenerator<T1> g1_;
@@ -14176,7 +14177,7 @@ namespace testing {
 				ParamType current_value_;
 			};  // class CartesianProductGenerator4::Iterator
 
-				// No implementation - assignment is unsupported.
+			// No implementation - assignment is unsupported.
 			void operator=(const CartesianProductGenerator4& other);
 
 			const ParamGenerator<T1> g1_;
@@ -14342,7 +14343,7 @@ namespace testing {
 				ParamType current_value_;
 			};  // class CartesianProductGenerator5::Iterator
 
-				// No implementation - assignment is unsupported.
+			// No implementation - assignment is unsupported.
 			void operator=(const CartesianProductGenerator5& other);
 
 			const ParamGenerator<T1> g1_;
@@ -14355,1116 +14356,1116 @@ namespace testing {
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6>
-		class CartesianProductGenerator6
+			class CartesianProductGenerator6
 			: public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5,
 			T6> > {
-		public:
-			typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> ParamType;
-
-			CartesianProductGenerator6(const ParamGenerator<T1>& g1,
-				const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
-				const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
-				const ParamGenerator<T6>& g6)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6) {}
-			virtual ~CartesianProductGenerator6() {}
-
-			virtual ParamIteratorInterface<ParamType>* Begin() const {
-				return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
-					g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin());
-			}
-			virtual ParamIteratorInterface<ParamType>* End() const {
-				return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
-					g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end());
-			}
-
-		private:
-			class Iterator : public ParamIteratorInterface<ParamType> {
 			public:
-				Iterator(const ParamGeneratorInterface<ParamType>* base,
-					const ParamGenerator<T1>& g1,
-					const typename ParamGenerator<T1>::iterator& current1,
-					const ParamGenerator<T2>& g2,
-					const typename ParamGenerator<T2>::iterator& current2,
-					const ParamGenerator<T3>& g3,
-					const typename ParamGenerator<T3>::iterator& current3,
-					const ParamGenerator<T4>& g4,
-					const typename ParamGenerator<T4>::iterator& current4,
-					const ParamGenerator<T5>& g5,
-					const typename ParamGenerator<T5>::iterator& current5,
-					const ParamGenerator<T6>& g6,
-					const typename ParamGenerator<T6>::iterator& current6)
-					: base_(base),
-					begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
-					begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
-					begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
-					begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
-					begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
-					begin6_(g6.begin()), end6_(g6.end()), current6_(current6) {
-					ComputeCurrentValue();
-				}
-				virtual ~Iterator() {}
+				typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> ParamType;
 
-				virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
-					return base_;
+				CartesianProductGenerator6(const ParamGenerator<T1>& g1,
+					const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
+					const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
+					const ParamGenerator<T6>& g6)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6) {}
+				virtual ~CartesianProductGenerator6() {}
+
+				virtual ParamIteratorInterface<ParamType>* Begin() const {
+					return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
+						g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin());
 				}
-				// Advance should not be called on beyond-of-range iterators
-				// so no component iterators must be beyond end of range, either.
-				virtual void Advance() {
-					assert(!AtEnd());
-					++current6_;
-					if (current6_ == end6_) {
-						current6_ = begin6_;
-						++current5_;
-					}
-					if (current5_ == end5_) {
-						current5_ = begin5_;
-						++current4_;
-					}
-					if (current4_ == end4_) {
-						current4_ = begin4_;
-						++current3_;
-					}
-					if (current3_ == end3_) {
-						current3_ = begin3_;
-						++current2_;
-					}
-					if (current2_ == end2_) {
-						current2_ = begin2_;
-						++current1_;
-					}
-					ComputeCurrentValue();
-				}
-				virtual ParamIteratorInterface<ParamType>* Clone() const {
-					return new Iterator(*this);
-				}
-				virtual const ParamType* Current() const { return &current_value_; }
-				virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
-					// Having the same base generator guarantees that the other
-					// iterator is of the same type and we can downcast.
-					GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
-						<< "The program attempted to compare iterators "
-						<< "from different generators." << std::endl;
-					const Iterator* typed_other =
-						CheckedDowncastToActualType<const Iterator>(&other);
-					// We must report iterators equal if they both point beyond their
-					// respective ranges. That can happen in a variety of fashions,
-					// so we have to consult AtEnd().
-					return (AtEnd() && typed_other->AtEnd()) ||
-						(
-							current1_ == typed_other->current1_ &&
-							current2_ == typed_other->current2_ &&
-							current3_ == typed_other->current3_ &&
-							current4_ == typed_other->current4_ &&
-							current5_ == typed_other->current5_ &&
-							current6_ == typed_other->current6_);
+				virtual ParamIteratorInterface<ParamType>* End() const {
+					return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
+						g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end());
 				}
 
 			private:
-				Iterator(const Iterator& other)
-					: base_(other.base_),
-					begin1_(other.begin1_),
-					end1_(other.end1_),
-					current1_(other.current1_),
-					begin2_(other.begin2_),
-					end2_(other.end2_),
-					current2_(other.current2_),
-					begin3_(other.begin3_),
-					end3_(other.end3_),
-					current3_(other.current3_),
-					begin4_(other.begin4_),
-					end4_(other.end4_),
-					current4_(other.current4_),
-					begin5_(other.begin5_),
-					end5_(other.end5_),
-					current5_(other.current5_),
-					begin6_(other.begin6_),
-					end6_(other.end6_),
-					current6_(other.current6_) {
-					ComputeCurrentValue();
-				}
+				class Iterator : public ParamIteratorInterface<ParamType> {
+				public:
+					Iterator(const ParamGeneratorInterface<ParamType>* base,
+						const ParamGenerator<T1>& g1,
+						const typename ParamGenerator<T1>::iterator& current1,
+						const ParamGenerator<T2>& g2,
+						const typename ParamGenerator<T2>::iterator& current2,
+						const ParamGenerator<T3>& g3,
+						const typename ParamGenerator<T3>::iterator& current3,
+						const ParamGenerator<T4>& g4,
+						const typename ParamGenerator<T4>::iterator& current4,
+						const ParamGenerator<T5>& g5,
+						const typename ParamGenerator<T5>::iterator& current5,
+						const ParamGenerator<T6>& g6,
+						const typename ParamGenerator<T6>::iterator& current6)
+						: base_(base),
+						begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
+						begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
+						begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
+						begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
+						begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
+						begin6_(g6.begin()), end6_(g6.end()), current6_(current6) {
+						ComputeCurrentValue();
+					}
+					virtual ~Iterator() {}
 
-				void ComputeCurrentValue() {
-					if (!AtEnd())
-						current_value_ = ParamType(*current1_, *current2_, *current3_,
-							*current4_, *current5_, *current6_);
-				}
-				bool AtEnd() const {
-					// We must report iterator past the end of the range when either of the
-					// component iterators has reached the end of its range.
-					return
-						current1_ == end1_ ||
-						current2_ == end2_ ||
-						current3_ == end3_ ||
-						current4_ == end4_ ||
-						current5_ == end5_ ||
-						current6_ == end6_;
-				}
+					virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
+						return base_;
+					}
+					// Advance should not be called on beyond-of-range iterators
+					// so no component iterators must be beyond end of range, either.
+					virtual void Advance() {
+						assert(!AtEnd());
+						++current6_;
+						if (current6_ == end6_) {
+							current6_ = begin6_;
+							++current5_;
+						}
+						if (current5_ == end5_) {
+							current5_ = begin5_;
+							++current4_;
+						}
+						if (current4_ == end4_) {
+							current4_ = begin4_;
+							++current3_;
+						}
+						if (current3_ == end3_) {
+							current3_ = begin3_;
+							++current2_;
+						}
+						if (current2_ == end2_) {
+							current2_ = begin2_;
+							++current1_;
+						}
+						ComputeCurrentValue();
+					}
+					virtual ParamIteratorInterface<ParamType>* Clone() const {
+						return new Iterator(*this);
+					}
+					virtual const ParamType* Current() const { return &current_value_; }
+					virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
+						// Having the same base generator guarantees that the other
+						// iterator is of the same type and we can downcast.
+						GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
+							<< "The program attempted to compare iterators "
+							<< "from different generators." << std::endl;
+						const Iterator* typed_other =
+							CheckedDowncastToActualType<const Iterator>(&other);
+						// We must report iterators equal if they both point beyond their
+						// respective ranges. That can happen in a variety of fashions,
+						// so we have to consult AtEnd().
+						return (AtEnd() && typed_other->AtEnd()) ||
+							(
+								current1_ == typed_other->current1_ &&
+								current2_ == typed_other->current2_ &&
+								current3_ == typed_other->current3_ &&
+								current4_ == typed_other->current4_ &&
+								current5_ == typed_other->current5_ &&
+								current6_ == typed_other->current6_);
+					}
+
+				private:
+					Iterator(const Iterator& other)
+						: base_(other.base_),
+						begin1_(other.begin1_),
+						end1_(other.end1_),
+						current1_(other.current1_),
+						begin2_(other.begin2_),
+						end2_(other.end2_),
+						current2_(other.current2_),
+						begin3_(other.begin3_),
+						end3_(other.end3_),
+						current3_(other.current3_),
+						begin4_(other.begin4_),
+						end4_(other.end4_),
+						current4_(other.current4_),
+						begin5_(other.begin5_),
+						end5_(other.end5_),
+						current5_(other.current5_),
+						begin6_(other.begin6_),
+						end6_(other.end6_),
+						current6_(other.current6_) {
+						ComputeCurrentValue();
+					}
+
+					void ComputeCurrentValue() {
+						if (!AtEnd())
+							current_value_ = ParamType(*current1_, *current2_, *current3_,
+								*current4_, *current5_, *current6_);
+					}
+					bool AtEnd() const {
+						// We must report iterator past the end of the range when either of the
+						// component iterators has reached the end of its range.
+						return
+							current1_ == end1_ ||
+							current2_ == end2_ ||
+							current3_ == end3_ ||
+							current4_ == end4_ ||
+							current5_ == end5_ ||
+							current6_ == end6_;
+					}
+
+					// No implementation - assignment is unsupported.
+					void operator=(const Iterator& other);
+
+					const ParamGeneratorInterface<ParamType>* const base_;
+					// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
+					// current[i]_ is the actual traversing iterator.
+					const typename ParamGenerator<T1>::iterator begin1_;
+					const typename ParamGenerator<T1>::iterator end1_;
+					typename ParamGenerator<T1>::iterator current1_;
+					const typename ParamGenerator<T2>::iterator begin2_;
+					const typename ParamGenerator<T2>::iterator end2_;
+					typename ParamGenerator<T2>::iterator current2_;
+					const typename ParamGenerator<T3>::iterator begin3_;
+					const typename ParamGenerator<T3>::iterator end3_;
+					typename ParamGenerator<T3>::iterator current3_;
+					const typename ParamGenerator<T4>::iterator begin4_;
+					const typename ParamGenerator<T4>::iterator end4_;
+					typename ParamGenerator<T4>::iterator current4_;
+					const typename ParamGenerator<T5>::iterator begin5_;
+					const typename ParamGenerator<T5>::iterator end5_;
+					typename ParamGenerator<T5>::iterator current5_;
+					const typename ParamGenerator<T6>::iterator begin6_;
+					const typename ParamGenerator<T6>::iterator end6_;
+					typename ParamGenerator<T6>::iterator current6_;
+					ParamType current_value_;
+				};  // class CartesianProductGenerator6::Iterator
 
 				// No implementation - assignment is unsupported.
-				void operator=(const Iterator& other);
+				void operator=(const CartesianProductGenerator6& other);
 
-				const ParamGeneratorInterface<ParamType>* const base_;
-				// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-				// current[i]_ is the actual traversing iterator.
-				const typename ParamGenerator<T1>::iterator begin1_;
-				const typename ParamGenerator<T1>::iterator end1_;
-				typename ParamGenerator<T1>::iterator current1_;
-				const typename ParamGenerator<T2>::iterator begin2_;
-				const typename ParamGenerator<T2>::iterator end2_;
-				typename ParamGenerator<T2>::iterator current2_;
-				const typename ParamGenerator<T3>::iterator begin3_;
-				const typename ParamGenerator<T3>::iterator end3_;
-				typename ParamGenerator<T3>::iterator current3_;
-				const typename ParamGenerator<T4>::iterator begin4_;
-				const typename ParamGenerator<T4>::iterator end4_;
-				typename ParamGenerator<T4>::iterator current4_;
-				const typename ParamGenerator<T5>::iterator begin5_;
-				const typename ParamGenerator<T5>::iterator end5_;
-				typename ParamGenerator<T5>::iterator current5_;
-				const typename ParamGenerator<T6>::iterator begin6_;
-				const typename ParamGenerator<T6>::iterator end6_;
-				typename ParamGenerator<T6>::iterator current6_;
-				ParamType current_value_;
-			};  // class CartesianProductGenerator6::Iterator
-
-				// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductGenerator6& other);
-
-			const ParamGenerator<T1> g1_;
-			const ParamGenerator<T2> g2_;
-			const ParamGenerator<T3> g3_;
-			const ParamGenerator<T4> g4_;
-			const ParamGenerator<T5> g5_;
-			const ParamGenerator<T6> g6_;
+				const ParamGenerator<T1> g1_;
+				const ParamGenerator<T2> g2_;
+				const ParamGenerator<T3> g3_;
+				const ParamGenerator<T4> g4_;
+				const ParamGenerator<T5> g5_;
+				const ParamGenerator<T6> g6_;
 		};  // class CartesianProductGenerator6
 
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7>
-		class CartesianProductGenerator7
+			class CartesianProductGenerator7
 			: public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
 			T7> > {
-		public:
-			typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> ParamType;
-
-			CartesianProductGenerator7(const ParamGenerator<T1>& g1,
-				const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
-				const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
-				const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7) {}
-			virtual ~CartesianProductGenerator7() {}
-
-			virtual ParamIteratorInterface<ParamType>* Begin() const {
-				return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
-					g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
-					g7_.begin());
-			}
-			virtual ParamIteratorInterface<ParamType>* End() const {
-				return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
-					g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end());
-			}
-
-		private:
-			class Iterator : public ParamIteratorInterface<ParamType> {
 			public:
-				Iterator(const ParamGeneratorInterface<ParamType>* base,
-					const ParamGenerator<T1>& g1,
-					const typename ParamGenerator<T1>::iterator& current1,
-					const ParamGenerator<T2>& g2,
-					const typename ParamGenerator<T2>::iterator& current2,
-					const ParamGenerator<T3>& g3,
-					const typename ParamGenerator<T3>::iterator& current3,
-					const ParamGenerator<T4>& g4,
-					const typename ParamGenerator<T4>::iterator& current4,
-					const ParamGenerator<T5>& g5,
-					const typename ParamGenerator<T5>::iterator& current5,
-					const ParamGenerator<T6>& g6,
-					const typename ParamGenerator<T6>::iterator& current6,
-					const ParamGenerator<T7>& g7,
-					const typename ParamGenerator<T7>::iterator& current7)
-					: base_(base),
-					begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
-					begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
-					begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
-					begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
-					begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
-					begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
-					begin7_(g7.begin()), end7_(g7.end()), current7_(current7) {
-					ComputeCurrentValue();
-				}
-				virtual ~Iterator() {}
+				typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> ParamType;
 
-				virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
-					return base_;
+				CartesianProductGenerator7(const ParamGenerator<T1>& g1,
+					const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
+					const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
+					const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7) {}
+				virtual ~CartesianProductGenerator7() {}
+
+				virtual ParamIteratorInterface<ParamType>* Begin() const {
+					return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
+						g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
+						g7_.begin());
 				}
-				// Advance should not be called on beyond-of-range iterators
-				// so no component iterators must be beyond end of range, either.
-				virtual void Advance() {
-					assert(!AtEnd());
-					++current7_;
-					if (current7_ == end7_) {
-						current7_ = begin7_;
-						++current6_;
-					}
-					if (current6_ == end6_) {
-						current6_ = begin6_;
-						++current5_;
-					}
-					if (current5_ == end5_) {
-						current5_ = begin5_;
-						++current4_;
-					}
-					if (current4_ == end4_) {
-						current4_ = begin4_;
-						++current3_;
-					}
-					if (current3_ == end3_) {
-						current3_ = begin3_;
-						++current2_;
-					}
-					if (current2_ == end2_) {
-						current2_ = begin2_;
-						++current1_;
-					}
-					ComputeCurrentValue();
-				}
-				virtual ParamIteratorInterface<ParamType>* Clone() const {
-					return new Iterator(*this);
-				}
-				virtual const ParamType* Current() const { return &current_value_; }
-				virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
-					// Having the same base generator guarantees that the other
-					// iterator is of the same type and we can downcast.
-					GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
-						<< "The program attempted to compare iterators "
-						<< "from different generators." << std::endl;
-					const Iterator* typed_other =
-						CheckedDowncastToActualType<const Iterator>(&other);
-					// We must report iterators equal if they both point beyond their
-					// respective ranges. That can happen in a variety of fashions,
-					// so we have to consult AtEnd().
-					return (AtEnd() && typed_other->AtEnd()) ||
-						(
-							current1_ == typed_other->current1_ &&
-							current2_ == typed_other->current2_ &&
-							current3_ == typed_other->current3_ &&
-							current4_ == typed_other->current4_ &&
-							current5_ == typed_other->current5_ &&
-							current6_ == typed_other->current6_ &&
-							current7_ == typed_other->current7_);
+				virtual ParamIteratorInterface<ParamType>* End() const {
+					return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
+						g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end());
 				}
 
 			private:
-				Iterator(const Iterator& other)
-					: base_(other.base_),
-					begin1_(other.begin1_),
-					end1_(other.end1_),
-					current1_(other.current1_),
-					begin2_(other.begin2_),
-					end2_(other.end2_),
-					current2_(other.current2_),
-					begin3_(other.begin3_),
-					end3_(other.end3_),
-					current3_(other.current3_),
-					begin4_(other.begin4_),
-					end4_(other.end4_),
-					current4_(other.current4_),
-					begin5_(other.begin5_),
-					end5_(other.end5_),
-					current5_(other.current5_),
-					begin6_(other.begin6_),
-					end6_(other.end6_),
-					current6_(other.current6_),
-					begin7_(other.begin7_),
-					end7_(other.end7_),
-					current7_(other.current7_) {
-					ComputeCurrentValue();
-				}
+				class Iterator : public ParamIteratorInterface<ParamType> {
+				public:
+					Iterator(const ParamGeneratorInterface<ParamType>* base,
+						const ParamGenerator<T1>& g1,
+						const typename ParamGenerator<T1>::iterator& current1,
+						const ParamGenerator<T2>& g2,
+						const typename ParamGenerator<T2>::iterator& current2,
+						const ParamGenerator<T3>& g3,
+						const typename ParamGenerator<T3>::iterator& current3,
+						const ParamGenerator<T4>& g4,
+						const typename ParamGenerator<T4>::iterator& current4,
+						const ParamGenerator<T5>& g5,
+						const typename ParamGenerator<T5>::iterator& current5,
+						const ParamGenerator<T6>& g6,
+						const typename ParamGenerator<T6>::iterator& current6,
+						const ParamGenerator<T7>& g7,
+						const typename ParamGenerator<T7>::iterator& current7)
+						: base_(base),
+						begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
+						begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
+						begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
+						begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
+						begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
+						begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
+						begin7_(g7.begin()), end7_(g7.end()), current7_(current7) {
+						ComputeCurrentValue();
+					}
+					virtual ~Iterator() {}
 
-				void ComputeCurrentValue() {
-					if (!AtEnd())
-						current_value_ = ParamType(*current1_, *current2_, *current3_,
-							*current4_, *current5_, *current6_, *current7_);
-				}
-				bool AtEnd() const {
-					// We must report iterator past the end of the range when either of the
-					// component iterators has reached the end of its range.
-					return
-						current1_ == end1_ ||
-						current2_ == end2_ ||
-						current3_ == end3_ ||
-						current4_ == end4_ ||
-						current5_ == end5_ ||
-						current6_ == end6_ ||
-						current7_ == end7_;
-				}
+					virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
+						return base_;
+					}
+					// Advance should not be called on beyond-of-range iterators
+					// so no component iterators must be beyond end of range, either.
+					virtual void Advance() {
+						assert(!AtEnd());
+						++current7_;
+						if (current7_ == end7_) {
+							current7_ = begin7_;
+							++current6_;
+						}
+						if (current6_ == end6_) {
+							current6_ = begin6_;
+							++current5_;
+						}
+						if (current5_ == end5_) {
+							current5_ = begin5_;
+							++current4_;
+						}
+						if (current4_ == end4_) {
+							current4_ = begin4_;
+							++current3_;
+						}
+						if (current3_ == end3_) {
+							current3_ = begin3_;
+							++current2_;
+						}
+						if (current2_ == end2_) {
+							current2_ = begin2_;
+							++current1_;
+						}
+						ComputeCurrentValue();
+					}
+					virtual ParamIteratorInterface<ParamType>* Clone() const {
+						return new Iterator(*this);
+					}
+					virtual const ParamType* Current() const { return &current_value_; }
+					virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
+						// Having the same base generator guarantees that the other
+						// iterator is of the same type and we can downcast.
+						GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
+							<< "The program attempted to compare iterators "
+							<< "from different generators." << std::endl;
+						const Iterator* typed_other =
+							CheckedDowncastToActualType<const Iterator>(&other);
+						// We must report iterators equal if they both point beyond their
+						// respective ranges. That can happen in a variety of fashions,
+						// so we have to consult AtEnd().
+						return (AtEnd() && typed_other->AtEnd()) ||
+							(
+								current1_ == typed_other->current1_ &&
+								current2_ == typed_other->current2_ &&
+								current3_ == typed_other->current3_ &&
+								current4_ == typed_other->current4_ &&
+								current5_ == typed_other->current5_ &&
+								current6_ == typed_other->current6_ &&
+								current7_ == typed_other->current7_);
+					}
+
+				private:
+					Iterator(const Iterator& other)
+						: base_(other.base_),
+						begin1_(other.begin1_),
+						end1_(other.end1_),
+						current1_(other.current1_),
+						begin2_(other.begin2_),
+						end2_(other.end2_),
+						current2_(other.current2_),
+						begin3_(other.begin3_),
+						end3_(other.end3_),
+						current3_(other.current3_),
+						begin4_(other.begin4_),
+						end4_(other.end4_),
+						current4_(other.current4_),
+						begin5_(other.begin5_),
+						end5_(other.end5_),
+						current5_(other.current5_),
+						begin6_(other.begin6_),
+						end6_(other.end6_),
+						current6_(other.current6_),
+						begin7_(other.begin7_),
+						end7_(other.end7_),
+						current7_(other.current7_) {
+						ComputeCurrentValue();
+					}
+
+					void ComputeCurrentValue() {
+						if (!AtEnd())
+							current_value_ = ParamType(*current1_, *current2_, *current3_,
+								*current4_, *current5_, *current6_, *current7_);
+					}
+					bool AtEnd() const {
+						// We must report iterator past the end of the range when either of the
+						// component iterators has reached the end of its range.
+						return
+							current1_ == end1_ ||
+							current2_ == end2_ ||
+							current3_ == end3_ ||
+							current4_ == end4_ ||
+							current5_ == end5_ ||
+							current6_ == end6_ ||
+							current7_ == end7_;
+					}
+
+					// No implementation - assignment is unsupported.
+					void operator=(const Iterator& other);
+
+					const ParamGeneratorInterface<ParamType>* const base_;
+					// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
+					// current[i]_ is the actual traversing iterator.
+					const typename ParamGenerator<T1>::iterator begin1_;
+					const typename ParamGenerator<T1>::iterator end1_;
+					typename ParamGenerator<T1>::iterator current1_;
+					const typename ParamGenerator<T2>::iterator begin2_;
+					const typename ParamGenerator<T2>::iterator end2_;
+					typename ParamGenerator<T2>::iterator current2_;
+					const typename ParamGenerator<T3>::iterator begin3_;
+					const typename ParamGenerator<T3>::iterator end3_;
+					typename ParamGenerator<T3>::iterator current3_;
+					const typename ParamGenerator<T4>::iterator begin4_;
+					const typename ParamGenerator<T4>::iterator end4_;
+					typename ParamGenerator<T4>::iterator current4_;
+					const typename ParamGenerator<T5>::iterator begin5_;
+					const typename ParamGenerator<T5>::iterator end5_;
+					typename ParamGenerator<T5>::iterator current5_;
+					const typename ParamGenerator<T6>::iterator begin6_;
+					const typename ParamGenerator<T6>::iterator end6_;
+					typename ParamGenerator<T6>::iterator current6_;
+					const typename ParamGenerator<T7>::iterator begin7_;
+					const typename ParamGenerator<T7>::iterator end7_;
+					typename ParamGenerator<T7>::iterator current7_;
+					ParamType current_value_;
+				};  // class CartesianProductGenerator7::Iterator
 
 				// No implementation - assignment is unsupported.
-				void operator=(const Iterator& other);
+				void operator=(const CartesianProductGenerator7& other);
 
-				const ParamGeneratorInterface<ParamType>* const base_;
-				// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-				// current[i]_ is the actual traversing iterator.
-				const typename ParamGenerator<T1>::iterator begin1_;
-				const typename ParamGenerator<T1>::iterator end1_;
-				typename ParamGenerator<T1>::iterator current1_;
-				const typename ParamGenerator<T2>::iterator begin2_;
-				const typename ParamGenerator<T2>::iterator end2_;
-				typename ParamGenerator<T2>::iterator current2_;
-				const typename ParamGenerator<T3>::iterator begin3_;
-				const typename ParamGenerator<T3>::iterator end3_;
-				typename ParamGenerator<T3>::iterator current3_;
-				const typename ParamGenerator<T4>::iterator begin4_;
-				const typename ParamGenerator<T4>::iterator end4_;
-				typename ParamGenerator<T4>::iterator current4_;
-				const typename ParamGenerator<T5>::iterator begin5_;
-				const typename ParamGenerator<T5>::iterator end5_;
-				typename ParamGenerator<T5>::iterator current5_;
-				const typename ParamGenerator<T6>::iterator begin6_;
-				const typename ParamGenerator<T6>::iterator end6_;
-				typename ParamGenerator<T6>::iterator current6_;
-				const typename ParamGenerator<T7>::iterator begin7_;
-				const typename ParamGenerator<T7>::iterator end7_;
-				typename ParamGenerator<T7>::iterator current7_;
-				ParamType current_value_;
-			};  // class CartesianProductGenerator7::Iterator
-
-				// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductGenerator7& other);
-
-			const ParamGenerator<T1> g1_;
-			const ParamGenerator<T2> g2_;
-			const ParamGenerator<T3> g3_;
-			const ParamGenerator<T4> g4_;
-			const ParamGenerator<T5> g5_;
-			const ParamGenerator<T6> g6_;
-			const ParamGenerator<T7> g7_;
+				const ParamGenerator<T1> g1_;
+				const ParamGenerator<T2> g2_;
+				const ParamGenerator<T3> g3_;
+				const ParamGenerator<T4> g4_;
+				const ParamGenerator<T5> g5_;
+				const ParamGenerator<T6> g6_;
+				const ParamGenerator<T7> g7_;
 		};  // class CartesianProductGenerator7
 
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8>
-		class CartesianProductGenerator8
+			class CartesianProductGenerator8
 			: public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
 			T7, T8> > {
-		public:
-			typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> ParamType;
-
-			CartesianProductGenerator8(const ParamGenerator<T1>& g1,
-				const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
-				const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
-				const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
-				const ParamGenerator<T8>& g8)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7),
-				g8_(g8) {}
-			virtual ~CartesianProductGenerator8() {}
-
-			virtual ParamIteratorInterface<ParamType>* Begin() const {
-				return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
-					g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
-					g7_.begin(), g8_, g8_.begin());
-			}
-			virtual ParamIteratorInterface<ParamType>* End() const {
-				return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
-					g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
-					g8_.end());
-			}
-
-		private:
-			class Iterator : public ParamIteratorInterface<ParamType> {
 			public:
-				Iterator(const ParamGeneratorInterface<ParamType>* base,
-					const ParamGenerator<T1>& g1,
-					const typename ParamGenerator<T1>::iterator& current1,
-					const ParamGenerator<T2>& g2,
-					const typename ParamGenerator<T2>::iterator& current2,
-					const ParamGenerator<T3>& g3,
-					const typename ParamGenerator<T3>::iterator& current3,
-					const ParamGenerator<T4>& g4,
-					const typename ParamGenerator<T4>::iterator& current4,
-					const ParamGenerator<T5>& g5,
-					const typename ParamGenerator<T5>::iterator& current5,
-					const ParamGenerator<T6>& g6,
-					const typename ParamGenerator<T6>::iterator& current6,
-					const ParamGenerator<T7>& g7,
-					const typename ParamGenerator<T7>::iterator& current7,
-					const ParamGenerator<T8>& g8,
-					const typename ParamGenerator<T8>::iterator& current8)
-					: base_(base),
-					begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
-					begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
-					begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
-					begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
-					begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
-					begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
-					begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
-					begin8_(g8.begin()), end8_(g8.end()), current8_(current8) {
-					ComputeCurrentValue();
-				}
-				virtual ~Iterator() {}
+				typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> ParamType;
 
-				virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
-					return base_;
+				CartesianProductGenerator8(const ParamGenerator<T1>& g1,
+					const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
+					const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
+					const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
+					const ParamGenerator<T8>& g8)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7),
+					g8_(g8) {}
+				virtual ~CartesianProductGenerator8() {}
+
+				virtual ParamIteratorInterface<ParamType>* Begin() const {
+					return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
+						g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
+						g7_.begin(), g8_, g8_.begin());
 				}
-				// Advance should not be called on beyond-of-range iterators
-				// so no component iterators must be beyond end of range, either.
-				virtual void Advance() {
-					assert(!AtEnd());
-					++current8_;
-					if (current8_ == end8_) {
-						current8_ = begin8_;
-						++current7_;
-					}
-					if (current7_ == end7_) {
-						current7_ = begin7_;
-						++current6_;
-					}
-					if (current6_ == end6_) {
-						current6_ = begin6_;
-						++current5_;
-					}
-					if (current5_ == end5_) {
-						current5_ = begin5_;
-						++current4_;
-					}
-					if (current4_ == end4_) {
-						current4_ = begin4_;
-						++current3_;
-					}
-					if (current3_ == end3_) {
-						current3_ = begin3_;
-						++current2_;
-					}
-					if (current2_ == end2_) {
-						current2_ = begin2_;
-						++current1_;
-					}
-					ComputeCurrentValue();
-				}
-				virtual ParamIteratorInterface<ParamType>* Clone() const {
-					return new Iterator(*this);
-				}
-				virtual const ParamType* Current() const { return &current_value_; }
-				virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
-					// Having the same base generator guarantees that the other
-					// iterator is of the same type and we can downcast.
-					GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
-						<< "The program attempted to compare iterators "
-						<< "from different generators." << std::endl;
-					const Iterator* typed_other =
-						CheckedDowncastToActualType<const Iterator>(&other);
-					// We must report iterators equal if they both point beyond their
-					// respective ranges. That can happen in a variety of fashions,
-					// so we have to consult AtEnd().
-					return (AtEnd() && typed_other->AtEnd()) ||
-						(
-							current1_ == typed_other->current1_ &&
-							current2_ == typed_other->current2_ &&
-							current3_ == typed_other->current3_ &&
-							current4_ == typed_other->current4_ &&
-							current5_ == typed_other->current5_ &&
-							current6_ == typed_other->current6_ &&
-							current7_ == typed_other->current7_ &&
-							current8_ == typed_other->current8_);
+				virtual ParamIteratorInterface<ParamType>* End() const {
+					return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
+						g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
+						g8_.end());
 				}
 
 			private:
-				Iterator(const Iterator& other)
-					: base_(other.base_),
-					begin1_(other.begin1_),
-					end1_(other.end1_),
-					current1_(other.current1_),
-					begin2_(other.begin2_),
-					end2_(other.end2_),
-					current2_(other.current2_),
-					begin3_(other.begin3_),
-					end3_(other.end3_),
-					current3_(other.current3_),
-					begin4_(other.begin4_),
-					end4_(other.end4_),
-					current4_(other.current4_),
-					begin5_(other.begin5_),
-					end5_(other.end5_),
-					current5_(other.current5_),
-					begin6_(other.begin6_),
-					end6_(other.end6_),
-					current6_(other.current6_),
-					begin7_(other.begin7_),
-					end7_(other.end7_),
-					current7_(other.current7_),
-					begin8_(other.begin8_),
-					end8_(other.end8_),
-					current8_(other.current8_) {
-					ComputeCurrentValue();
-				}
+				class Iterator : public ParamIteratorInterface<ParamType> {
+				public:
+					Iterator(const ParamGeneratorInterface<ParamType>* base,
+						const ParamGenerator<T1>& g1,
+						const typename ParamGenerator<T1>::iterator& current1,
+						const ParamGenerator<T2>& g2,
+						const typename ParamGenerator<T2>::iterator& current2,
+						const ParamGenerator<T3>& g3,
+						const typename ParamGenerator<T3>::iterator& current3,
+						const ParamGenerator<T4>& g4,
+						const typename ParamGenerator<T4>::iterator& current4,
+						const ParamGenerator<T5>& g5,
+						const typename ParamGenerator<T5>::iterator& current5,
+						const ParamGenerator<T6>& g6,
+						const typename ParamGenerator<T6>::iterator& current6,
+						const ParamGenerator<T7>& g7,
+						const typename ParamGenerator<T7>::iterator& current7,
+						const ParamGenerator<T8>& g8,
+						const typename ParamGenerator<T8>::iterator& current8)
+						: base_(base),
+						begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
+						begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
+						begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
+						begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
+						begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
+						begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
+						begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
+						begin8_(g8.begin()), end8_(g8.end()), current8_(current8) {
+						ComputeCurrentValue();
+					}
+					virtual ~Iterator() {}
 
-				void ComputeCurrentValue() {
-					if (!AtEnd())
-						current_value_ = ParamType(*current1_, *current2_, *current3_,
-							*current4_, *current5_, *current6_, *current7_, *current8_);
-				}
-				bool AtEnd() const {
-					// We must report iterator past the end of the range when either of the
-					// component iterators has reached the end of its range.
-					return
-						current1_ == end1_ ||
-						current2_ == end2_ ||
-						current3_ == end3_ ||
-						current4_ == end4_ ||
-						current5_ == end5_ ||
-						current6_ == end6_ ||
-						current7_ == end7_ ||
-						current8_ == end8_;
-				}
+					virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
+						return base_;
+					}
+					// Advance should not be called on beyond-of-range iterators
+					// so no component iterators must be beyond end of range, either.
+					virtual void Advance() {
+						assert(!AtEnd());
+						++current8_;
+						if (current8_ == end8_) {
+							current8_ = begin8_;
+							++current7_;
+						}
+						if (current7_ == end7_) {
+							current7_ = begin7_;
+							++current6_;
+						}
+						if (current6_ == end6_) {
+							current6_ = begin6_;
+							++current5_;
+						}
+						if (current5_ == end5_) {
+							current5_ = begin5_;
+							++current4_;
+						}
+						if (current4_ == end4_) {
+							current4_ = begin4_;
+							++current3_;
+						}
+						if (current3_ == end3_) {
+							current3_ = begin3_;
+							++current2_;
+						}
+						if (current2_ == end2_) {
+							current2_ = begin2_;
+							++current1_;
+						}
+						ComputeCurrentValue();
+					}
+					virtual ParamIteratorInterface<ParamType>* Clone() const {
+						return new Iterator(*this);
+					}
+					virtual const ParamType* Current() const { return &current_value_; }
+					virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
+						// Having the same base generator guarantees that the other
+						// iterator is of the same type and we can downcast.
+						GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
+							<< "The program attempted to compare iterators "
+							<< "from different generators." << std::endl;
+						const Iterator* typed_other =
+							CheckedDowncastToActualType<const Iterator>(&other);
+						// We must report iterators equal if they both point beyond their
+						// respective ranges. That can happen in a variety of fashions,
+						// so we have to consult AtEnd().
+						return (AtEnd() && typed_other->AtEnd()) ||
+							(
+								current1_ == typed_other->current1_ &&
+								current2_ == typed_other->current2_ &&
+								current3_ == typed_other->current3_ &&
+								current4_ == typed_other->current4_ &&
+								current5_ == typed_other->current5_ &&
+								current6_ == typed_other->current6_ &&
+								current7_ == typed_other->current7_ &&
+								current8_ == typed_other->current8_);
+					}
+
+				private:
+					Iterator(const Iterator& other)
+						: base_(other.base_),
+						begin1_(other.begin1_),
+						end1_(other.end1_),
+						current1_(other.current1_),
+						begin2_(other.begin2_),
+						end2_(other.end2_),
+						current2_(other.current2_),
+						begin3_(other.begin3_),
+						end3_(other.end3_),
+						current3_(other.current3_),
+						begin4_(other.begin4_),
+						end4_(other.end4_),
+						current4_(other.current4_),
+						begin5_(other.begin5_),
+						end5_(other.end5_),
+						current5_(other.current5_),
+						begin6_(other.begin6_),
+						end6_(other.end6_),
+						current6_(other.current6_),
+						begin7_(other.begin7_),
+						end7_(other.end7_),
+						current7_(other.current7_),
+						begin8_(other.begin8_),
+						end8_(other.end8_),
+						current8_(other.current8_) {
+						ComputeCurrentValue();
+					}
+
+					void ComputeCurrentValue() {
+						if (!AtEnd())
+							current_value_ = ParamType(*current1_, *current2_, *current3_,
+								*current4_, *current5_, *current6_, *current7_, *current8_);
+					}
+					bool AtEnd() const {
+						// We must report iterator past the end of the range when either of the
+						// component iterators has reached the end of its range.
+						return
+							current1_ == end1_ ||
+							current2_ == end2_ ||
+							current3_ == end3_ ||
+							current4_ == end4_ ||
+							current5_ == end5_ ||
+							current6_ == end6_ ||
+							current7_ == end7_ ||
+							current8_ == end8_;
+					}
+
+					// No implementation - assignment is unsupported.
+					void operator=(const Iterator& other);
+
+					const ParamGeneratorInterface<ParamType>* const base_;
+					// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
+					// current[i]_ is the actual traversing iterator.
+					const typename ParamGenerator<T1>::iterator begin1_;
+					const typename ParamGenerator<T1>::iterator end1_;
+					typename ParamGenerator<T1>::iterator current1_;
+					const typename ParamGenerator<T2>::iterator begin2_;
+					const typename ParamGenerator<T2>::iterator end2_;
+					typename ParamGenerator<T2>::iterator current2_;
+					const typename ParamGenerator<T3>::iterator begin3_;
+					const typename ParamGenerator<T3>::iterator end3_;
+					typename ParamGenerator<T3>::iterator current3_;
+					const typename ParamGenerator<T4>::iterator begin4_;
+					const typename ParamGenerator<T4>::iterator end4_;
+					typename ParamGenerator<T4>::iterator current4_;
+					const typename ParamGenerator<T5>::iterator begin5_;
+					const typename ParamGenerator<T5>::iterator end5_;
+					typename ParamGenerator<T5>::iterator current5_;
+					const typename ParamGenerator<T6>::iterator begin6_;
+					const typename ParamGenerator<T6>::iterator end6_;
+					typename ParamGenerator<T6>::iterator current6_;
+					const typename ParamGenerator<T7>::iterator begin7_;
+					const typename ParamGenerator<T7>::iterator end7_;
+					typename ParamGenerator<T7>::iterator current7_;
+					const typename ParamGenerator<T8>::iterator begin8_;
+					const typename ParamGenerator<T8>::iterator end8_;
+					typename ParamGenerator<T8>::iterator current8_;
+					ParamType current_value_;
+				};  // class CartesianProductGenerator8::Iterator
 
 				// No implementation - assignment is unsupported.
-				void operator=(const Iterator& other);
+				void operator=(const CartesianProductGenerator8& other);
 
-				const ParamGeneratorInterface<ParamType>* const base_;
-				// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-				// current[i]_ is the actual traversing iterator.
-				const typename ParamGenerator<T1>::iterator begin1_;
-				const typename ParamGenerator<T1>::iterator end1_;
-				typename ParamGenerator<T1>::iterator current1_;
-				const typename ParamGenerator<T2>::iterator begin2_;
-				const typename ParamGenerator<T2>::iterator end2_;
-				typename ParamGenerator<T2>::iterator current2_;
-				const typename ParamGenerator<T3>::iterator begin3_;
-				const typename ParamGenerator<T3>::iterator end3_;
-				typename ParamGenerator<T3>::iterator current3_;
-				const typename ParamGenerator<T4>::iterator begin4_;
-				const typename ParamGenerator<T4>::iterator end4_;
-				typename ParamGenerator<T4>::iterator current4_;
-				const typename ParamGenerator<T5>::iterator begin5_;
-				const typename ParamGenerator<T5>::iterator end5_;
-				typename ParamGenerator<T5>::iterator current5_;
-				const typename ParamGenerator<T6>::iterator begin6_;
-				const typename ParamGenerator<T6>::iterator end6_;
-				typename ParamGenerator<T6>::iterator current6_;
-				const typename ParamGenerator<T7>::iterator begin7_;
-				const typename ParamGenerator<T7>::iterator end7_;
-				typename ParamGenerator<T7>::iterator current7_;
-				const typename ParamGenerator<T8>::iterator begin8_;
-				const typename ParamGenerator<T8>::iterator end8_;
-				typename ParamGenerator<T8>::iterator current8_;
-				ParamType current_value_;
-			};  // class CartesianProductGenerator8::Iterator
-
-				// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductGenerator8& other);
-
-			const ParamGenerator<T1> g1_;
-			const ParamGenerator<T2> g2_;
-			const ParamGenerator<T3> g3_;
-			const ParamGenerator<T4> g4_;
-			const ParamGenerator<T5> g5_;
-			const ParamGenerator<T6> g6_;
-			const ParamGenerator<T7> g7_;
-			const ParamGenerator<T8> g8_;
+				const ParamGenerator<T1> g1_;
+				const ParamGenerator<T2> g2_;
+				const ParamGenerator<T3> g3_;
+				const ParamGenerator<T4> g4_;
+				const ParamGenerator<T5> g5_;
+				const ParamGenerator<T6> g6_;
+				const ParamGenerator<T7> g7_;
+				const ParamGenerator<T8> g8_;
 		};  // class CartesianProductGenerator8
 
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9>
-		class CartesianProductGenerator9
+			class CartesianProductGenerator9
 			: public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
 			T7, T8, T9> > {
-		public:
-			typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> ParamType;
-
-			CartesianProductGenerator9(const ParamGenerator<T1>& g1,
-				const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
-				const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
-				const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
-				const ParamGenerator<T8>& g8, const ParamGenerator<T9>& g9)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
-				g9_(g9) {}
-			virtual ~CartesianProductGenerator9() {}
-
-			virtual ParamIteratorInterface<ParamType>* Begin() const {
-				return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
-					g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
-					g7_.begin(), g8_, g8_.begin(), g9_, g9_.begin());
-			}
-			virtual ParamIteratorInterface<ParamType>* End() const {
-				return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
-					g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
-					g8_.end(), g9_, g9_.end());
-			}
-
-		private:
-			class Iterator : public ParamIteratorInterface<ParamType> {
 			public:
-				Iterator(const ParamGeneratorInterface<ParamType>* base,
-					const ParamGenerator<T1>& g1,
-					const typename ParamGenerator<T1>::iterator& current1,
-					const ParamGenerator<T2>& g2,
-					const typename ParamGenerator<T2>::iterator& current2,
-					const ParamGenerator<T3>& g3,
-					const typename ParamGenerator<T3>::iterator& current3,
-					const ParamGenerator<T4>& g4,
-					const typename ParamGenerator<T4>::iterator& current4,
-					const ParamGenerator<T5>& g5,
-					const typename ParamGenerator<T5>::iterator& current5,
-					const ParamGenerator<T6>& g6,
-					const typename ParamGenerator<T6>::iterator& current6,
-					const ParamGenerator<T7>& g7,
-					const typename ParamGenerator<T7>::iterator& current7,
-					const ParamGenerator<T8>& g8,
-					const typename ParamGenerator<T8>::iterator& current8,
-					const ParamGenerator<T9>& g9,
-					const typename ParamGenerator<T9>::iterator& current9)
-					: base_(base),
-					begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
-					begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
-					begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
-					begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
-					begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
-					begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
-					begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
-					begin8_(g8.begin()), end8_(g8.end()), current8_(current8),
-					begin9_(g9.begin()), end9_(g9.end()), current9_(current9) {
-					ComputeCurrentValue();
-				}
-				virtual ~Iterator() {}
+				typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> ParamType;
 
-				virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
-					return base_;
+				CartesianProductGenerator9(const ParamGenerator<T1>& g1,
+					const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
+					const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
+					const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
+					const ParamGenerator<T8>& g8, const ParamGenerator<T9>& g9)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
+					g9_(g9) {}
+				virtual ~CartesianProductGenerator9() {}
+
+				virtual ParamIteratorInterface<ParamType>* Begin() const {
+					return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
+						g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
+						g7_.begin(), g8_, g8_.begin(), g9_, g9_.begin());
 				}
-				// Advance should not be called on beyond-of-range iterators
-				// so no component iterators must be beyond end of range, either.
-				virtual void Advance() {
-					assert(!AtEnd());
-					++current9_;
-					if (current9_ == end9_) {
-						current9_ = begin9_;
-						++current8_;
-					}
-					if (current8_ == end8_) {
-						current8_ = begin8_;
-						++current7_;
-					}
-					if (current7_ == end7_) {
-						current7_ = begin7_;
-						++current6_;
-					}
-					if (current6_ == end6_) {
-						current6_ = begin6_;
-						++current5_;
-					}
-					if (current5_ == end5_) {
-						current5_ = begin5_;
-						++current4_;
-					}
-					if (current4_ == end4_) {
-						current4_ = begin4_;
-						++current3_;
-					}
-					if (current3_ == end3_) {
-						current3_ = begin3_;
-						++current2_;
-					}
-					if (current2_ == end2_) {
-						current2_ = begin2_;
-						++current1_;
-					}
-					ComputeCurrentValue();
-				}
-				virtual ParamIteratorInterface<ParamType>* Clone() const {
-					return new Iterator(*this);
-				}
-				virtual const ParamType* Current() const { return &current_value_; }
-				virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
-					// Having the same base generator guarantees that the other
-					// iterator is of the same type and we can downcast.
-					GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
-						<< "The program attempted to compare iterators "
-						<< "from different generators." << std::endl;
-					const Iterator* typed_other =
-						CheckedDowncastToActualType<const Iterator>(&other);
-					// We must report iterators equal if they both point beyond their
-					// respective ranges. That can happen in a variety of fashions,
-					// so we have to consult AtEnd().
-					return (AtEnd() && typed_other->AtEnd()) ||
-						(
-							current1_ == typed_other->current1_ &&
-							current2_ == typed_other->current2_ &&
-							current3_ == typed_other->current3_ &&
-							current4_ == typed_other->current4_ &&
-							current5_ == typed_other->current5_ &&
-							current6_ == typed_other->current6_ &&
-							current7_ == typed_other->current7_ &&
-							current8_ == typed_other->current8_ &&
-							current9_ == typed_other->current9_);
+				virtual ParamIteratorInterface<ParamType>* End() const {
+					return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
+						g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
+						g8_.end(), g9_, g9_.end());
 				}
 
 			private:
-				Iterator(const Iterator& other)
-					: base_(other.base_),
-					begin1_(other.begin1_),
-					end1_(other.end1_),
-					current1_(other.current1_),
-					begin2_(other.begin2_),
-					end2_(other.end2_),
-					current2_(other.current2_),
-					begin3_(other.begin3_),
-					end3_(other.end3_),
-					current3_(other.current3_),
-					begin4_(other.begin4_),
-					end4_(other.end4_),
-					current4_(other.current4_),
-					begin5_(other.begin5_),
-					end5_(other.end5_),
-					current5_(other.current5_),
-					begin6_(other.begin6_),
-					end6_(other.end6_),
-					current6_(other.current6_),
-					begin7_(other.begin7_),
-					end7_(other.end7_),
-					current7_(other.current7_),
-					begin8_(other.begin8_),
-					end8_(other.end8_),
-					current8_(other.current8_),
-					begin9_(other.begin9_),
-					end9_(other.end9_),
-					current9_(other.current9_) {
-					ComputeCurrentValue();
-				}
+				class Iterator : public ParamIteratorInterface<ParamType> {
+				public:
+					Iterator(const ParamGeneratorInterface<ParamType>* base,
+						const ParamGenerator<T1>& g1,
+						const typename ParamGenerator<T1>::iterator& current1,
+						const ParamGenerator<T2>& g2,
+						const typename ParamGenerator<T2>::iterator& current2,
+						const ParamGenerator<T3>& g3,
+						const typename ParamGenerator<T3>::iterator& current3,
+						const ParamGenerator<T4>& g4,
+						const typename ParamGenerator<T4>::iterator& current4,
+						const ParamGenerator<T5>& g5,
+						const typename ParamGenerator<T5>::iterator& current5,
+						const ParamGenerator<T6>& g6,
+						const typename ParamGenerator<T6>::iterator& current6,
+						const ParamGenerator<T7>& g7,
+						const typename ParamGenerator<T7>::iterator& current7,
+						const ParamGenerator<T8>& g8,
+						const typename ParamGenerator<T8>::iterator& current8,
+						const ParamGenerator<T9>& g9,
+						const typename ParamGenerator<T9>::iterator& current9)
+						: base_(base),
+						begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
+						begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
+						begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
+						begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
+						begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
+						begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
+						begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
+						begin8_(g8.begin()), end8_(g8.end()), current8_(current8),
+						begin9_(g9.begin()), end9_(g9.end()), current9_(current9) {
+						ComputeCurrentValue();
+					}
+					virtual ~Iterator() {}
 
-				void ComputeCurrentValue() {
-					if (!AtEnd())
-						current_value_ = ParamType(*current1_, *current2_, *current3_,
-							*current4_, *current5_, *current6_, *current7_, *current8_,
-							*current9_);
-				}
-				bool AtEnd() const {
-					// We must report iterator past the end of the range when either of the
-					// component iterators has reached the end of its range.
-					return
-						current1_ == end1_ ||
-						current2_ == end2_ ||
-						current3_ == end3_ ||
-						current4_ == end4_ ||
-						current5_ == end5_ ||
-						current6_ == end6_ ||
-						current7_ == end7_ ||
-						current8_ == end8_ ||
-						current9_ == end9_;
-				}
+					virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
+						return base_;
+					}
+					// Advance should not be called on beyond-of-range iterators
+					// so no component iterators must be beyond end of range, either.
+					virtual void Advance() {
+						assert(!AtEnd());
+						++current9_;
+						if (current9_ == end9_) {
+							current9_ = begin9_;
+							++current8_;
+						}
+						if (current8_ == end8_) {
+							current8_ = begin8_;
+							++current7_;
+						}
+						if (current7_ == end7_) {
+							current7_ = begin7_;
+							++current6_;
+						}
+						if (current6_ == end6_) {
+							current6_ = begin6_;
+							++current5_;
+						}
+						if (current5_ == end5_) {
+							current5_ = begin5_;
+							++current4_;
+						}
+						if (current4_ == end4_) {
+							current4_ = begin4_;
+							++current3_;
+						}
+						if (current3_ == end3_) {
+							current3_ = begin3_;
+							++current2_;
+						}
+						if (current2_ == end2_) {
+							current2_ = begin2_;
+							++current1_;
+						}
+						ComputeCurrentValue();
+					}
+					virtual ParamIteratorInterface<ParamType>* Clone() const {
+						return new Iterator(*this);
+					}
+					virtual const ParamType* Current() const { return &current_value_; }
+					virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
+						// Having the same base generator guarantees that the other
+						// iterator is of the same type and we can downcast.
+						GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
+							<< "The program attempted to compare iterators "
+							<< "from different generators." << std::endl;
+						const Iterator* typed_other =
+							CheckedDowncastToActualType<const Iterator>(&other);
+						// We must report iterators equal if they both point beyond their
+						// respective ranges. That can happen in a variety of fashions,
+						// so we have to consult AtEnd().
+						return (AtEnd() && typed_other->AtEnd()) ||
+							(
+								current1_ == typed_other->current1_ &&
+								current2_ == typed_other->current2_ &&
+								current3_ == typed_other->current3_ &&
+								current4_ == typed_other->current4_ &&
+								current5_ == typed_other->current5_ &&
+								current6_ == typed_other->current6_ &&
+								current7_ == typed_other->current7_ &&
+								current8_ == typed_other->current8_ &&
+								current9_ == typed_other->current9_);
+					}
+
+				private:
+					Iterator(const Iterator& other)
+						: base_(other.base_),
+						begin1_(other.begin1_),
+						end1_(other.end1_),
+						current1_(other.current1_),
+						begin2_(other.begin2_),
+						end2_(other.end2_),
+						current2_(other.current2_),
+						begin3_(other.begin3_),
+						end3_(other.end3_),
+						current3_(other.current3_),
+						begin4_(other.begin4_),
+						end4_(other.end4_),
+						current4_(other.current4_),
+						begin5_(other.begin5_),
+						end5_(other.end5_),
+						current5_(other.current5_),
+						begin6_(other.begin6_),
+						end6_(other.end6_),
+						current6_(other.current6_),
+						begin7_(other.begin7_),
+						end7_(other.end7_),
+						current7_(other.current7_),
+						begin8_(other.begin8_),
+						end8_(other.end8_),
+						current8_(other.current8_),
+						begin9_(other.begin9_),
+						end9_(other.end9_),
+						current9_(other.current9_) {
+						ComputeCurrentValue();
+					}
+
+					void ComputeCurrentValue() {
+						if (!AtEnd())
+							current_value_ = ParamType(*current1_, *current2_, *current3_,
+								*current4_, *current5_, *current6_, *current7_, *current8_,
+								*current9_);
+					}
+					bool AtEnd() const {
+						// We must report iterator past the end of the range when either of the
+						// component iterators has reached the end of its range.
+						return
+							current1_ == end1_ ||
+							current2_ == end2_ ||
+							current3_ == end3_ ||
+							current4_ == end4_ ||
+							current5_ == end5_ ||
+							current6_ == end6_ ||
+							current7_ == end7_ ||
+							current8_ == end8_ ||
+							current9_ == end9_;
+					}
+
+					// No implementation - assignment is unsupported.
+					void operator=(const Iterator& other);
+
+					const ParamGeneratorInterface<ParamType>* const base_;
+					// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
+					// current[i]_ is the actual traversing iterator.
+					const typename ParamGenerator<T1>::iterator begin1_;
+					const typename ParamGenerator<T1>::iterator end1_;
+					typename ParamGenerator<T1>::iterator current1_;
+					const typename ParamGenerator<T2>::iterator begin2_;
+					const typename ParamGenerator<T2>::iterator end2_;
+					typename ParamGenerator<T2>::iterator current2_;
+					const typename ParamGenerator<T3>::iterator begin3_;
+					const typename ParamGenerator<T3>::iterator end3_;
+					typename ParamGenerator<T3>::iterator current3_;
+					const typename ParamGenerator<T4>::iterator begin4_;
+					const typename ParamGenerator<T4>::iterator end4_;
+					typename ParamGenerator<T4>::iterator current4_;
+					const typename ParamGenerator<T5>::iterator begin5_;
+					const typename ParamGenerator<T5>::iterator end5_;
+					typename ParamGenerator<T5>::iterator current5_;
+					const typename ParamGenerator<T6>::iterator begin6_;
+					const typename ParamGenerator<T6>::iterator end6_;
+					typename ParamGenerator<T6>::iterator current6_;
+					const typename ParamGenerator<T7>::iterator begin7_;
+					const typename ParamGenerator<T7>::iterator end7_;
+					typename ParamGenerator<T7>::iterator current7_;
+					const typename ParamGenerator<T8>::iterator begin8_;
+					const typename ParamGenerator<T8>::iterator end8_;
+					typename ParamGenerator<T8>::iterator current8_;
+					const typename ParamGenerator<T9>::iterator begin9_;
+					const typename ParamGenerator<T9>::iterator end9_;
+					typename ParamGenerator<T9>::iterator current9_;
+					ParamType current_value_;
+				};  // class CartesianProductGenerator9::Iterator
 
 				// No implementation - assignment is unsupported.
-				void operator=(const Iterator& other);
+				void operator=(const CartesianProductGenerator9& other);
 
-				const ParamGeneratorInterface<ParamType>* const base_;
-				// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-				// current[i]_ is the actual traversing iterator.
-				const typename ParamGenerator<T1>::iterator begin1_;
-				const typename ParamGenerator<T1>::iterator end1_;
-				typename ParamGenerator<T1>::iterator current1_;
-				const typename ParamGenerator<T2>::iterator begin2_;
-				const typename ParamGenerator<T2>::iterator end2_;
-				typename ParamGenerator<T2>::iterator current2_;
-				const typename ParamGenerator<T3>::iterator begin3_;
-				const typename ParamGenerator<T3>::iterator end3_;
-				typename ParamGenerator<T3>::iterator current3_;
-				const typename ParamGenerator<T4>::iterator begin4_;
-				const typename ParamGenerator<T4>::iterator end4_;
-				typename ParamGenerator<T4>::iterator current4_;
-				const typename ParamGenerator<T5>::iterator begin5_;
-				const typename ParamGenerator<T5>::iterator end5_;
-				typename ParamGenerator<T5>::iterator current5_;
-				const typename ParamGenerator<T6>::iterator begin6_;
-				const typename ParamGenerator<T6>::iterator end6_;
-				typename ParamGenerator<T6>::iterator current6_;
-				const typename ParamGenerator<T7>::iterator begin7_;
-				const typename ParamGenerator<T7>::iterator end7_;
-				typename ParamGenerator<T7>::iterator current7_;
-				const typename ParamGenerator<T8>::iterator begin8_;
-				const typename ParamGenerator<T8>::iterator end8_;
-				typename ParamGenerator<T8>::iterator current8_;
-				const typename ParamGenerator<T9>::iterator begin9_;
-				const typename ParamGenerator<T9>::iterator end9_;
-				typename ParamGenerator<T9>::iterator current9_;
-				ParamType current_value_;
-			};  // class CartesianProductGenerator9::Iterator
-
-				// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductGenerator9& other);
-
-			const ParamGenerator<T1> g1_;
-			const ParamGenerator<T2> g2_;
-			const ParamGenerator<T3> g3_;
-			const ParamGenerator<T4> g4_;
-			const ParamGenerator<T5> g5_;
-			const ParamGenerator<T6> g6_;
-			const ParamGenerator<T7> g7_;
-			const ParamGenerator<T8> g8_;
-			const ParamGenerator<T9> g9_;
+				const ParamGenerator<T1> g1_;
+				const ParamGenerator<T2> g2_;
+				const ParamGenerator<T3> g3_;
+				const ParamGenerator<T4> g4_;
+				const ParamGenerator<T5> g5_;
+				const ParamGenerator<T6> g6_;
+				const ParamGenerator<T7> g7_;
+				const ParamGenerator<T8> g8_;
+				const ParamGenerator<T9> g9_;
 		};  // class CartesianProductGenerator9
 
 
 		template <typename T1, typename T2, typename T3, typename T4, typename T5,
 			typename T6, typename T7, typename T8, typename T9, typename T10>
-		class CartesianProductGenerator10
+			class CartesianProductGenerator10
 			: public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
 			T7, T8, T9, T10> > {
-		public:
-			typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
-
-			CartesianProductGenerator10(const ParamGenerator<T1>& g1,
-				const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
-				const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
-				const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
-				const ParamGenerator<T8>& g8, const ParamGenerator<T9>& g9,
-				const ParamGenerator<T10>& g10)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
-				g9_(g9), g10_(g10) {}
-			virtual ~CartesianProductGenerator10() {}
-
-			virtual ParamIteratorInterface<ParamType>* Begin() const {
-				return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
-					g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
-					g7_.begin(), g8_, g8_.begin(), g9_, g9_.begin(), g10_, g10_.begin());
-			}
-			virtual ParamIteratorInterface<ParamType>* End() const {
-				return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
-					g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
-					g8_.end(), g9_, g9_.end(), g10_, g10_.end());
-			}
-
-		private:
-			class Iterator : public ParamIteratorInterface<ParamType> {
 			public:
-				Iterator(const ParamGeneratorInterface<ParamType>* base,
-					const ParamGenerator<T1>& g1,
-					const typename ParamGenerator<T1>::iterator& current1,
-					const ParamGenerator<T2>& g2,
-					const typename ParamGenerator<T2>::iterator& current2,
-					const ParamGenerator<T3>& g3,
-					const typename ParamGenerator<T3>::iterator& current3,
-					const ParamGenerator<T4>& g4,
-					const typename ParamGenerator<T4>::iterator& current4,
-					const ParamGenerator<T5>& g5,
-					const typename ParamGenerator<T5>::iterator& current5,
-					const ParamGenerator<T6>& g6,
-					const typename ParamGenerator<T6>::iterator& current6,
-					const ParamGenerator<T7>& g7,
-					const typename ParamGenerator<T7>::iterator& current7,
-					const ParamGenerator<T8>& g8,
-					const typename ParamGenerator<T8>::iterator& current8,
-					const ParamGenerator<T9>& g9,
-					const typename ParamGenerator<T9>::iterator& current9,
-					const ParamGenerator<T10>& g10,
-					const typename ParamGenerator<T10>::iterator& current10)
-					: base_(base),
-					begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
-					begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
-					begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
-					begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
-					begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
-					begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
-					begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
-					begin8_(g8.begin()), end8_(g8.end()), current8_(current8),
-					begin9_(g9.begin()), end9_(g9.end()), current9_(current9),
-					begin10_(g10.begin()), end10_(g10.end()), current10_(current10) {
-					ComputeCurrentValue();
-				}
-				virtual ~Iterator() {}
+				typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
 
-				virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
-					return base_;
+				CartesianProductGenerator10(const ParamGenerator<T1>& g1,
+					const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
+					const ParamGenerator<T4>& g4, const ParamGenerator<T5>& g5,
+					const ParamGenerator<T6>& g6, const ParamGenerator<T7>& g7,
+					const ParamGenerator<T8>& g8, const ParamGenerator<T9>& g9,
+					const ParamGenerator<T10>& g10)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
+					g9_(g9), g10_(g10) {}
+				virtual ~CartesianProductGenerator10() {}
+
+				virtual ParamIteratorInterface<ParamType>* Begin() const {
+					return new Iterator(this, g1_, g1_.begin(), g2_, g2_.begin(), g3_,
+						g3_.begin(), g4_, g4_.begin(), g5_, g5_.begin(), g6_, g6_.begin(), g7_,
+						g7_.begin(), g8_, g8_.begin(), g9_, g9_.begin(), g10_, g10_.begin());
 				}
-				// Advance should not be called on beyond-of-range iterators
-				// so no component iterators must be beyond end of range, either.
-				virtual void Advance() {
-					assert(!AtEnd());
-					++current10_;
-					if (current10_ == end10_) {
-						current10_ = begin10_;
-						++current9_;
-					}
-					if (current9_ == end9_) {
-						current9_ = begin9_;
-						++current8_;
-					}
-					if (current8_ == end8_) {
-						current8_ = begin8_;
-						++current7_;
-					}
-					if (current7_ == end7_) {
-						current7_ = begin7_;
-						++current6_;
-					}
-					if (current6_ == end6_) {
-						current6_ = begin6_;
-						++current5_;
-					}
-					if (current5_ == end5_) {
-						current5_ = begin5_;
-						++current4_;
-					}
-					if (current4_ == end4_) {
-						current4_ = begin4_;
-						++current3_;
-					}
-					if (current3_ == end3_) {
-						current3_ = begin3_;
-						++current2_;
-					}
-					if (current2_ == end2_) {
-						current2_ = begin2_;
-						++current1_;
-					}
-					ComputeCurrentValue();
-				}
-				virtual ParamIteratorInterface<ParamType>* Clone() const {
-					return new Iterator(*this);
-				}
-				virtual const ParamType* Current() const { return &current_value_; }
-				virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
-					// Having the same base generator guarantees that the other
-					// iterator is of the same type and we can downcast.
-					GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
-						<< "The program attempted to compare iterators "
-						<< "from different generators." << std::endl;
-					const Iterator* typed_other =
-						CheckedDowncastToActualType<const Iterator>(&other);
-					// We must report iterators equal if they both point beyond their
-					// respective ranges. That can happen in a variety of fashions,
-					// so we have to consult AtEnd().
-					return (AtEnd() && typed_other->AtEnd()) ||
-						(
-							current1_ == typed_other->current1_ &&
-							current2_ == typed_other->current2_ &&
-							current3_ == typed_other->current3_ &&
-							current4_ == typed_other->current4_ &&
-							current5_ == typed_other->current5_ &&
-							current6_ == typed_other->current6_ &&
-							current7_ == typed_other->current7_ &&
-							current8_ == typed_other->current8_ &&
-							current9_ == typed_other->current9_ &&
-							current10_ == typed_other->current10_);
+				virtual ParamIteratorInterface<ParamType>* End() const {
+					return new Iterator(this, g1_, g1_.end(), g2_, g2_.end(), g3_, g3_.end(),
+						g4_, g4_.end(), g5_, g5_.end(), g6_, g6_.end(), g7_, g7_.end(), g8_,
+						g8_.end(), g9_, g9_.end(), g10_, g10_.end());
 				}
 
 			private:
-				Iterator(const Iterator& other)
-					: base_(other.base_),
-					begin1_(other.begin1_),
-					end1_(other.end1_),
-					current1_(other.current1_),
-					begin2_(other.begin2_),
-					end2_(other.end2_),
-					current2_(other.current2_),
-					begin3_(other.begin3_),
-					end3_(other.end3_),
-					current3_(other.current3_),
-					begin4_(other.begin4_),
-					end4_(other.end4_),
-					current4_(other.current4_),
-					begin5_(other.begin5_),
-					end5_(other.end5_),
-					current5_(other.current5_),
-					begin6_(other.begin6_),
-					end6_(other.end6_),
-					current6_(other.current6_),
-					begin7_(other.begin7_),
-					end7_(other.end7_),
-					current7_(other.current7_),
-					begin8_(other.begin8_),
-					end8_(other.end8_),
-					current8_(other.current8_),
-					begin9_(other.begin9_),
-					end9_(other.end9_),
-					current9_(other.current9_),
-					begin10_(other.begin10_),
-					end10_(other.end10_),
-					current10_(other.current10_) {
-					ComputeCurrentValue();
-				}
+				class Iterator : public ParamIteratorInterface<ParamType> {
+				public:
+					Iterator(const ParamGeneratorInterface<ParamType>* base,
+						const ParamGenerator<T1>& g1,
+						const typename ParamGenerator<T1>::iterator& current1,
+						const ParamGenerator<T2>& g2,
+						const typename ParamGenerator<T2>::iterator& current2,
+						const ParamGenerator<T3>& g3,
+						const typename ParamGenerator<T3>::iterator& current3,
+						const ParamGenerator<T4>& g4,
+						const typename ParamGenerator<T4>::iterator& current4,
+						const ParamGenerator<T5>& g5,
+						const typename ParamGenerator<T5>::iterator& current5,
+						const ParamGenerator<T6>& g6,
+						const typename ParamGenerator<T6>::iterator& current6,
+						const ParamGenerator<T7>& g7,
+						const typename ParamGenerator<T7>::iterator& current7,
+						const ParamGenerator<T8>& g8,
+						const typename ParamGenerator<T8>::iterator& current8,
+						const ParamGenerator<T9>& g9,
+						const typename ParamGenerator<T9>::iterator& current9,
+						const ParamGenerator<T10>& g10,
+						const typename ParamGenerator<T10>::iterator& current10)
+						: base_(base),
+						begin1_(g1.begin()), end1_(g1.end()), current1_(current1),
+						begin2_(g2.begin()), end2_(g2.end()), current2_(current2),
+						begin3_(g3.begin()), end3_(g3.end()), current3_(current3),
+						begin4_(g4.begin()), end4_(g4.end()), current4_(current4),
+						begin5_(g5.begin()), end5_(g5.end()), current5_(current5),
+						begin6_(g6.begin()), end6_(g6.end()), current6_(current6),
+						begin7_(g7.begin()), end7_(g7.end()), current7_(current7),
+						begin8_(g8.begin()), end8_(g8.end()), current8_(current8),
+						begin9_(g9.begin()), end9_(g9.end()), current9_(current9),
+						begin10_(g10.begin()), end10_(g10.end()), current10_(current10) {
+						ComputeCurrentValue();
+					}
+					virtual ~Iterator() {}
 
-				void ComputeCurrentValue() {
-					if (!AtEnd())
-						current_value_ = ParamType(*current1_, *current2_, *current3_,
-							*current4_, *current5_, *current6_, *current7_, *current8_,
-							*current9_, *current10_);
-				}
-				bool AtEnd() const {
-					// We must report iterator past the end of the range when either of the
-					// component iterators has reached the end of its range.
-					return
-						current1_ == end1_ ||
-						current2_ == end2_ ||
-						current3_ == end3_ ||
-						current4_ == end4_ ||
-						current5_ == end5_ ||
-						current6_ == end6_ ||
-						current7_ == end7_ ||
-						current8_ == end8_ ||
-						current9_ == end9_ ||
-						current10_ == end10_;
-				}
+					virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const {
+						return base_;
+					}
+					// Advance should not be called on beyond-of-range iterators
+					// so no component iterators must be beyond end of range, either.
+					virtual void Advance() {
+						assert(!AtEnd());
+						++current10_;
+						if (current10_ == end10_) {
+							current10_ = begin10_;
+							++current9_;
+						}
+						if (current9_ == end9_) {
+							current9_ = begin9_;
+							++current8_;
+						}
+						if (current8_ == end8_) {
+							current8_ = begin8_;
+							++current7_;
+						}
+						if (current7_ == end7_) {
+							current7_ = begin7_;
+							++current6_;
+						}
+						if (current6_ == end6_) {
+							current6_ = begin6_;
+							++current5_;
+						}
+						if (current5_ == end5_) {
+							current5_ = begin5_;
+							++current4_;
+						}
+						if (current4_ == end4_) {
+							current4_ = begin4_;
+							++current3_;
+						}
+						if (current3_ == end3_) {
+							current3_ = begin3_;
+							++current2_;
+						}
+						if (current2_ == end2_) {
+							current2_ = begin2_;
+							++current1_;
+						}
+						ComputeCurrentValue();
+					}
+					virtual ParamIteratorInterface<ParamType>* Clone() const {
+						return new Iterator(*this);
+					}
+					virtual const ParamType* Current() const { return &current_value_; }
+					virtual bool Equals(const ParamIteratorInterface<ParamType>& other) const {
+						// Having the same base generator guarantees that the other
+						// iterator is of the same type and we can downcast.
+						GTEST_CHECK_(BaseGenerator() == other.BaseGenerator())
+							<< "The program attempted to compare iterators "
+							<< "from different generators." << std::endl;
+						const Iterator* typed_other =
+							CheckedDowncastToActualType<const Iterator>(&other);
+						// We must report iterators equal if they both point beyond their
+						// respective ranges. That can happen in a variety of fashions,
+						// so we have to consult AtEnd().
+						return (AtEnd() && typed_other->AtEnd()) ||
+							(
+								current1_ == typed_other->current1_ &&
+								current2_ == typed_other->current2_ &&
+								current3_ == typed_other->current3_ &&
+								current4_ == typed_other->current4_ &&
+								current5_ == typed_other->current5_ &&
+								current6_ == typed_other->current6_ &&
+								current7_ == typed_other->current7_ &&
+								current8_ == typed_other->current8_ &&
+								current9_ == typed_other->current9_ &&
+								current10_ == typed_other->current10_);
+					}
+
+				private:
+					Iterator(const Iterator& other)
+						: base_(other.base_),
+						begin1_(other.begin1_),
+						end1_(other.end1_),
+						current1_(other.current1_),
+						begin2_(other.begin2_),
+						end2_(other.end2_),
+						current2_(other.current2_),
+						begin3_(other.begin3_),
+						end3_(other.end3_),
+						current3_(other.current3_),
+						begin4_(other.begin4_),
+						end4_(other.end4_),
+						current4_(other.current4_),
+						begin5_(other.begin5_),
+						end5_(other.end5_),
+						current5_(other.current5_),
+						begin6_(other.begin6_),
+						end6_(other.end6_),
+						current6_(other.current6_),
+						begin7_(other.begin7_),
+						end7_(other.end7_),
+						current7_(other.current7_),
+						begin8_(other.begin8_),
+						end8_(other.end8_),
+						current8_(other.current8_),
+						begin9_(other.begin9_),
+						end9_(other.end9_),
+						current9_(other.current9_),
+						begin10_(other.begin10_),
+						end10_(other.end10_),
+						current10_(other.current10_) {
+						ComputeCurrentValue();
+					}
+
+					void ComputeCurrentValue() {
+						if (!AtEnd())
+							current_value_ = ParamType(*current1_, *current2_, *current3_,
+								*current4_, *current5_, *current6_, *current7_, *current8_,
+								*current9_, *current10_);
+					}
+					bool AtEnd() const {
+						// We must report iterator past the end of the range when either of the
+						// component iterators has reached the end of its range.
+						return
+							current1_ == end1_ ||
+							current2_ == end2_ ||
+							current3_ == end3_ ||
+							current4_ == end4_ ||
+							current5_ == end5_ ||
+							current6_ == end6_ ||
+							current7_ == end7_ ||
+							current8_ == end8_ ||
+							current9_ == end9_ ||
+							current10_ == end10_;
+					}
+
+					// No implementation - assignment is unsupported.
+					void operator=(const Iterator& other);
+
+					const ParamGeneratorInterface<ParamType>* const base_;
+					// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
+					// current[i]_ is the actual traversing iterator.
+					const typename ParamGenerator<T1>::iterator begin1_;
+					const typename ParamGenerator<T1>::iterator end1_;
+					typename ParamGenerator<T1>::iterator current1_;
+					const typename ParamGenerator<T2>::iterator begin2_;
+					const typename ParamGenerator<T2>::iterator end2_;
+					typename ParamGenerator<T2>::iterator current2_;
+					const typename ParamGenerator<T3>::iterator begin3_;
+					const typename ParamGenerator<T3>::iterator end3_;
+					typename ParamGenerator<T3>::iterator current3_;
+					const typename ParamGenerator<T4>::iterator begin4_;
+					const typename ParamGenerator<T4>::iterator end4_;
+					typename ParamGenerator<T4>::iterator current4_;
+					const typename ParamGenerator<T5>::iterator begin5_;
+					const typename ParamGenerator<T5>::iterator end5_;
+					typename ParamGenerator<T5>::iterator current5_;
+					const typename ParamGenerator<T6>::iterator begin6_;
+					const typename ParamGenerator<T6>::iterator end6_;
+					typename ParamGenerator<T6>::iterator current6_;
+					const typename ParamGenerator<T7>::iterator begin7_;
+					const typename ParamGenerator<T7>::iterator end7_;
+					typename ParamGenerator<T7>::iterator current7_;
+					const typename ParamGenerator<T8>::iterator begin8_;
+					const typename ParamGenerator<T8>::iterator end8_;
+					typename ParamGenerator<T8>::iterator current8_;
+					const typename ParamGenerator<T9>::iterator begin9_;
+					const typename ParamGenerator<T9>::iterator end9_;
+					typename ParamGenerator<T9>::iterator current9_;
+					const typename ParamGenerator<T10>::iterator begin10_;
+					const typename ParamGenerator<T10>::iterator end10_;
+					typename ParamGenerator<T10>::iterator current10_;
+					ParamType current_value_;
+				};  // class CartesianProductGenerator10::Iterator
 
 				// No implementation - assignment is unsupported.
-				void operator=(const Iterator& other);
+				void operator=(const CartesianProductGenerator10& other);
 
-				const ParamGeneratorInterface<ParamType>* const base_;
-				// begin[i]_ and end[i]_ define the i-th range that Iterator traverses.
-				// current[i]_ is the actual traversing iterator.
-				const typename ParamGenerator<T1>::iterator begin1_;
-				const typename ParamGenerator<T1>::iterator end1_;
-				typename ParamGenerator<T1>::iterator current1_;
-				const typename ParamGenerator<T2>::iterator begin2_;
-				const typename ParamGenerator<T2>::iterator end2_;
-				typename ParamGenerator<T2>::iterator current2_;
-				const typename ParamGenerator<T3>::iterator begin3_;
-				const typename ParamGenerator<T3>::iterator end3_;
-				typename ParamGenerator<T3>::iterator current3_;
-				const typename ParamGenerator<T4>::iterator begin4_;
-				const typename ParamGenerator<T4>::iterator end4_;
-				typename ParamGenerator<T4>::iterator current4_;
-				const typename ParamGenerator<T5>::iterator begin5_;
-				const typename ParamGenerator<T5>::iterator end5_;
-				typename ParamGenerator<T5>::iterator current5_;
-				const typename ParamGenerator<T6>::iterator begin6_;
-				const typename ParamGenerator<T6>::iterator end6_;
-				typename ParamGenerator<T6>::iterator current6_;
-				const typename ParamGenerator<T7>::iterator begin7_;
-				const typename ParamGenerator<T7>::iterator end7_;
-				typename ParamGenerator<T7>::iterator current7_;
-				const typename ParamGenerator<T8>::iterator begin8_;
-				const typename ParamGenerator<T8>::iterator end8_;
-				typename ParamGenerator<T8>::iterator current8_;
-				const typename ParamGenerator<T9>::iterator begin9_;
-				const typename ParamGenerator<T9>::iterator end9_;
-				typename ParamGenerator<T9>::iterator current9_;
-				const typename ParamGenerator<T10>::iterator begin10_;
-				const typename ParamGenerator<T10>::iterator end10_;
-				typename ParamGenerator<T10>::iterator current10_;
-				ParamType current_value_;
-			};  // class CartesianProductGenerator10::Iterator
-
-				// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductGenerator10& other);
-
-			const ParamGenerator<T1> g1_;
-			const ParamGenerator<T2> g2_;
-			const ParamGenerator<T3> g3_;
-			const ParamGenerator<T4> g4_;
-			const ParamGenerator<T5> g5_;
-			const ParamGenerator<T6> g6_;
-			const ParamGenerator<T7> g7_;
-			const ParamGenerator<T8> g8_;
-			const ParamGenerator<T9> g9_;
-			const ParamGenerator<T10> g10_;
+				const ParamGenerator<T1> g1_;
+				const ParamGenerator<T2> g2_;
+				const ParamGenerator<T3> g3_;
+				const ParamGenerator<T4> g4_;
+				const ParamGenerator<T5> g5_;
+				const ParamGenerator<T6> g6_;
+				const ParamGenerator<T7> g7_;
+				const ParamGenerator<T8> g8_;
+				const ParamGenerator<T9> g9_;
+				const ParamGenerator<T10> g10_;
 		};  // class CartesianProductGenerator10
 
 
-			// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
-			//
-			// Helper classes providing Combine() with polymorphic features. They allow
-			// casting CartesianProductGeneratorN<T> to ParamGenerator<U> if T is
-			// convertible to U.
-			//
+		// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
+		//
+		// Helper classes providing Combine() with polymorphic features. They allow
+		// casting CartesianProductGeneratorN<T> to ParamGenerator<U> if T is
+		// convertible to U.
+		//
 		template <class Generator1, class Generator2>
 		class CartesianProductHolder2 {
 		public:
@@ -15474,8 +15475,8 @@ namespace testing {
 			operator ParamGenerator< ::std::tr1::tuple<T1, T2> >() const {
 				return ParamGenerator< ::std::tr1::tuple<T1, T2> >(
 					new CartesianProductGenerator2<T1, T2>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_)));
+						static_cast<ParamGenerator<T1>>(g1_),
+						static_cast<ParamGenerator<T2>>(g2_)));
 			}
 
 		private:
@@ -15496,9 +15497,9 @@ namespace testing {
 			operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3> >() const {
 				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3> >(
 					new CartesianProductGenerator3<T1, T2, T3>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_)));
+						static_cast<ParamGenerator<T1>>(g1_),
+						static_cast<ParamGenerator<T2>>(g2_),
+						static_cast<ParamGenerator<T3>>(g3_)));
 			}
 
 		private:
@@ -15511,259 +15512,259 @@ namespace testing {
 		};  // class CartesianProductHolder3
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4>
-		class CartesianProductHolder4 {
-		public:
-			CartesianProductHolder4(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4) {}
-			template <typename T1, typename T2, typename T3, typename T4>
-			operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >(
-					new CartesianProductGenerator4<T1, T2, T3, T4>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_),
-						static_cast<ParamGenerator<T4> >(g4_)));
-			}
+			class Generator4>
+			class CartesianProductHolder4 {
+			public:
+				CartesianProductHolder4(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4) {}
+				template <typename T1, typename T2, typename T3, typename T4>
+				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >(
+						new CartesianProductGenerator4<T1, T2, T3, T4>(
+							static_cast<ParamGenerator<T1>>(g1_),
+							static_cast<ParamGenerator<T2>>(g2_),
+							static_cast<ParamGenerator<T3>>(g3_),
+							static_cast<ParamGenerator<T4>>(g4_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder4& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder4& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
 		};  // class CartesianProductHolder4
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5>
-		class CartesianProductHolder5 {
-		public:
-			CartesianProductHolder5(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5>
-			operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >(
-					new CartesianProductGenerator5<T1, T2, T3, T4, T5>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_),
-						static_cast<ParamGenerator<T4> >(g4_),
-						static_cast<ParamGenerator<T5> >(g5_)));
-			}
+			class Generator4, class Generator5>
+			class CartesianProductHolder5 {
+			public:
+				CartesianProductHolder5(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5>
+				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >(
+						new CartesianProductGenerator5<T1, T2, T3, T4, T5>(
+							static_cast<ParamGenerator<T1>>(g1_),
+							static_cast<ParamGenerator<T2>>(g2_),
+							static_cast<ParamGenerator<T3>>(g3_),
+							static_cast<ParamGenerator<T4>>(g4_),
+							static_cast<ParamGenerator<T5>>(g5_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder5& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder5& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
 		};  // class CartesianProductHolder5
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5, class Generator6>
-		class CartesianProductHolder6 {
-		public:
-			CartesianProductHolder6(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5,
-				const Generator6& g6)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5,
-				typename T6>
-				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >(
-					new CartesianProductGenerator6<T1, T2, T3, T4, T5, T6>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_),
-						static_cast<ParamGenerator<T4> >(g4_),
-						static_cast<ParamGenerator<T5> >(g5_),
-						static_cast<ParamGenerator<T6> >(g6_)));
-			}
+			class Generator4, class Generator5, class Generator6>
+			class CartesianProductHolder6 {
+			public:
+				CartesianProductHolder6(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5,
+					const Generator6& g6)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5,
+					typename T6>
+					operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >(
+						new CartesianProductGenerator6<T1, T2, T3, T4, T5, T6>(
+							static_cast<ParamGenerator<T1>>(g1_),
+							static_cast<ParamGenerator<T2>>(g2_),
+							static_cast<ParamGenerator<T3>>(g3_),
+							static_cast<ParamGenerator<T4>>(g4_),
+							static_cast<ParamGenerator<T5>>(g5_),
+							static_cast<ParamGenerator<T6>>(g6_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder6& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder6& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
-			const Generator6 g6_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
+				const Generator6 g6_;
 		};  // class CartesianProductHolder6
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5, class Generator6, class Generator7>
-		class CartesianProductHolder7 {
-		public:
-			CartesianProductHolder7(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5,
-				const Generator6& g6, const Generator7& g7)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5,
-				typename T6, typename T7>
-				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
-				T7> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> >(
-					new CartesianProductGenerator7<T1, T2, T3, T4, T5, T6, T7>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_),
-						static_cast<ParamGenerator<T4> >(g4_),
-						static_cast<ParamGenerator<T5> >(g5_),
-						static_cast<ParamGenerator<T6> >(g6_),
-						static_cast<ParamGenerator<T7> >(g7_)));
-			}
+			class Generator4, class Generator5, class Generator6, class Generator7>
+			class CartesianProductHolder7 {
+			public:
+				CartesianProductHolder7(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5,
+					const Generator6& g6, const Generator7& g7)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5,
+					typename T6, typename T7>
+					operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+					T7> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> >(
+						new CartesianProductGenerator7<T1, T2, T3, T4, T5, T6, T7>(
+							static_cast<ParamGenerator<T1>>(g1_),
+							static_cast<ParamGenerator<T2>>(g2_),
+							static_cast<ParamGenerator<T3>>(g3_),
+							static_cast<ParamGenerator<T4>>(g4_),
+							static_cast<ParamGenerator<T5>>(g5_),
+							static_cast<ParamGenerator<T6>>(g6_),
+							static_cast<ParamGenerator<T7>>(g7_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder7& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder7& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
-			const Generator6 g6_;
-			const Generator7 g7_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
+				const Generator6 g6_;
+				const Generator7 g7_;
 		};  // class CartesianProductHolder7
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5, class Generator6, class Generator7,
-		class Generator8>
-		class CartesianProductHolder8 {
-		public:
-			CartesianProductHolder8(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5,
-				const Generator6& g6, const Generator7& g7, const Generator8& g8)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7),
-				g8_(g8) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5,
-				typename T6, typename T7, typename T8>
-				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7,
-				T8> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> >(
-					new CartesianProductGenerator8<T1, T2, T3, T4, T5, T6, T7, T8>(
-						static_cast<ParamGenerator<T1> >(g1_),
-						static_cast<ParamGenerator<T2> >(g2_),
-						static_cast<ParamGenerator<T3> >(g3_),
-						static_cast<ParamGenerator<T4> >(g4_),
-						static_cast<ParamGenerator<T5> >(g5_),
-						static_cast<ParamGenerator<T6> >(g6_),
-						static_cast<ParamGenerator<T7> >(g7_),
-						static_cast<ParamGenerator<T8> >(g8_)));
-			}
+			class Generator4, class Generator5, class Generator6, class Generator7,
+			class Generator8>
+			class CartesianProductHolder8 {
+			public:
+				CartesianProductHolder8(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5,
+					const Generator6& g6, const Generator7& g7, const Generator8& g8)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7),
+					g8_(g8) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5,
+					typename T6, typename T7, typename T8>
+					operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7,
+					T8> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> >(
+						new CartesianProductGenerator8<T1, T2, T3, T4, T5, T6, T7, T8>(
+							static_cast<ParamGenerator<T1>>(g1_),
+							static_cast<ParamGenerator<T2>>(g2_),
+							static_cast<ParamGenerator<T3>>(g3_),
+							static_cast<ParamGenerator<T4>>(g4_),
+							static_cast<ParamGenerator<T5>>(g5_),
+							static_cast<ParamGenerator<T6>>(g6_),
+							static_cast<ParamGenerator<T7>>(g7_),
+							static_cast<ParamGenerator<T8>>(g8_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder8& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder8& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
-			const Generator6 g6_;
-			const Generator7 g7_;
-			const Generator8 g8_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
+				const Generator6 g6_;
+				const Generator7 g7_;
+				const Generator8 g8_;
 		};  // class CartesianProductHolder8
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5, class Generator6, class Generator7,
-		class Generator8, class Generator9>
-		class CartesianProductHolder9 {
-		public:
-			CartesianProductHolder9(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5,
-				const Generator6& g6, const Generator7& g7, const Generator8& g8,
-				const Generator9& g9)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
-				g9_(g9) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5,
-				typename T6, typename T7, typename T8, typename T9>
-				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
-				T9> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
-					T9> >(
-						new CartesianProductGenerator9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
-							static_cast<ParamGenerator<T1> >(g1_),
-							static_cast<ParamGenerator<T2> >(g2_),
-							static_cast<ParamGenerator<T3> >(g3_),
-							static_cast<ParamGenerator<T4> >(g4_),
-							static_cast<ParamGenerator<T5> >(g5_),
-							static_cast<ParamGenerator<T6> >(g6_),
-							static_cast<ParamGenerator<T7> >(g7_),
-							static_cast<ParamGenerator<T8> >(g8_),
-							static_cast<ParamGenerator<T9> >(g9_)));
-			}
+			class Generator4, class Generator5, class Generator6, class Generator7,
+			class Generator8, class Generator9>
+			class CartesianProductHolder9 {
+			public:
+				CartesianProductHolder9(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5,
+					const Generator6& g6, const Generator7& g7, const Generator8& g8,
+					const Generator9& g9)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
+					g9_(g9) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5,
+					typename T6, typename T7, typename T8, typename T9>
+					operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+					T9> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+						T9> >(
+							new CartesianProductGenerator9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
+								static_cast<ParamGenerator<T1>>(g1_),
+								static_cast<ParamGenerator<T2>>(g2_),
+								static_cast<ParamGenerator<T3>>(g3_),
+								static_cast<ParamGenerator<T4>>(g4_),
+								static_cast<ParamGenerator<T5>>(g5_),
+								static_cast<ParamGenerator<T6>>(g6_),
+								static_cast<ParamGenerator<T7>>(g7_),
+								static_cast<ParamGenerator<T8>>(g8_),
+								static_cast<ParamGenerator<T9>>(g9_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder9& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder9& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
-			const Generator6 g6_;
-			const Generator7 g7_;
-			const Generator8 g8_;
-			const Generator9 g9_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
+				const Generator6 g6_;
+				const Generator7 g7_;
+				const Generator8 g8_;
+				const Generator9 g9_;
 		};  // class CartesianProductHolder9
 
 		template <class Generator1, class Generator2, class Generator3,
-		class Generator4, class Generator5, class Generator6, class Generator7,
-		class Generator8, class Generator9, class Generator10>
-		class CartesianProductHolder10 {
-		public:
-			CartesianProductHolder10(const Generator1& g1, const Generator2& g2,
-				const Generator3& g3, const Generator4& g4, const Generator5& g5,
-				const Generator6& g6, const Generator7& g7, const Generator8& g8,
-				const Generator9& g9, const Generator10& g10)
-				: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
-				g9_(g9), g10_(g10) {}
-			template <typename T1, typename T2, typename T3, typename T4, typename T5,
-				typename T6, typename T7, typename T8, typename T9, typename T10>
-				operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
-				T9, T10> >() const {
-				return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
-					T9, T10> >(
-						new CartesianProductGenerator10<T1, T2, T3, T4, T5, T6, T7, T8, T9,
-						T10>(
-							static_cast<ParamGenerator<T1> >(g1_),
-							static_cast<ParamGenerator<T2> >(g2_),
-							static_cast<ParamGenerator<T3> >(g3_),
-							static_cast<ParamGenerator<T4> >(g4_),
-							static_cast<ParamGenerator<T5> >(g5_),
-							static_cast<ParamGenerator<T6> >(g6_),
-							static_cast<ParamGenerator<T7> >(g7_),
-							static_cast<ParamGenerator<T8> >(g8_),
-							static_cast<ParamGenerator<T9> >(g9_),
-							static_cast<ParamGenerator<T10> >(g10_)));
-			}
+			class Generator4, class Generator5, class Generator6, class Generator7,
+			class Generator8, class Generator9, class Generator10>
+			class CartesianProductHolder10 {
+			public:
+				CartesianProductHolder10(const Generator1& g1, const Generator2& g2,
+					const Generator3& g3, const Generator4& g4, const Generator5& g5,
+					const Generator6& g6, const Generator7& g7, const Generator8& g8,
+					const Generator9& g9, const Generator10& g10)
+					: g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7), g8_(g8),
+					g9_(g9), g10_(g10) {}
+				template <typename T1, typename T2, typename T3, typename T4, typename T5,
+					typename T6, typename T7, typename T8, typename T9, typename T10>
+					operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+					T9, T10> >() const {
+					return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+						T9, T10> >(
+							new CartesianProductGenerator10<T1, T2, T3, T4, T5, T6, T7, T8, T9,
+							T10>(
+								static_cast<ParamGenerator<T1>>(g1_),
+								static_cast<ParamGenerator<T2>>(g2_),
+								static_cast<ParamGenerator<T3>>(g3_),
+								static_cast<ParamGenerator<T4>>(g4_),
+								static_cast<ParamGenerator<T5>>(g5_),
+								static_cast<ParamGenerator<T6>>(g6_),
+								static_cast<ParamGenerator<T7>>(g7_),
+								static_cast<ParamGenerator<T8>>(g8_),
+								static_cast<ParamGenerator<T9>>(g9_),
+								static_cast<ParamGenerator<T10>>(g10_)));
+				}
 
-		private:
-			// No implementation - assignment is unsupported.
-			void operator=(const CartesianProductHolder10& other);
+			private:
+				// No implementation - assignment is unsupported.
+				void operator=(const CartesianProductHolder10& other);
 
-			const Generator1 g1_;
-			const Generator2 g2_;
-			const Generator3 g3_;
-			const Generator4 g4_;
-			const Generator5 g5_;
-			const Generator6 g6_;
-			const Generator7 g7_;
-			const Generator8 g8_;
-			const Generator9 g9_;
-			const Generator10 g10_;
+				const Generator1 g1_;
+				const Generator2 g2_;
+				const Generator3 g3_;
+				const Generator4 g4_;
+				const Generator5 g5_;
+				const Generator6 g6_;
+				const Generator7 g7_;
+				const Generator8 g8_;
+				const Generator9 g9_;
+				const Generator10 g10_;
 		};  // class CartesianProductHolder10
 
 # endif  // GTEST_HAS_COMBINE
@@ -17002,95 +17003,95 @@ namespace testing {
 #endif  // GTEST_HAS_PARAM_TEST
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
-   // Copyright 2006, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
-   //
-   // Google C++ Testing Framework definitions useful in production code.
+// Copyright 2006, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
+//
+// Google C++ Testing Framework definitions useful in production code.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PROD_H_
 #define GTEST_INCLUDE_GTEST_GTEST_PROD_H_
 
-   // When you need to test the private or protected members of a class,
-   // use the FRIEND_TEST macro to declare your tests as friends of the
-   // class.  For example:
-   //
-   // class MyClass {
-   //  private:
-   //   void MyMethod();
-   //   FRIEND_TEST(MyClassTest, MyMethod);
-   // };
-   //
-   // class MyClassTest : public testing::Test {
-   //   // ...
-   // };
-   //
-   // TEST_F(MyClassTest, MyMethod) {
-   //   // Can call MyClass::MyMethod() here.
-   // }
+// When you need to test the private or protected members of a class,
+// use the FRIEND_TEST macro to declare your tests as friends of the
+// class.  For example:
+//
+// class MyClass {
+//  private:
+//   void MyMethod();
+//   FRIEND_TEST(MyClassTest, MyMethod);
+// };
+//
+// class MyClassTest : public testing::Test {
+//   // ...
+// };
+//
+// TEST_F(MyClassTest, MyMethod) {
+//   // Can call MyClass::MyMethod() here.
+// }
 
 #define FRIEND_TEST(test_case_name, test_name)\
 friend class test_case_name##_##test_name##_Test
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_PROD_H_
-   // Copyright 2008, Google Inc.
-   // All rights reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: mheule@google.com (Markus Heule)
-   //
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: mheule@google.com (Markus Heule)
+//
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
 #define GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
@@ -17237,50 +17238,50 @@ namespace testing {
 }  // namespace testing
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
-   // Copyright 2008 Google Inc.
-   // All Rights Reserved.
-   //
-   // Redistribution and use in source and binary forms, with or without
-   // modification, are permitted provided that the following conditions are
-   // met:
-   //
-   //     * Redistributions of source code must retain the above copyright
-   // notice, this list of conditions and the following disclaimer.
-   //     * Redistributions in binary form must reproduce the above
-   // copyright notice, this list of conditions and the following disclaimer
-   // in the documentation and/or other materials provided with the
-   // distribution.
-   //     * Neither the name of Google Inc. nor the names of its
-   // contributors may be used to endorse or promote products derived from
-   // this software without specific prior written permission.
-   //
-   // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   //
-   // Author: wan@google.com (Zhanyong Wan)
+// Copyright 2008 Google Inc.
+// All Rights Reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: wan@google.com (Zhanyong Wan)
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 
-   // This header implements typed tests and type-parameterized tests.
+// This header implements typed tests and type-parameterized tests.
 
-   // Typed (aka type-driven) tests repeat the same test for types in a
-   // list.  You must know which types you want to test with when writing
-   // typed tests. Here's how you do it:
+// Typed (aka type-driven) tests repeat the same test for types in a
+// list.  You must know which types you want to test with when writing
+// typed tests. Here's how you do it:
 
 #if 0
 
-   // First, define a fixture class template.  It should be parameterized
-   // by a type.  Remember to derive it from testing::Test.
+// First, define a fixture class template.  It should be parameterized
+// by a type.  Remember to derive it from testing::Test.
 template <typename T>
 class FooTest : public testing::Test {
 public:
@@ -17596,9 +17597,9 @@ namespace testing {
 
 	}  // namespace internal
 
-	   // The friend relationship of some of these classes is cyclic.
-	   // If we don't forward declare them the compiler might confuse the classes
-	   // in friendship clauses with same named classes on the scope.
+	// The friend relationship of some of these classes is cyclic.
+	// If we don't forward declare them the compiler might confuse the classes
+	// in friendship clauses with same named classes on the scope.
 	class Test;
 	class TestCase;
 	class TestInfo;
@@ -17694,7 +17695,7 @@ namespace testing {
 		// Returns true iff the assertion succeeded.
 		operator bool() const { return success_; }  // NOLINT
 
-													// Returns the assertion's negation. Used with EXPECT/ASSERT_FALSE.
+		// Returns the assertion's negation. Used with EXPECT/ASSERT_FALSE.
 		AssertionResult operator!() const;
 
 		// Returns the text streamed into this AssertionResult. Test assertions
@@ -18037,17 +18038,17 @@ namespace testing {
 		GTEST_DISALLOW_COPY_AND_ASSIGN_(TestResult);
 	};  // class TestResult
 
-		// A TestInfo object stores the following information about a test:
-		//
-		//   Test case name
-		//   Test name
-		//   Whether the test should be run
-		//   A function pointer that creates the test object when invoked
-		//   Test result
-		//
-		// The constructor of TestInfo registers itself with the UnitTest
-		// singleton such that the RUN_ALL_TESTS() macro knows which tests to
-		// run.
+	// A TestInfo object stores the following information about a test:
+	//
+	//   Test case name
+	//   Test name
+	//   Whether the test should be run
+	//   A function pointer that creates the test object when invoked
+	//   Test result
+	//
+	// The constructor of TestInfo registers itself with the UnitTest
+	// singleton such that the RUN_ALL_TESTS() macro knows which tests to
+	// run.
 	class GTEST_API_ TestInfo {
 	public:
 		// Destructs a TestInfo object.  This function is not virtual, so
@@ -18149,8 +18150,8 @@ namespace testing {
 		// These fields are immutable properties of the test.
 		const std::string test_case_name_;     // Test case name
 		const std::string name_;               // Test name
-											   // Name of the parameter type, or NULL if this is not a typed or a
-											   // type-parameterized test.
+		// Name of the parameter type, or NULL if this is not a typed or a
+		// type-parameterized test.
 		const internal::scoped_ptr<const ::std::string> type_param_;
 		// Text representation of the value parameter, or NULL if this is not a
 		// value-parameterized test.
@@ -18163,8 +18164,8 @@ namespace testing {
 		internal::TestFactoryBase* const factory_;  // The factory that creates
 													// the test object
 
-													// This field is mutable and needs to be reset before running the
-													// test for the second time.
+		// This field is mutable and needs to be reset before running the
+		// test for the second time.
 		TestResult result_;
 
 		GTEST_DISALLOW_COPY_AND_ASSIGN_(TestInfo);
@@ -19001,18 +19002,18 @@ AssertionResult CmpHelper##op_name(const char* expr1, const char* expr2, \
 GTEST_API_ AssertionResult CmpHelper##op_name(\
     const char* expr1, const char* expr2, BiggestInt val1, BiggestInt val2)
 
-		// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
+// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
 
-		// Implements the helper function for {ASSERT|EXPECT}_NE
+// Implements the helper function for {ASSERT|EXPECT}_NE
 		GTEST_IMPL_CMP_HELPER_(NE, != );
 		// Implements the helper function for {ASSERT|EXPECT}_LE
 		GTEST_IMPL_CMP_HELPER_(LE, <= );
 		// Implements the helper function for {ASSERT|EXPECT}_LT
-		GTEST_IMPL_CMP_HELPER_(LT, <);
+		GTEST_IMPL_CMP_HELPER_(LT, < );
 		// Implements the helper function for {ASSERT|EXPECT}_GE
 		GTEST_IMPL_CMP_HELPER_(GE, >= );
 		// Implements the helper function for {ASSERT|EXPECT}_GT
-		GTEST_IMPL_CMP_HELPER_(GT, >);
+		GTEST_IMPL_CMP_HELPER_(GT, > );
 
 #undef GTEST_IMPL_CMP_HELPER_
 
@@ -19067,14 +19068,14 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 	}  // namespace internal
 
-	   // IsSubstring() and IsNotSubstring() are intended to be used as the
-	   // first argument to {EXPECT,ASSERT}_PRED_FORMAT2(), not by
-	   // themselves.  They check whether needle is a substring of haystack
-	   // (NULL is considered a substring of itself only), and return an
-	   // appropriate error message when they fail.
-	   //
-	   // The {needle,haystack}_expr arguments are the stringified
-	   // expressions that generated the two real arguments.
+	// IsSubstring() and IsNotSubstring() are intended to be used as the
+	// first argument to {EXPECT,ASSERT}_PRED_FORMAT2(), not by
+	// themselves.  They check whether needle is a substring of haystack
+	// (NULL is considered a substring of itself only), and return an
+	// appropriate error message when they fail.
+	//
+	// The {needle,haystack}_expr arguments are the stringified
+	// expressions that generated the two real arguments.
 	GTEST_API_ AssertionResult IsSubstring(
 		const char* needle_expr, const char* haystack_expr,
 		const char* needle, const char* haystack);
@@ -19192,39 +19193,39 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 	}  // namespace internal
 
 #if GTEST_HAS_PARAM_TEST
-	   // The pure interface class that all value-parameterized tests inherit from.
-	   // A value-parameterized class must inherit from both ::testing::Test and
-	   // ::testing::WithParamInterface. In most cases that just means inheriting
-	   // from ::testing::TestWithParam, but more complicated test hierarchies
-	   // may need to inherit from Test and WithParamInterface at different levels.
-	   //
-	   // This interface has support for accessing the test parameter value via
-	   // the GetParam() method.
-	   //
-	   // Use it with one of the parameter generator defining functions, like Range(),
-	   // Values(), ValuesIn(), Bool(), and Combine().
-	   //
-	   // class FooTest : public ::testing::TestWithParam<int> {
-	   //  protected:
-	   //   FooTest() {
-	   //     // Can use GetParam() here.
-	   //   }
-	   //   virtual ~FooTest() {
-	   //     // Can use GetParam() here.
-	   //   }
-	   //   virtual void SetUp() {
-	   //     // Can use GetParam() here.
-	   //   }
-	   //   virtual void TearDown {
-	   //     // Can use GetParam() here.
-	   //   }
-	   // };
-	   // TEST_P(FooTest, DoesBar) {
-	   //   // Can use GetParam() method here.
-	   //   Foo foo;
-	   //   ASSERT_TRUE(foo.DoesBar(GetParam()));
-	   // }
-	   // INSTANTIATE_TEST_CASE_P(OneToTenRange, FooTest, ::testing::Range(1, 10));
+// The pure interface class that all value-parameterized tests inherit from.
+// A value-parameterized class must inherit from both ::testing::Test and
+// ::testing::WithParamInterface. In most cases that just means inheriting
+// from ::testing::TestWithParam, but more complicated test hierarchies
+// may need to inherit from Test and WithParamInterface at different levels.
+//
+// This interface has support for accessing the test parameter value via
+// the GetParam() method.
+//
+// Use it with one of the parameter generator defining functions, like Range(),
+// Values(), ValuesIn(), Bool(), and Combine().
+//
+// class FooTest : public ::testing::TestWithParam<int> {
+//  protected:
+//   FooTest() {
+//     // Can use GetParam() here.
+//   }
+//   virtual ~FooTest() {
+//     // Can use GetParam() here.
+//   }
+//   virtual void SetUp() {
+//     // Can use GetParam() here.
+//   }
+//   virtual void TearDown {
+//     // Can use GetParam() here.
+//   }
+// };
+// TEST_P(FooTest, DoesBar) {
+//   // Can use GetParam() method here.
+//   Foo foo;
+//   ASSERT_TRUE(foo.DoesBar(GetParam()));
+// }
+// INSTANTIATE_TEST_CASE_P(OneToTenRange, FooTest, ::testing::Range(1, 10));
 
 	template <typename T>
 	class WithParamInterface {
@@ -19292,38 +19293,38 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 	// Generates a nonfatal failure with a generic message.
 #define ADD_FAILURE() GTEST_NONFATAL_FAILURE_("Failed")
 
-	// Generates a nonfatal failure at the given source file location with
-	// a generic message.
+// Generates a nonfatal failure at the given source file location with
+// a generic message.
 #define ADD_FAILURE_AT(file, line) \
   GTEST_MESSAGE_AT_(file, line, "Failed", \
                     ::testing::TestPartResult::kNonFatalFailure)
 
-	// Generates a fatal failure with a generic message.
+// Generates a fatal failure with a generic message.
 #define GTEST_FAIL() GTEST_FATAL_FAILURE_("Failed")
 
-	// Define this macro to 1 to omit the definition of FAIL(), which is a
-	// generic name and clashes with some other libraries.
+// Define this macro to 1 to omit the definition of FAIL(), which is a
+// generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_FAIL
 # define FAIL() GTEST_FAIL()
 #endif
 
-	// Generates a success with a generic message.
+// Generates a success with a generic message.
 #define GTEST_SUCCEED() GTEST_SUCCESS_("Succeeded")
 
-	// Define this macro to 1 to omit the definition of SUCCEED(), which
-	// is a generic name and clashes with some other libraries.
+// Define this macro to 1 to omit the definition of SUCCEED(), which
+// is a generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_SUCCEED
 # define SUCCEED() GTEST_SUCCEED()
 #endif
 
-	// Macros for testing exceptions.
-	//
-	//    * {ASSERT|EXPECT}_THROW(statement, expected_exception):
-	//         Tests that the statement throws the expected exception.
-	//    * {ASSERT|EXPECT}_NO_THROW(statement):
-	//         Tests that the statement doesn't throw any exception.
-	//    * {ASSERT|EXPECT}_ANY_THROW(statement):
-	//         Tests that the statement throws an exception.
+// Macros for testing exceptions.
+//
+//    * {ASSERT|EXPECT}_THROW(statement, expected_exception):
+//         Tests that the statement throws the expected exception.
+//    * {ASSERT|EXPECT}_NO_THROW(statement):
+//         Tests that the statement doesn't throw any exception.
+//    * {ASSERT|EXPECT}_ANY_THROW(statement):
+//         Tests that the statement throws an exception.
 
 #define EXPECT_THROW(statement, expected_exception) \
   GTEST_TEST_THROW_(statement, expected_exception, GTEST_NONFATAL_FAILURE_)
@@ -19338,9 +19339,9 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 #define ASSERT_ANY_THROW(statement) \
   GTEST_TEST_ANY_THROW_(statement, GTEST_FATAL_FAILURE_)
 
-	// Boolean assertions. Condition can be either a Boolean expression or an
-	// AssertionResult. For more information on how to use AssertionResult with
-	// these macros see comments on that class.
+// Boolean assertions. Condition can be either a Boolean expression or an
+// AssertionResult. For more information on how to use AssertionResult with
+// these macros see comments on that class.
 #define EXPECT_TRUE(condition) \
   GTEST_TEST_BOOLEAN_(condition, #condition, false, true, \
                       GTEST_NONFATAL_FAILURE_)
@@ -19354,81 +19355,81 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_TEST_BOOLEAN_(!(condition), #condition, true, false, \
                       GTEST_FATAL_FAILURE_)
 
-	// Includes the auto-generated header that implements a family of
-	// generic predicate assertion macros.
-	// Copyright 2006, Google Inc.
-	// All rights reserved.
-	//
-	// Redistribution and use in source and binary forms, with or without
-	// modification, are permitted provided that the following conditions are
-	// met:
-	//
-	//     * Redistributions of source code must retain the above copyright
-	// notice, this list of conditions and the following disclaimer.
-	//     * Redistributions in binary form must reproduce the above
-	// copyright notice, this list of conditions and the following disclaimer
-	// in the documentation and/or other materials provided with the
-	// distribution.
-	//     * Neither the name of Google Inc. nor the names of its
-	// contributors may be used to endorse or promote products derived from
-	// this software without specific prior written permission.
-	//
-	// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-	// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-	// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-	// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-	// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-	// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-	// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-	// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Includes the auto-generated header that implements a family of
+// generic predicate assertion macros.
+// Copyright 2006, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-	// This file is AUTOMATICALLY GENERATED on 10/31/2011 by command
-	// 'gen_gtest_pred_impl.py 5'.  DO NOT EDIT BY HAND!
-	//
-	// Implements a family of generic predicate assertion macros.
+// This file is AUTOMATICALLY GENERATED on 10/31/2011 by command
+// 'gen_gtest_pred_impl.py 5'.  DO NOT EDIT BY HAND!
+//
+// Implements a family of generic predicate assertion macros.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 #define GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 
-	// Makes sure this header is not included before gtest.h.
+// Makes sure this header is not included before gtest.h.
 #ifndef GTEST_INCLUDE_GTEST_GTEST_H_
 # error Do not include gtest_pred_impl.h directly.  Include gtest.h instead.
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_
 
-	// This header implements a family of generic predicate assertion
-	// macros:
-	//
-	//   ASSERT_PRED_FORMAT1(pred_format, v1)
-	//   ASSERT_PRED_FORMAT2(pred_format, v1, v2)
-	//   ...
-	//
-	// where pred_format is a function or functor that takes n (in the
-	// case of ASSERT_PRED_FORMATn) values and their source expression
-	// text, and returns a testing::AssertionResult.  See the definition
-	// of ASSERT_EQ in gtest.h for an example.
-	//
-	// If you don't care about formatting, you can use the more
-	// restrictive version:
-	//
-	//   ASSERT_PRED1(pred, v1)
-	//   ASSERT_PRED2(pred, v1, v2)
-	//   ...
-	//
-	// where pred is an n-ary function or functor that returns bool,
-	// and the values v1, v2, ..., must support the << operator for
-	// streaming to std::ostream.
-	//
-	// We also define the EXPECT_* variations.
-	//
-	// For now we only support predicates whose arity is at most 5.
-	// Please email googletestframework@googlegroups.com if you need
-	// support for higher arities.
+// This header implements a family of generic predicate assertion
+// macros:
+//
+//   ASSERT_PRED_FORMAT1(pred_format, v1)
+//   ASSERT_PRED_FORMAT2(pred_format, v1, v2)
+//   ...
+//
+// where pred_format is a function or functor that takes n (in the
+// case of ASSERT_PRED_FORMATn) values and their source expression
+// text, and returns a testing::AssertionResult.  See the definition
+// of ASSERT_EQ in gtest.h for an example.
+//
+// If you don't care about formatting, you can use the more
+// restrictive version:
+//
+//   ASSERT_PRED1(pred, v1)
+//   ASSERT_PRED2(pred, v1, v2)
+//   ...
+//
+// where pred is an n-ary function or functor that returns bool,
+// and the values v1, v2, ..., must support the << operator for
+// streaming to std::ostream.
+//
+// We also define the EXPECT_* variations.
+//
+// For now we only support predicates whose arity is at most 5.
+// Please email googletestframework@googlegroups.com if you need
+// support for higher arities.
 
-	// GTEST_ASSERT_ is the basic statement to which all of the assertions
-	// in this file reduce.  Don't use this in your code.
+// GTEST_ASSERT_ is the basic statement to which all of the assertions
+// in this file reduce.  Don't use this in your code.
 
 #define GTEST_ASSERT_(expression, on_failure) \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_ \
@@ -19438,8 +19439,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
     on_failure(gtest_ar.failure_message())
 
 
-	// Helper function for implementing {EXPECT|ASSERT}_PRED1.  Don't use
-	// this in your code.
+// Helper function for implementing {EXPECT|ASSERT}_PRED1.  Don't use
+// this in your code.
 	template <typename Pred,
 		typename T1>
 		AssertionResult AssertPred1Helper(const char* pred_text,
@@ -19459,15 +19460,15 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_ASSERT_(pred_format(#v1, v1), \
                 on_failure)
 
-	// Internal macro for implementing {EXPECT|ASSERT}_PRED1.  Don't use
-	// this in your code.
+// Internal macro for implementing {EXPECT|ASSERT}_PRED1.  Don't use
+// this in your code.
 #define GTEST_PRED1_(pred, v1, on_failure)\
   GTEST_ASSERT_(::testing::AssertPred1Helper(#pred, \
                                              #v1, \
                                              pred, \
                                              v1), on_failure)
 
-	// Unary predicate assertion macros.
+// Unary predicate assertion macros.
 #define EXPECT_PRED_FORMAT1(pred_format, v1) \
   GTEST_PRED_FORMAT1_(pred_format, v1, GTEST_NONFATAL_FAILURE_)
 #define EXPECT_PRED1(pred, v1) \
@@ -19479,8 +19480,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 
 
-	// Helper function for implementing {EXPECT|ASSERT}_PRED2.  Don't use
-	// this in your code.
+// Helper function for implementing {EXPECT|ASSERT}_PRED2.  Don't use
+// this in your code.
 	template <typename Pred,
 		typename T1,
 		typename T2>
@@ -19505,8 +19506,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_ASSERT_(pred_format(#v1, #v2, v1, v2), \
                 on_failure)
 
-	// Internal macro for implementing {EXPECT|ASSERT}_PRED2.  Don't use
-	// this in your code.
+// Internal macro for implementing {EXPECT|ASSERT}_PRED2.  Don't use
+// this in your code.
 #define GTEST_PRED2_(pred, v1, v2, on_failure)\
   GTEST_ASSERT_(::testing::AssertPred2Helper(#pred, \
                                              #v1, \
@@ -19515,7 +19516,7 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
                                              v1, \
                                              v2), on_failure)
 
-	// Binary predicate assertion macros.
+// Binary predicate assertion macros.
 #define EXPECT_PRED_FORMAT2(pred_format, v1, v2) \
   GTEST_PRED_FORMAT2_(pred_format, v1, v2, GTEST_NONFATAL_FAILURE_)
 #define EXPECT_PRED2(pred, v1, v2) \
@@ -19527,8 +19528,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 
 
-	// Helper function for implementing {EXPECT|ASSERT}_PRED3.  Don't use
-	// this in your code.
+// Helper function for implementing {EXPECT|ASSERT}_PRED3.  Don't use
+// this in your code.
 	template <typename Pred,
 		typename T1,
 		typename T2,
@@ -19558,8 +19559,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_ASSERT_(pred_format(#v1, #v2, #v3, v1, v2, v3), \
                 on_failure)
 
-	// Internal macro for implementing {EXPECT|ASSERT}_PRED3.  Don't use
-	// this in your code.
+// Internal macro for implementing {EXPECT|ASSERT}_PRED3.  Don't use
+// this in your code.
 #define GTEST_PRED3_(pred, v1, v2, v3, on_failure)\
   GTEST_ASSERT_(::testing::AssertPred3Helper(#pred, \
                                              #v1, \
@@ -19570,7 +19571,7 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
                                              v2, \
                                              v3), on_failure)
 
-	// Ternary predicate assertion macros.
+// Ternary predicate assertion macros.
 #define EXPECT_PRED_FORMAT3(pred_format, v1, v2, v3) \
   GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, GTEST_NONFATAL_FAILURE_)
 #define EXPECT_PRED3(pred, v1, v2, v3) \
@@ -19582,8 +19583,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 
 
-	// Helper function for implementing {EXPECT|ASSERT}_PRED4.  Don't use
-	// this in your code.
+// Helper function for implementing {EXPECT|ASSERT}_PRED4.  Don't use
+// this in your code.
 	template <typename Pred,
 		typename T1,
 		typename T2,
@@ -19618,8 +19619,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, v1, v2, v3, v4), \
                 on_failure)
 
-	// Internal macro for implementing {EXPECT|ASSERT}_PRED4.  Don't use
-	// this in your code.
+// Internal macro for implementing {EXPECT|ASSERT}_PRED4.  Don't use
+// this in your code.
 #define GTEST_PRED4_(pred, v1, v2, v3, v4, on_failure)\
   GTEST_ASSERT_(::testing::AssertPred4Helper(#pred, \
                                              #v1, \
@@ -19632,7 +19633,7 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
                                              v3, \
                                              v4), on_failure)
 
-	// 4-ary predicate assertion macros.
+// 4-ary predicate assertion macros.
 #define EXPECT_PRED_FORMAT4(pred_format, v1, v2, v3, v4) \
   GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, GTEST_NONFATAL_FAILURE_)
 #define EXPECT_PRED4(pred, v1, v2, v3, v4) \
@@ -19644,8 +19645,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 
 
-	// Helper function for implementing {EXPECT|ASSERT}_PRED5.  Don't use
-	// this in your code.
+// Helper function for implementing {EXPECT|ASSERT}_PRED5.  Don't use
+// this in your code.
 	template <typename Pred,
 		typename T1,
 		typename T2,
@@ -19685,8 +19686,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, #v5, v1, v2, v3, v4, v5), \
                 on_failure)
 
-	// Internal macro for implementing {EXPECT|ASSERT}_PRED5.  Don't use
-	// this in your code.
+// Internal macro for implementing {EXPECT|ASSERT}_PRED5.  Don't use
+// this in your code.
 #define GTEST_PRED5_(pred, v1, v2, v3, v4, v5, on_failure)\
   GTEST_ASSERT_(::testing::AssertPred5Helper(#pred, \
                                              #v1, \
@@ -19701,7 +19702,7 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
                                              v4, \
                                              v5), on_failure)
 
-	// 5-ary predicate assertion macros.
+// 5-ary predicate assertion macros.
 #define EXPECT_PRED_FORMAT5(pred_format, v1, v2, v3, v4, v5) \
   GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, GTEST_NONFATAL_FAILURE_)
 #define EXPECT_PRED5(pred, v1, v2, v3, v4, v5) \
@@ -19715,51 +19716,51 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 
-	// Macros for testing equalities and inequalities.
-	//
-	//    * {ASSERT|EXPECT}_EQ(expected, actual): Tests that expected == actual
-	//    * {ASSERT|EXPECT}_NE(v1, v2):           Tests that v1 != v2
-	//    * {ASSERT|EXPECT}_LT(v1, v2):           Tests that v1 < v2
-	//    * {ASSERT|EXPECT}_LE(v1, v2):           Tests that v1 <= v2
-	//    * {ASSERT|EXPECT}_GT(v1, v2):           Tests that v1 > v2
-	//    * {ASSERT|EXPECT}_GE(v1, v2):           Tests that v1 >= v2
-	//
-	// When they are not, Google Test prints both the tested expressions and
-	// their actual values.  The values must be compatible built-in types,
-	// or you will get a compiler error.  By "compatible" we mean that the
-	// values can be compared by the respective operator.
-	//
-	// Note:
-	//
-	//   1. It is possible to make a user-defined type work with
-	//   {ASSERT|EXPECT}_??(), but that requires overloading the
-	//   comparison operators and is thus discouraged by the Google C++
-	//   Usage Guide.  Therefore, you are advised to use the
-	//   {ASSERT|EXPECT}_TRUE() macro to assert that two objects are
-	//   equal.
-	//
-	//   2. The {ASSERT|EXPECT}_??() macros do pointer comparisons on
-	//   pointers (in particular, C strings).  Therefore, if you use it
-	//   with two C strings, you are testing how their locations in memory
-	//   are related, not how their content is related.  To compare two C
-	//   strings by content, use {ASSERT|EXPECT}_STR*().
-	//
-	//   3. {ASSERT|EXPECT}_EQ(expected, actual) is preferred to
-	//   {ASSERT|EXPECT}_TRUE(expected == actual), as the former tells you
-	//   what the actual value is when it fails, and similarly for the
-	//   other comparisons.
-	//
-	//   4. Do not depend on the order in which {ASSERT|EXPECT}_??()
-	//   evaluate their arguments, which is undefined.
-	//
-	//   5. These macros evaluate their arguments exactly once.
-	//
-	// Examples:
-	//
-	//   EXPECT_NE(5, Foo());
-	//   EXPECT_EQ(NULL, a_pointer);
-	//   ASSERT_LT(i, array_size);
-	//   ASSERT_GT(records.size(), 0) << "There is no record left.";
+// Macros for testing equalities and inequalities.
+//
+//    * {ASSERT|EXPECT}_EQ(expected, actual): Tests that expected == actual
+//    * {ASSERT|EXPECT}_NE(v1, v2):           Tests that v1 != v2
+//    * {ASSERT|EXPECT}_LT(v1, v2):           Tests that v1 < v2
+//    * {ASSERT|EXPECT}_LE(v1, v2):           Tests that v1 <= v2
+//    * {ASSERT|EXPECT}_GT(v1, v2):           Tests that v1 > v2
+//    * {ASSERT|EXPECT}_GE(v1, v2):           Tests that v1 >= v2
+//
+// When they are not, Google Test prints both the tested expressions and
+// their actual values.  The values must be compatible built-in types,
+// or you will get a compiler error.  By "compatible" we mean that the
+// values can be compared by the respective operator.
+//
+// Note:
+//
+//   1. It is possible to make a user-defined type work with
+//   {ASSERT|EXPECT}_??(), but that requires overloading the
+//   comparison operators and is thus discouraged by the Google C++
+//   Usage Guide.  Therefore, you are advised to use the
+//   {ASSERT|EXPECT}_TRUE() macro to assert that two objects are
+//   equal.
+//
+//   2. The {ASSERT|EXPECT}_??() macros do pointer comparisons on
+//   pointers (in particular, C strings).  Therefore, if you use it
+//   with two C strings, you are testing how their locations in memory
+//   are related, not how their content is related.  To compare two C
+//   strings by content, use {ASSERT|EXPECT}_STR*().
+//
+//   3. {ASSERT|EXPECT}_EQ(expected, actual) is preferred to
+//   {ASSERT|EXPECT}_TRUE(expected == actual), as the former tells you
+//   what the actual value is when it fails, and similarly for the
+//   other comparisons.
+//
+//   4. Do not depend on the order in which {ASSERT|EXPECT}_??()
+//   evaluate their arguments, which is undefined.
+//
+//   5. These macros evaluate their arguments exactly once.
+//
+// Examples:
+//
+//   EXPECT_NE(5, Foo());
+//   EXPECT_EQ(NULL, a_pointer);
+//   ASSERT_LT(i, array_size);
+//   ASSERT_GT(records.size(), 0) << "There is no record left.";
 
 #define EXPECT_EQ(expected, actual) \
   EXPECT_PRED_FORMAT2(::testing::internal:: \
@@ -19791,8 +19792,8 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 #define GTEST_ASSERT_GT(val1, val2) \
   ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperGT, val1, val2)
 
-	// Define macro GTEST_DONT_DEFINE_ASSERT_XY to 1 to omit the definition of
-	// ASSERT_XY(), which clashes with some users' own code.
+// Define macro GTEST_DONT_DEFINE_ASSERT_XY to 1 to omit the definition of
+// ASSERT_XY(), which clashes with some users' own code.
 
 #if !GTEST_DONT_DEFINE_ASSERT_EQ
 # define ASSERT_EQ(val1, val2) GTEST_ASSERT_EQ(val1, val2)
@@ -19818,21 +19819,21 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 # define ASSERT_GT(val1, val2) GTEST_ASSERT_GT(val1, val2)
 #endif
 
-	// C-string Comparisons.  All tests treat NULL and any non-NULL string
-	// as different.  Two NULLs are equal.
-	//
-	//    * {ASSERT|EXPECT}_STREQ(s1, s2):     Tests that s1 == s2
-	//    * {ASSERT|EXPECT}_STRNE(s1, s2):     Tests that s1 != s2
-	//    * {ASSERT|EXPECT}_STRCASEEQ(s1, s2): Tests that s1 == s2, ignoring case
-	//    * {ASSERT|EXPECT}_STRCASENE(s1, s2): Tests that s1 != s2, ignoring case
-	//
-	// For wide or narrow string objects, you can use the
-	// {ASSERT|EXPECT}_??() macros.
-	//
-	// Don't depend on the order in which the arguments are evaluated,
-	// which is undefined.
-	//
-	// These macros evaluate their arguments exactly once.
+// C-string Comparisons.  All tests treat NULL and any non-NULL string
+// as different.  Two NULLs are equal.
+//
+//    * {ASSERT|EXPECT}_STREQ(s1, s2):     Tests that s1 == s2
+//    * {ASSERT|EXPECT}_STRNE(s1, s2):     Tests that s1 != s2
+//    * {ASSERT|EXPECT}_STRCASEEQ(s1, s2): Tests that s1 == s2, ignoring case
+//    * {ASSERT|EXPECT}_STRCASENE(s1, s2): Tests that s1 != s2, ignoring case
+//
+// For wide or narrow string objects, you can use the
+// {ASSERT|EXPECT}_??() macros.
+//
+// Don't depend on the order in which the arguments are evaluated,
+// which is undefined.
+//
+// These macros evaluate their arguments exactly once.
 
 #define EXPECT_STREQ(expected, actual) \
   EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperSTREQ, expected, actual)
@@ -19852,19 +19853,19 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 #define ASSERT_STRCASENE(s1, s2)\
   ASSERT_PRED_FORMAT2(::testing::internal::CmpHelperSTRCASENE, s1, s2)
 
-	// Macros for comparing floating-point numbers.
-	//
-	//    * {ASSERT|EXPECT}_FLOAT_EQ(expected, actual):
-	//         Tests that two float values are almost equal.
-	//    * {ASSERT|EXPECT}_DOUBLE_EQ(expected, actual):
-	//         Tests that two double values are almost equal.
-	//    * {ASSERT|EXPECT}_NEAR(v1, v2, abs_error):
-	//         Tests that v1 and v2 are within the given distance to each other.
-	//
-	// Google Test uses ULP-based comparison to automatically pick a default
-	// error bound that is appropriate for the operands.  See the
-	// FloatingPoint template class in gtest-internal.h if you are
-	// interested in the implementation details.
+// Macros for comparing floating-point numbers.
+//
+//    * {ASSERT|EXPECT}_FLOAT_EQ(expected, actual):
+//         Tests that two float values are almost equal.
+//    * {ASSERT|EXPECT}_DOUBLE_EQ(expected, actual):
+//         Tests that two double values are almost equal.
+//    * {ASSERT|EXPECT}_NEAR(v1, v2, abs_error):
+//         Tests that v1 and v2 are within the given distance to each other.
+//
+// Google Test uses ULP-based comparison to automatically pick a default
+// error bound that is appropriate for the operands.  See the
+// FloatingPoint template class in gtest-internal.h if you are
+// interested in the implementation details.
 
 #define EXPECT_FLOAT_EQ(expected, actual)\
   EXPECT_PRED_FORMAT2(::testing::internal::CmpHelperFloatingPointEQ<float>, \
@@ -19890,13 +19891,13 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   ASSERT_PRED_FORMAT3(::testing::internal::DoubleNearPredFormat, \
                       val1, val2, abs_error)
 
-	// These predicate format functions work on floating-point values, and
-	// can be used in {ASSERT|EXPECT}_PRED_FORMAT2*(), e.g.
-	//
-	//   EXPECT_PRED_FORMAT2(testing::DoubleLE, Foo(), 5.0);
+// These predicate format functions work on floating-point values, and
+// can be used in {ASSERT|EXPECT}_PRED_FORMAT2*(), e.g.
+//
+//   EXPECT_PRED_FORMAT2(testing::DoubleLE, Foo(), 5.0);
 
-	// Asserts that val1 is less than, or almost equal to, val2.  Fails
-	// otherwise.  In particular, it fails if either val1 or val2 is NaN.
+// Asserts that val1 is less than, or almost equal to, val2.  Fails
+// otherwise.  In particular, it fails if either val1 or val2 is NaN.
 	GTEST_API_ AssertionResult FloatLE(const char* expr1, const char* expr2,
 		float val1, float val2);
 	GTEST_API_ AssertionResult DoubleLE(const char* expr1, const char* expr2,
@@ -19928,66 +19929,66 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 #endif  // GTEST_OS_WINDOWS
 
-	// Macros that execute statement and check that it doesn't generate new fatal
-	// failures in the current thread.
-	//
-	//   * {ASSERT|EXPECT}_NO_FATAL_FAILURE(statement);
-	//
-	// Examples:
-	//
-	//   EXPECT_NO_FATAL_FAILURE(Process());
-	//   ASSERT_NO_FATAL_FAILURE(Process()) << "Process() failed";
-	//
+// Macros that execute statement and check that it doesn't generate new fatal
+// failures in the current thread.
+//
+//   * {ASSERT|EXPECT}_NO_FATAL_FAILURE(statement);
+//
+// Examples:
+//
+//   EXPECT_NO_FATAL_FAILURE(Process());
+//   ASSERT_NO_FATAL_FAILURE(Process()) << "Process() failed";
+//
 #define ASSERT_NO_FATAL_FAILURE(statement) \
     GTEST_TEST_NO_FATAL_FAILURE_(statement, GTEST_FATAL_FAILURE_)
 #define EXPECT_NO_FATAL_FAILURE(statement) \
     GTEST_TEST_NO_FATAL_FAILURE_(statement, GTEST_NONFATAL_FAILURE_)
 
-	// Causes a trace (including the source file path, the current line
-	// number, and the given message) to be included in every test failure
-	// message generated by code in the current scope.  The effect is
-	// undone when the control leaves the current scope.
-	//
-	// The message argument can be anything streamable to std::ostream.
-	//
-	// In the implementation, we include the current line number as part
-	// of the dummy variable name, thus allowing multiple SCOPED_TRACE()s
-	// to appear in the same block - as long as they are on different
-	// lines.
+// Causes a trace (including the source file path, the current line
+// number, and the given message) to be included in every test failure
+// message generated by code in the current scope.  The effect is
+// undone when the control leaves the current scope.
+//
+// The message argument can be anything streamable to std::ostream.
+//
+// In the implementation, we include the current line number as part
+// of the dummy variable name, thus allowing multiple SCOPED_TRACE()s
+// to appear in the same block - as long as they are on different
+// lines.
 #define SCOPED_TRACE(message) \
   ::testing::internal::ScopedTrace GTEST_CONCAT_TOKEN_(gtest_trace_, __LINE__)(\
     __FILE__, __LINE__, ::testing::Message() << (message))
 
-	// Compile-time assertion for type equality.
-	// StaticAssertTypeEq<type1, type2>() compiles iff type1 and type2 are
-	// the same type.  The value it returns is not interesting.
-	//
-	// Instead of making StaticAssertTypeEq a class template, we make it a
-	// function template that invokes a helper class template.  This
-	// prevents a user from misusing StaticAssertTypeEq<T1, T2> by
-	// defining objects of that type.
-	//
-	// CAVEAT:
-	//
-	// When used inside a method of a class template,
-	// StaticAssertTypeEq<T1, T2>() is effective ONLY IF the method is
-	// instantiated.  For example, given:
-	//
-	//   template <typename T> class Foo {
-	//    public:
-	//     void Bar() { testing::StaticAssertTypeEq<int, T>(); }
-	//   };
-	//
-	// the code:
-	//
-	//   void Test1() { Foo<bool> foo; }
-	//
-	// will NOT generate a compiler error, as Foo<bool>::Bar() is never
-	// actually instantiated.  Instead, you need:
-	//
-	//   void Test2() { Foo<bool> foo; foo.Bar(); }
-	//
-	// to cause a compiler error.
+// Compile-time assertion for type equality.
+// StaticAssertTypeEq<type1, type2>() compiles iff type1 and type2 are
+// the same type.  The value it returns is not interesting.
+//
+// Instead of making StaticAssertTypeEq a class template, we make it a
+// function template that invokes a helper class template.  This
+// prevents a user from misusing StaticAssertTypeEq<T1, T2> by
+// defining objects of that type.
+//
+// CAVEAT:
+//
+// When used inside a method of a class template,
+// StaticAssertTypeEq<T1, T2>() is effective ONLY IF the method is
+// instantiated.  For example, given:
+//
+//   template <typename T> class Foo {
+//    public:
+//     void Bar() { testing::StaticAssertTypeEq<int, T>(); }
+//   };
+//
+// the code:
+//
+//   void Test1() { Foo<bool> foo; }
+//
+// will NOT generate a compiler error, as Foo<bool>::Bar() is never
+// actually instantiated.  Instead, you need:
+//
+//   void Test2() { Foo<bool> foo; foo.Bar(); }
+//
+// to cause a compiler error.
 	template <typename T1, typename T2>
 	bool StaticAssertTypeEq() {
 		(void)internal::StaticAssertTypeEqHelper<T1, T2>();
@@ -20023,37 +20024,37 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
   GTEST_TEST_(test_case_name, test_name, \
               ::testing::Test, ::testing::internal::GetTestTypeId())
 
-	// Define this macro to 1 to omit the definition of TEST(), which
-	// is a generic name and clashes with some other libraries.
+// Define this macro to 1 to omit the definition of TEST(), which
+// is a generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_TEST
 # define TEST(test_case_name, test_name) GTEST_TEST(test_case_name, test_name)
 #endif
 
-	// Defines a test that uses a test fixture.
-	//
-	// The first parameter is the name of the test fixture class, which
-	// also doubles as the test case name.  The second parameter is the
-	// name of the test within the test case.
-	//
-	// A test fixture class must be declared earlier.  The user should put
-	// his test code between braces after using this macro.  Example:
-	//
-	//   class FooTest : public testing::Test {
-	//    protected:
-	//     virtual void SetUp() { b_.AddElement(3); }
-	//
-	//     Foo a_;
-	//     Foo b_;
-	//   };
-	//
-	//   TEST_F(FooTest, InitializesCorrectly) {
-	//     EXPECT_TRUE(a_.StatusIsOK());
-	//   }
-	//
-	//   TEST_F(FooTest, ReturnsElementCountCorrectly) {
-	//     EXPECT_EQ(0, a_.size());
-	//     EXPECT_EQ(1, b_.size());
-	//   }
+// Defines a test that uses a test fixture.
+//
+// The first parameter is the name of the test fixture class, which
+// also doubles as the test case name.  The second parameter is the
+// name of the test within the test case.
+//
+// A test fixture class must be declared earlier.  The user should put
+// his test code between braces after using this macro.  Example:
+//
+//   class FooTest : public testing::Test {
+//    protected:
+//     virtual void SetUp() { b_.AddElement(3); }
+//
+//     Foo a_;
+//     Foo b_;
+//   };
+//
+//   TEST_F(FooTest, InitializesCorrectly) {
+//     EXPECT_TRUE(a_.StatusIsOK());
+//   }
+//
+//   TEST_F(FooTest, ReturnsElementCountCorrectly) {
+//     EXPECT_EQ(0, a_.size());
+//     EXPECT_EQ(1, b_.size());
+//   }
 
 #define TEST_F(test_fixture, test_name)\
   GTEST_TEST_(test_fixture, test_name, test_fixture, \
@@ -20061,14 +20062,14 @@ GTEST_API_ AssertionResult CmpHelper##op_name(\
 
 }  // namespace testing
 
-   // Use this function in main() to run all tests.  It returns 0 if all
-   // tests are successful, or 1 otherwise.
-   //
-   // RUN_ALL_TESTS() should be invoked after the command line has been
-   // parsed by InitGoogleTest().
-   //
-   // This function was formerly a macro; thus, it is in the global
-   // namespace and has an all-caps name.
+// Use this function in main() to run all tests.  It returns 0 if all
+// tests are successful, or 1 otherwise.
+//
+// RUN_ALL_TESTS() should be invoked after the command line has been
+// parsed by InitGoogleTest().
+//
+// This function was formerly a macro; thus, it is in the global
+// namespace and has an all-caps name.
 int RUN_ALL_TESTS() GTEST_MUST_USE_RESULT_;
 
 inline int RUN_ALL_TESTS() {
@@ -20076,4 +20077,3 @@ inline int RUN_ALL_TESTS() {
 }
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_
-#pragma once

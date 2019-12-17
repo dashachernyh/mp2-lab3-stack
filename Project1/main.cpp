@@ -3,7 +3,7 @@ using namespace std;
 #include"calcul.h"
 #include<string>
 #include<conio.h>
-/*int main()
+int main()
 {
 
 	TCalculator<int> c;
@@ -18,4 +18,4 @@ using namespace std;
 	m = c.Calc();
 	cout << m << endl;
 	_getch();
-}*/
+}

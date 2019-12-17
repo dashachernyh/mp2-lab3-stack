@@ -16,7 +16,7 @@ class TCalculator
 	void SetExpr(string _expr);
 	string GetExpr();
 	string GetPostfix();
-	bool CheckBrackets() const;
+	bool CheckBrackets();
 	void ToPosfix();
 	double Calc();
 };
@@ -36,7 +36,7 @@ string TCalculator<T>::GetPostfix()
 	return postfix;
 }
 template<class T>
-bool TCalculator<T>::CheckBrackets()const
+bool TCalculator<T>::CheckBrackets()
 {
 	st_c.ClearSt();
 	for (int i = 0; i < expr.size(); i++)

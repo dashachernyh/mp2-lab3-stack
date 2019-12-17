@@ -1,6 +1,6 @@
 #include "gtest.h"
 
-#include "stack.h"
+#include "../Project1/stack.h"
 
 TEST(TStack, can_creat_stack_with_positiv_lenght)
 {

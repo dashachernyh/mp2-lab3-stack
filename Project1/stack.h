@@ -12,9 +12,9 @@ public:
 	TStack& operator=(const TStack &st);
 	void Push(T el);
 	T Pop();
-	T Top()const;
-	bool IsEmpty()const;
-	bool IsFull()const;
+	T Top();
+	bool IsEmpty();
+	bool IsFull();
 	void ClearSt();
 };
 template<class T>
@@ -28,7 +28,7 @@ TStack<T>::TStack<T>(int _size)
 template<class T>
 TStack<T>::TStack<T>(const TStack &st)
 {
-	size = _size;
+	size = st.size;
 	arr = new T[size];
 	num = st.num;
 	for (int i = 0; i <= num; i++)
@@ -69,19 +69,19 @@ T TStack<T>::Pop()
 	return arr[num + 1];
 }
 template<class T>
-T TStack<T>::Top()const
+T TStack<T>::Top()
 {
 	if (num == -1) throw" can not get elem";
 	return arr[num];
 }
 template<class T>
-bool TStack<T>::IsEmpty()const
+bool TStack<T>::IsEmpty()
 {
 	if (num == -1) return true;
 	else return false;
 }
 template<class T>
-bool TStack<T>::IsFull()const
+bool TStack<T>::IsFull()
 {
 	if (num == size - 1) return true;
 	else return false;
