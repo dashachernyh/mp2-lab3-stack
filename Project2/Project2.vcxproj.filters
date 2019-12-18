@@ -18,8 +18,11 @@
     <ClInclude Include="gtest.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
+    <ClInclude Include="..\Project1\calcul.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
     <ClInclude Include="gtest-all.cc">
-      <Filter>Файлы ресурсов</Filter>
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +33,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="test_stack.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Project1\calcul.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

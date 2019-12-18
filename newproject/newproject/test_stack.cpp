@@ -1,13 +1,13 @@
 #include "gtest.h"
 
-#include "../Project1/stack.h"
+#include "stack.h"
 
 TEST(TStack, can_creat_stack_with_positiv_lenght)
 {
 	ASSERT_NO_THROW(TStack<int> st(5));
 }
 
-/*TEST(TStack, throw_than_create_stack_with_negativ_lenght)
+TEST(TStack, throw_than_create_stack_with_negativ_lenght)
 {
 	ASSERT_ANY_THROW(TStack<int> st(-5));
 }
@@ -24,14 +24,15 @@ TEST(TStack, can_look_elem)
 	TStack<int> st(5);
 	int el = 3;
 	st.Push(el);
-	EXPECT_EQ(3,st.Top());
+	EXPECT_EQ(el,st.Top());
 }
 
 TEST(TStack, can_get_elem)
 {
 	TStack<int> st(5);
 	int el = 3;
-	EXPECT_EQ(3, st.Pop());
+	st.Push(el);
+	EXPECT_EQ(el, st.Pop());
 }
 TEST(TStack, assert_true_stack_is_empty)
 {
@@ -76,4 +77,3 @@ TEST(TStack, can_clear_stack)
 	st.ClearSt();
 	EXPECT_EQ(1, st.IsEmpty());
 }
-*/
