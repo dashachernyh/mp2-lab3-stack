@@ -44,10 +44,10 @@ TEST(TCalcul, can_get_postfix)
 TEST(TCalcul, can_calculate)
 {
 	TCalculator c;
-	string st = "2+2*(3+4)";
+	string st = "2+2*(3+4)/14+5*10";
 	c.SetExpr(st);
 	ASSERT_NO_THROW(c.CheckBrackets());
 	c.ToPosfix();
-	EXPECT_EQ(16, c.Calc());
+	EXPECT_EQ(53, c.Calc());
 	system("pause");
 }

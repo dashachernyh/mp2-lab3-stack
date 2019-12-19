@@ -34,8 +34,8 @@ bool TCalculator::CheckBrackets()
 			else st_c.Pop();
 		}
 	}
-	if (st_c.IsEmpty()) return true;
-	else return false;
+	return (st_c.IsEmpty());
+	
 }
 
 int TCalculator::Prior(char c)
