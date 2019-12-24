@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="calcul.h" />
+    <ClInclude Include="stack-list.h" />
     <ClInclude Include="stack.h" />
   </ItemGroup>
   <ItemGroup>

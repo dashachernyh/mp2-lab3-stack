@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 using namespace std;
-#include"stack.h"
+#include"stack-list.h"
 #include"calcul.h"
 #include<string>
 #include<cmath>
